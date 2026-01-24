@@ -1,16 +1,16 @@
-import { createContext, useReducer, useContext } from "react";
-import reducer, {initialState} from "../store/userReducer";
+import { createContext, useReducer } from "react";
+import reducer, { initialState } from "../store/userReducer";
 
+export const UserContext = createContext();
 
-
-export const UserContext = createContext(null);
-
-const { Provider } = UserContext;
-
-function UserProvider({ children }) {
+const UserProvider = ({ children }) => {
   const [state, dispatchUser] = useReducer(reducer, initialState);
 
-  return <Provider value={{ state, dispatchUser }}>{children}</Provider>;
-}
+  return (
+    <UserContext.Provider value={{ state, dispatchUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
 
 export default UserProvider;

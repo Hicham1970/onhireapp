@@ -1,30 +1,32 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Navbar from "./components/Navbar";
-import Edit from "./pages/Edit";
-import User from "./pages/User";
-import Notfound from "./pages/Notfound";
-import Users from "./pages/Users";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Alert from './components/Alert';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import OnHire from './pages/Onhire';
+import Edit from './pages/Edit';
+import User from './pages/User';
+import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
-    <Router>
+    <>
       <Navbar />
+      <Alert />
       <Routes>
-        <Route index element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Dashboard />} />
-        <Route path="/profile/edit" element={<Edit />} />
-        <Route path="/users" element={<Users />} />
+        <Route path="/onhire" element={<OnHire />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/users/:username/edit" element={<Edit />} />
         <Route path="/users/:username" element={<User />} />
-        {/* <Route path="/404" element={<Notfound />} /> */}
-        <Route path="*" element={<Notfound />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 

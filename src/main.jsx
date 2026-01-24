@@ -1,22 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
-import UserProvider from "./context/UserContext";
-import AlertProvider from "./context/AlertContext";
-import Alert from "./components/Alert";
-import Hooks from "./hooks/Hooks";
-import Loader from "./components/Loader";
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import './index.css'
+import UserProvider from './context/UserContext'
+import AlertProvider from './context/AlertContext' // Assurez-vous que ce fichier existe aussi
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AlertProvider>
-      <UserProvider>
-        <App />
-        <Loader />
-        <Alert />
-        <Hooks />
-      </UserProvider>
-    </AlertProvider>
-  </React.StrictMode>
-);
+    <UserProvider>
+      <AlertProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AlertProvider>
+    </UserProvider>
+  </React.StrictMode>,
+)

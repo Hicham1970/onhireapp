@@ -6,47 +6,17 @@ export const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case "LOADING":
+      return { ...state, isLoading: true, isError: false };
     case "LOG_IN":
       localStorage.setItem("user", JSON.stringify(action.payload));
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        user: action.payload,
-      };
-
-    case "LOADING":
-      return {
-        ...state,
-        isLoading: true,
-        isError: false, // Reset error flag when loading starts
-      };
-
-    case "SUCCESS":
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-      };
-
-    case "ERROR":
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-      };
-
+      return { ...state, user: action.payload, isLoading: false };
     case "LOG_OUT":
       localStorage.removeItem("user");
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        user: null,
-      };
-
+      return { ...state, user: null, isLoading: false };
+    case "ERROR":
+      return { ...state, isLoading: false, isError: true };
     default:
-      // If the action type is not recognized, return the unchanged state
       return state;
   }
 };

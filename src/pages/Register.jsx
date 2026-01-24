@@ -4,7 +4,7 @@ import { AlertContext } from "../context/AlertContext";
 import { useAppState, useUser } from "../hooks/Hooks";
 import { Link } from "react-router-dom";
 
-function Login() {
+function Register() {
   const { dispatchUser } = useContext(UserContext);
   const { dispatchAlert } = useContext(AlertContext);
 
@@ -12,7 +12,7 @@ function Login() {
 
   useEffect(() => {
     if (user) {
-      window.location.href = "/profile";
+      window.location.href = "/dashboard";
     }
   }, [user]);
 
@@ -53,7 +53,7 @@ function Login() {
           email: "",
           password: "",
         });
-        window.location.href = "/profile";
+        window.location.href = "/dashboard";
       }, 3000);
     } catch (err) {
       dispatchAlert({
@@ -120,4 +120,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

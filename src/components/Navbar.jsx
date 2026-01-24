@@ -1,11 +1,15 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { useAlert, useUser } from "../hooks/Hooks";
 
 function Navbar() {
   const { id } = useParams();
   const { dispatchAlert } = useAlert();
   const { user, dispatchUser } = useUser();
+  const location = useLocation();
+
+  // Masquer la Navbar globale sur la page OnHire car elle a son propre layout
+  if (location.pathname === '/onhire') return null;
 
   const handleLogout = () => {
     dispatchUser({ type: "LOG_OUT" });
@@ -19,8 +23,8 @@ function Navbar() {
 
   return (
     <div className="backdrop-blur-md fixed inset-0 h-16 w-full bg-white bg-opacity-50 justify-between flex items-center px-10 py-5">
-      <Link to="/" className="text-xl font-semibold">
-        Fronto
+      <Link to="/onhire" className="text-xl font-semibold">
+        OnHire
       </Link>
       <div className="flex gap-2">
         <Link

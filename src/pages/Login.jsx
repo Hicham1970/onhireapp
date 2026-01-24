@@ -12,7 +12,7 @@ function Login() {
 
   useEffect(() => {
     if (user) {
-      window.location.href = "/profile";
+      window.location.href = "/dashboard";
     }
   }, [user]);
 
@@ -35,7 +35,6 @@ function Login() {
       });
 
       setUserDetails({
-        username: "",
         email: "",
         password: "",
       });

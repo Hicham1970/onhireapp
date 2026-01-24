@@ -72,8 +72,8 @@ function User() {
       } else {
         throw new Error("Couldn't perform action");
       }
-    } catch (errror) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -100,10 +100,10 @@ function User() {
           ),
         }));
       } else {
-        throw new Error("Couldn't perform actionr");
+        throw new Error("Couldn't perform action");
       }
-    } catch (errror) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
 

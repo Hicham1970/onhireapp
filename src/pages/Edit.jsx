@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useAlert } from "../hooks/Hooks";
+import { useAlert, useUser } from "../hooks/Hooks";
 
 function Edit() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUser();
 
   const { dispatchAlert } = useAlert();
 
@@ -15,7 +16,7 @@ function Edit() {
     setIsLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/users/${username}/edit`,
+        `http://localhost:5000/api/v1/users/${user?.username}/edit`,
         {
           method: "POST",
           headers: {
@@ -30,17 +31,17 @@ function Edit() {
       const result = await res.json();
       console.log(result);
 
-      // if (res.ok) {
-      //   dispatchAlert({
-      //     type: "SHOW",
-      //     message: "Details updated successfully",
-      //     variant: "Success",
-      //   });
-      //   window.location.href = "/profile";
-      // } else {
-      //   setError(true);
-      //   throw new Error("Failed to update details");
-      // }
+      if (res.ok) {
+        dispatchAlert({
+          type: "SHOW",
+          message: "Details updated successfully",
+          variant: "Success",
+        });
+        window.location.href = "/dashboard";
+      } else {
+        setError(true);
+        throw new Error("Failed to update details");
+      }
     } catch (error) {
       console.log(error.message);
       dispatchAlert({
@@ -89,7 +90,6 @@ function Edit() {
             onChange={handleChange}
           />
           <button
-            onClick={() => alert("Hehe")}
             className=" right-10 bg-red-700 text-white font-medium text-lg px-5 h-10 w-28 rounded-3xl"
             type="submit"
           >
