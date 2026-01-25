@@ -1,17 +1,25 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
 import { FuelCalculator } from './FuelCalculator';
-import { INITIAL_VESSELS, MOCK_SURVEYS } from './constants';
+import { INITIAL_VESSELS } from './constants';
 import { SurveyType } from './types';
-import { Plus, History, Ship, Search, ArrowRight, MessageSquare, Send, Sparkles, BarChart3, Settings, ClipboardCheck, Bot, Info, ChevronLeft, Droplets, Ruler, Trash2 } from 'lucide-react';
-// import { getMaritimeAssistantResponse } from './services/gemini';
+import { Plus, History, Ship, Search, ArrowRight, MessageSquare, Send, Sparkles, BarChart3, Settings, ClipboardCheck, Bot, Info, ChevronLeft, Droplets, Ruler, Trash2, FileDown } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { getMaritimeAssistantResponse } from '../services/gemini';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { useAuth } from '../context/AuthContext.jsx';
+import { getSurveys, getVessels, saveSurvey, deleteSurvey } from '../api/api';
 
 const OnHire = () => {
+  const { currentUser, loading } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [vessels] = useState(INITIAL_VESSELS);
-  const [surveys, setSurveys] = useState(MOCK_SURVEYS);
+  const [surveys, setSurveys] = useState([]);
+  const [isLoadingSurveys, setIsLoadingSurveys] = useState(true);
   const [isCreatingSurvey, setIsCreatingSurvey] = useState(false);
   const [selectedVessel, setSelectedVessel] = useState(null);
   const [detailedVessel, setDetailedVessel] = useState(null);
@@ -20,6 +28,7 @@ const OnHire = () => {
     owner: '',
     charterer: '',
     location: 'New Port Location',
+    placeOfDelivery: '',
     surveyType: 'ONHIRE SURVEY',
     fromTime: '',
     toTime: '',
@@ -30,21 +39,71 @@ const OnHire = () => {
     er: '',
     thermometer: '',
     vesselNameEditable: '',
+    vesselImoEditable: '',
+    vesselCallSignEditable: '',
+    masterName: '',
+    chiefEngineerName: '',
     logBookEntries: []
   });
+  const [initialFuelEntries, setInitialFuelEntries] = useState(null);
   
   // AI Assistant State
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
 
+  useEffect(() => {
+    if (loading) return;
+
+    if (currentUser) {
+      setIsLoadingSurveys(true);
+      
+      // Charger les surveys
+      getSurveys(currentUser.uid)
+        .then(userSurveys => {
+          setSurveys(userSurveys || []);
+        })
+        .catch(error => {
+          console.error("Erreur lors du chargement des surveys:", error);
+          alert("Impossible de charger les surveys.");
+        })
+        .finally(() => {
+          setIsLoadingSurveys(false);
+        });
+
+      // Charger les navires personnalisés
+      getVessels(currentUser.uid)
+        .then(dbVessels => {
+          if (dbVessels && dbVessels.length > 0) {
+            setVessels([...INITIAL_VESSELS, ...dbVessels]);
+          }
+        })
+        .catch(error => console.error("Erreur lors du chargement des navires:", error));
+    } else {
+      setSurveys([]);
+      setVessels(INITIAL_VESSELS);
+      setIsLoadingSurveys(false);
+      navigate('/login');
+    }
+  }, [currentUser, loading, navigate]);
+
   const handleCreateSurvey = (vessel) => {
-    setSelectedVessel(vessel);
+    const vesselData = vessel || {
+      name: '',
+      imo: '',
+      callSign: '',
+      client: '',
+      owner: '',
+      charterer: '',
+      tanks: []
+    };
+    setSelectedVessel(vesselData);
     setSurveyDetails({
-      client: vessel.client || '',
-      owner: vessel.owner || '',
-      charterer: vessel.charterer || '',
+      client: vesselData.client || '',
+      owner: vesselData.owner || '',
+      charterer: vesselData.charterer || '',
       location: 'New Port Location',
+      placeOfDelivery: '',
       surveyType: 'ONHIRE SURVEY',
       fromTime: '',
       toTime: '',
@@ -54,33 +113,31 @@ const OnHire = () => {
       list: '',
       er: '',
       thermometer: '',
-      vesselNameEditable: vessel.name
+      vesselNameEditable: vesselData.name || '',
+      vesselImoEditable: vesselData.imo || '',
+      vesselCallSignEditable: vesselData.callSign || '',
+      masterName: '',
+      chiefEngineerName: ''
     });
+    setInitialFuelEntries(null); // Réinitialiser les données de carburant pour un nouveau survey
     setIsCreatingSurvey(true);
   };
 
-  const handleSaveSurvey = (entries, manualHfo, manualMgo) => {
-    if (!selectedVessel) return;
-
-    const calculatedHFO = entries.reduce((acc, e) => {
-      const tank = selectedVessel.tanks.find(t => t.id === e.tankId);
-      return tank?.fuelType.includes('HFO') || tank?.fuelType.includes('VLSFO') ? acc + (e.correctedVolume || 0) : acc;
-    }, 0);
-
-    const calculatedMGO = entries.reduce((acc, e) => {
-      const tank = selectedVessel.tanks.find(t => t.id === e.tankId);
-      return tank?.fuelType.includes('MGO') || tank?.fuelType.includes('LSMGO') ? acc + (e.correctedVolume || 0) : acc;
-    }, 0);
-
-    const finalHFO = manualHfo !== undefined ? manualHfo : calculatedHFO;
-    const finalMGO = manualMgo !== undefined ? manualMgo : calculatedMGO;
+  const handleSaveSurvey = async (entries, finalHFO, finalMGO) => {
+    if (!selectedVessel || !currentUser) {
+      alert("Vous devez être connecté pour enregistrer un survey.");
+      return;
+    }
 
     const newSurvey = {
-      id: `s-${Date.now()}`,
       vesselName: surveyDetails.vesselNameEditable || selectedVessel.name,
-      vesselImo: selectedVessel.imo,
+      vesselImo: surveyDetails.vesselImoEditable || selectedVessel.imo,
+      vesselCallSign: surveyDetails.vesselCallSignEditable || selectedVessel.callSign,
+      masterName: surveyDetails.masterName,
+      chiefEngineerName: surveyDetails.chiefEngineerName,
       date: new Date().toISOString().split('T')[0],
       location: surveyDetails.location,
+      placeOfDelivery: surveyDetails.placeOfDelivery,
       type: surveyDetails.surveyType,
       client: surveyDetails.client,
       charterer: surveyDetails.charterer,
@@ -99,18 +156,391 @@ const OnHire = () => {
       status: 'Completed'
     };
 
-    setSurveys([newSurvey, ...surveys]);
-    setIsCreatingSurvey(false);
-    setSelectedVessel(null);
-    setActiveTab('surveys');
+    try {
+      const { surveyId } = await saveSurvey(currentUser.uid, newSurvey);
+      setSurveys(prevSurveys => [{ ...newSurvey, id: surveyId }, ...prevSurveys]);
+      alert("Survey enregistré avec succès dans votre compte !");
+      setIsCreatingSurvey(false);
+      setSelectedVessel(null);
+      setActiveTab('surveys');
+    } catch (error) {
+      console.error("Échec de l'enregistrement du survey:", error);
+      alert(`Erreur lors de l'enregistrement : ${error.message}`);
+    }
+  };
+
+  const handleDeleteSurvey = async (surveyId) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce rapport ?")) {
+      try {
+        await deleteSurvey(currentUser.uid, surveyId);
+        setSurveys(prev => prev.filter(s => s.id !== surveyId));
+      } catch (error) {
+        console.error("Erreur suppression:", error);
+        alert("Erreur lors de la suppression.");
+      }
+    }
+  };
+
+  const generateSurveyPDF = async (survey) => {
+    const doc = new jsPDF();
+
+    // Fonction pour charger une image de manière asynchrone
+    const loadImage = (src) => new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = (err) => reject(err);
+      img.src = src;
+    });
+
+    try {
+      // Le logo est dans le dossier /public, accessible à la racine
+      const companyLogo = await loadImage('/logoClair.jpg');
+      doc.addImage(companyLogo, 'JPEG', 15, 10, 40, 15);
+    } catch (error) {
+      console.error("Impossible de charger le logo pour le PDF.", error);
+    }
+
+    // Header
+    doc.setFontSize(20);
+    doc.setTextColor(40, 40, 40);
+    doc.text("BUNKER SURVEY REPORT", 105, 22, null, null, "center");
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, null, null, "center");
+
+    // Vessel Info Box
+    autoTable(doc, {
+      startY: 40,
+      head: [['Vessel Particulars', 'Survey Details', 'Commercial Details']],
+      body: [
+        [`Name: ${survey.vesselName}`, `Date: ${survey.date}`, `Owner: ${survey.owner || '-'}`],
+        [`IMO: ${survey.vesselImo}`, `Time: ${survey.fromTime || '-'}`, `Charterer: ${survey.charterer || '-'}`],
+        [`Type: ${survey.type}`, `Status: ${survey.status}`, `Place of Survey: ${survey.location || '-'}`],
+        [`Call Sign: ${survey.vesselCallSign || '-'}`, `Master: ${survey.masterName || '-'}`, `Place of Delivery: ${survey.placeOfDelivery || '-'}`],
+        [`C/E: ${survey.chiefEngineerName || '-'}`, ``, ``]
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185] },
+      styles: { fontSize: 10, cellPadding: 5 }
+    });
+
+    // Préparation des données pour les tables par produit
+    const vessel = vessels.find(v => v.imo === survey.vesselImo);
+    const processedSoundings = (survey.soundings || []).map(s => {
+      let name = s.tankName;
+      let type = s.fuelType;
+      if (!name && vessel) {
+        const t = vessel.tanks.find(vt => vt.id === s.tankId);
+        if (t) { name = t.name; type = t.fuelType; }
+      }
+      return {
+        ...s,
+        tankName: name || s.tankId || 'Unknown',
+        fuelType: type || '-',
+        weight: parseFloat(s.weightInAir || 0)
+      };
+    });
+
+    const fuelCategories = [
+      { title: 'HIGH SULPHUR FUEL OIL (HSFO)', filter: type => type.includes('HSFO') || (type.includes('HFO') && !type.includes('VLSFO')) },
+      { title: 'VERY LOW SULPHUR FUEL OIL (VLSFO)', filter: type => type.includes('VLSFO') },
+      { title: 'MARINE DIESEL OIL (MDO)', filter: type => type.includes('MDO') || (type.includes('MGO') && !type.includes('LSMGO')) },
+      { title: 'LOW SULPHUR MARINE GAS OIL (LSMGO)', filter: type => type.includes('LSMGO') }
+    ];
+
+    let lastY = doc.lastAutoTable.finalY + 10;
+
+    fuelCategories.forEach(cat => {
+      const rows = processedSoundings.filter(s => cat.filter((s.fuelType || '').toUpperCase()));
+      
+      if (rows.length > 0) {
+        const totalWeight = rows.reduce((sum, r) => sum + r.weight, 0);
+        
+        const tableBody = rows.map(r => [
+          r.tankName,
+          r.fuelType,
+          r.sounding || '0',
+          r.temperature || '0',
+          r.densityAt15 || '0',
+          r.observedVolume || '0',
+          r.weight.toFixed(3)
+        ]);
+
+        // Ajouter la ligne de total
+        tableBody.push([
+          { content: 'Total', colSpan: 6, styles: { fontStyle: 'bold', halign: 'right' } },
+          { content: totalWeight.toFixed(3), styles: { fontStyle: 'bold' } }
+        ]);
+
+        // Titre de la catégorie
+        doc.setFontSize(11);
+        doc.setTextColor(0);
+        doc.text(cat.title, 14, lastY);
+
+        autoTable(doc, {
+          startY: lastY + 2,
+          head: [['Tank Name', 'Fuel Type', 'Sounding (m)', 'Temp (C)', 'Density', 'Vol (m3)', 'Weight (MT)']],
+          body: tableBody,
+          theme: 'striped',
+          headStyles: { fillColor: [52, 73, 94] },
+          styles: { fontSize: 9 },
+          columnStyles: { 6: { fontStyle: 'bold' } } // Colonne poids en gras
+        });
+
+        lastY = doc.lastAutoTable.finalY + 15;
+      }
+    });
+
+    // CERTIFICATE OF OFF-HIRE BUNKER QUANTITY REPORT
+    // Ajouter une nouvelle page si nécessaire
+    if (lastY > 200) {
+      doc.addPage();
+      lastY = 30;
+    } else {
+      lastY += 20;
+    }
+
+    // Titre du rapport certificat
+    doc.setFontSize(12);
+    doc.setTextColor(40, 40, 40);
+    doc.setFont(undefined, 'bold');
+    doc.text("CERTIFICATE OF OFF-HIRE BUNKER QUANTITY", 105, lastY, null, null, "center");
+    lastY += 10;
+
+    // Table principale du certificat
+    autoTable(doc, {
+      startY: lastY,
+      head: [['VESSEL NAME', 'MARSHALL ISLANDS']],
+      body: [
+        ['Port of Registry', 'MAJURO'],
+        ['Gross & Net Tons', '24,087/12,210'],
+        ['Place of Redelivery', 'DLOSP CASABLANCA'],
+        ['Date & Time of Redelivery', '28.09.2025 - 12:00'],
+        ['Place of Survey', 'CASABLANCA'],
+        ['Date & Time Survey Completed', 'CASABLANCA - 15:00']
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255] },
+      bodyStyles: { textColor: [0, 0, 0] },
+      columnStyles: { 0: { cellWidth: 80 }, 1: { cellWidth: 90 } },
+      styles: { fontSize: 9, cellPadding: 4 },
+      margin: { left: 14, right: 14 }
+    });
+
+    lastY = doc.lastAutoTable.finalY + 8;
+
+    // Texte explicatif
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'normal');
+    
+    const descriptionText = "This is to certify that MV NIKE, which has above mentioned details, Re-delivered between the parties below subject to all terms conditions and exceptions agreed between Owner and Charterers as per governing Charter Party";
+    doc.text(descriptionText, 14, lastY, { maxWidth: 180, align: 'justify' });
+    lastY += 22;
+
+    // Section des parties (Re-delivered By / To)
+    doc.setFont(undefined, 'bold');
+    doc.text("Re-delivered By", 14, lastY);
+    doc.setFont(undefined, 'normal');
+    doc.text("Pacific BASIN SHIPPING LTD.", 14, lastY + 5);
+    doc.text("Re-Delivered To...", 14, lastY + 10);
+    doc.text("NIKE SHIPPING S.A.", 14, lastY + 15);
+    doc.text("29.09.2025", 14, lastY + 20);
+
+    lastY += 28;
+
+    // Vérifier s'il faut une nouvelle page
+    if (lastY > 220) {
+      doc.addPage();
+      lastY = 30;
+    }
+
+    // Table des bunkers constatés
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'bold');
+    doc.text("The undersigned Master/Surveyor, acting on behalf of PACIFIC BASIN SHIPPING LTD,", 14, lastY);
+    doc.text("carried out bunker Survey in order to determine the amount of bunkers remain on board.", 14, lastY + 5);
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    doc.text("All bunker tanks were carefully sounded, with the presence of the Chief Engineer and the following", 14, lastY + 10);
+    doc.text("quantities found and agreed, as calculated from the vessel's calibration tables.", 14, lastY + 14);
+    
+    lastY += 24;
+
+    // Table de bilan des bunkers
+    autoTable(doc, {
+      startY: lastY,
+      head: [['VLSFO', 'MT', 'Diesel Oil', 'MT', 'MGO', 'MT']],
+      body: [
+        ['473.058', 'Diesel Oil', '0.000', 'MGO', '65.790']
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255] },
+      styles: { fontSize: 9, cellPadding: 4, halign: 'center' },
+      columnStyles: { 0: { cellWidth: 40 }, 1: { cellWidth: 30 }, 2: { cellWidth: 40 }, 3: { cellWidth: 30 }, 4: { cellWidth: 40 }, 5: { cellWidth: 30 } },
+      margin: { left: 14, right: 14 }
+    });
+
+    lastY = doc.lastAutoTable.finalY + 8;
+
+    // Text about calculation
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'normal');
+    const calcText = "The consumption from time of survey to the time of Re-delivery is calculated and verified with the Chief Engineer to be as per C/P:";
+    doc.text(calcText, 14, lastY, { maxWidth: 180, align: 'justify' });
+    lastY += 12;
+
+    // Table de consommation
+    autoTable(doc, {
+      startY: lastY,
+      head: [['VLSFO', 'MT', 'Diesel Oil', 'MT', 'MGO', 'MT']],
+      body: [
+        ['0.000', '0.000', '0.000', '0.000', '0.000', '0.000']
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255] },
+      styles: { fontSize: 9, cellPadding: 4, halign: 'center' },
+      columnStyles: { 0: { cellWidth: 40 }, 1: { cellWidth: 30 }, 2: { cellWidth: 40 }, 3: { cellWidth: 30 }, 4: { cellWidth: 40 }, 5: { cellWidth: 30 } },
+      margin: { left: 14, right: 14 }
+    });
+
+    lastY = doc.lastAutoTable.finalY + 8;
+
+    // Text about expected bunkers
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'normal');
+    const expectedText = "Consequently, the following Bunkers are expected to be onboard at the time of Re-delivery:";
+    doc.text(expectedText, 14, lastY, { maxWidth: 180, align: 'left' });
+    lastY += 8;
+
+    // Table des bunkers attendus
+    doc.setFont(undefined, 'bold');
+    doc.text("Vessel supplied:", 14, lastY);
+    lastY += 5;
+
+    autoTable(doc, {
+      startY: lastY,
+      head: [['VLSFO', 'MT', 'Fuel Oil', 'MT', 'MGO', 'MT']],
+      body: [
+        ['473.058', 'Fuel Oil', '0.000', 'MGO', '65.790']
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255] },
+      styles: { fontSize: 9, cellPadding: 4, halign: 'center' },
+      columnStyles: { 0: { cellWidth: 40 }, 1: { cellWidth: 30 }, 2: { cellWidth: 40 }, 3: { cellWidth: 30 }, 4: { cellWidth: 40 }, 5: { cellWidth: 30 } },
+      margin: { left: 14, right: 14 }
+    });
+
+    lastY = doc.lastAutoTable.finalY + 8;
+
+    // Remark section
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(8);
+    const remarkText = "REMARK: Master will re-confirm by teles or E-Mail exact delivery time and figures.";
+    doc.text(remarkText, 14, lastY, { maxWidth: 180, align: 'left' });
+
+    lastY += 12;
+
+    // Signed section
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'bold');
+    doc.text("SIGNED", 14, lastY);
+    doc.text("On behalf of Owners", 14, lastY + 8);
+    doc.text("The Master of", 14, lastY + 16);
+    doc.text("MV NIKE", 14, lastY + 24);
+
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    doc.line(14, lastY + 32, 60, lastY + 32);
+    doc.text("Captain/Master", 14, lastY + 36, { align: 'center' });
+
+    doc.setFontSize(9);
+    doc.line(100, lastY + 32, 146, lastY + 32);
+    doc.text("Chief Engineer", 100, lastY + 36, { align: 'center' });
+
+    doc.setFontSize(9);
+    doc.line(166, lastY + 32, 212, lastY + 32);
+    doc.text("Date", 166, lastY + 36, { align: 'center' });
+
+    lastY += 50;
+
+    // Section Signatures du rapport de survey original
+    // Vérifier s'il reste assez d'espace sur la page, sinon nouvelle page
+    // if (lastY > 240) {
+    //   doc.addPage();
+    //   lastY = 30;
+    // }
+
+    // const sigY = lastY + 10;
+    // doc.setFontSize(10);
+    // doc.setTextColor(0);
+    // doc.setFont(undefined, 'normal');
+    
+    // // Zone 1
+    // doc.text("For the Vessel (Master/C/E)", 40, sigY, { align: "center" });
+    // doc.line(20, sigY + 15, 60, sigY + 15);
+    // doc.text("Name & Signature", 40, sigY + 22, { align: "center" });
+
+    // // Zone 2
+    // doc.text("For the Surveyor", 105, sigY, { align: "center" });
+    // doc.line(85, sigY + 15, 125, sigY + 15);
+    // doc.text("Name & Signature", 105, sigY + 22, { align: "center" });
+
+    // // Zone 3
+    // doc.text("For the Charterer/Rep", 170, sigY, { align: "center" });
+    // doc.line(150, sigY + 15, 190, sigY + 15);
+    // doc.text("Name & Signature", 170, sigY + 22, { align: "center" });
+
+    // doc.save(`Survey_${survey.vesselName}_${survey.date}.pdf`);
+  };
+
+  const handleViewDetails = (survey) => {
+    // Trouver le navire correspondant pour récupérer la config des tanks
+    const vessel = vessels.find(v => v.imo === survey.vesselImo) || null;
+    
+    setSelectedVessel(vessel);
+    
+    // Remplir les détails du formulaire
+    setSurveyDetails({
+      client: survey.client || '',
+      owner: survey.owner || '',
+      charterer: survey.charterer || '',
+      location: survey.location || '',
+      placeOfDelivery: survey.placeOfDelivery || '',
+      surveyType: survey.type || 'ONHIRE SURVEY',
+      fromTime: survey.fromTime || '',
+      toTime: survey.toTime || '',
+      draftFwd: survey.draftFwd || '',
+      draftAft: survey.draftAft || '',
+      voy: survey.voy || '',
+      list: survey.list || '',
+      er: survey.er || '',
+      thermometer: survey.thermometer || '',
+      vesselNameEditable: survey.vesselName || '',
+      vesselImoEditable: survey.vesselImo || '',
+      vesselCallSignEditable: survey.vesselCallSign || '',
+      masterName: survey.masterName || '',
+      chiefEngineerName: survey.chiefEngineerName || '',
+      logBookEntries: survey.logBookEntries || []
+    });
+
+    // Passer les données de sondage sauvegardées au calculateur
+    setInitialFuelEntries(survey.soundings || []);
+    setIsCreatingSurvey(true);
   };
 
   const handleAiConsult = async () => {
     if (!aiPrompt.trim()) return;
     setIsAiLoading(true);
-    const response = await getMaritimeAssistantResponse(aiPrompt);
-    setAiResponse(response || '');
-    setIsAiLoading(false);
+    try {
+      const response = await getMaritimeAssistantResponse(aiPrompt);
+      setAiResponse(response || '');
+    } catch (error) {
+      setAiResponse("Erreur lors de la consultation.");
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   const handleAddLogBookEntry = () => {
@@ -244,6 +674,13 @@ const OnHire = () => {
                 <div className="flex justify-between items-center">
                   <h2 className="text-2xl font-bold text-slate-900">Onhire / Offhire Reports</h2>
                   <div className="flex gap-4">
+                    <button
+                      onClick={() => handleCreateSurvey(null)}
+                      className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors flex items-center gap-2 shadow-sm"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Blank Survey
+                    </button>
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input 
@@ -283,37 +720,51 @@ const OnHire = () => {
                     <h3 className="font-semibold text-slate-800">Recent Reports</h3>
                   </div>
                   <div className="divide-y divide-slate-100">
-                    {surveys.map(s => (
-                      <div key={s.id} className="p-4 flex flex-wrap md:flex-nowrap items-center gap-6 hover:bg-slate-50 transition-colors">
-                        <div className="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-slate-400">
-                          <ClipboardCheck className="w-6 h-6" />
-                        </div>
-                        <div className="flex-1 min-w-[200px]">
-                          <p className="font-bold text-slate-900">{s.vesselName}</p>
-                          <p className="text-xs text-slate-500">{s.date} • {s.location}</p>
-                        </div>
-                        <div className="flex-1">
-                          <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            s.type === SurveyType.ONHIRE ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
-                          }`}>
-                            {s.type}
-                          </span>
-                        </div>
-                        <div className="flex gap-8">
-                          <div className="text-right">
-                            <p className="text-xs text-slate-400 uppercase font-bold">HFO ROB</p>
-                            <p className="font-mono font-bold text-slate-900">{s.totalHFO} MT</p>
+                    {isLoadingSurveys ? (
+                      <div className="p-6 text-center text-slate-500">Chargement des rapports...</div>
+                    ) : surveys.length > 0 ? (
+                      surveys.map(s => (
+                        <div key={s.id} className="p-4 flex flex-wrap md:flex-nowrap items-center gap-6 hover:bg-slate-50 transition-colors">
+                          <div className="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-slate-400">
+                            <ClipboardCheck className="w-6 h-6" />
                           </div>
-                          <div className="text-right">
-                            <p className="text-xs text-slate-400 uppercase font-bold">MGO ROB</p>
-                            <p className="font-mono font-bold text-slate-900">{s.totalMGO} MT</p>
+                          <div className="flex-1 min-w-[200px]">
+                            <p className="font-bold text-slate-900">{s.vesselName}</p>
+                            <p className="text-xs text-slate-500">{s.date} • {s.location}</p>
+                          </div>
+                          <div className="flex-1">
+                            <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                              s.type === SurveyType.ONHIRE ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+                            }`}>
+                              {s.type}
+                            </span>
+                          </div>
+                          <div className="flex gap-8">
+                            <div className="text-right">
+                              <p className="text-xs text-slate-400 uppercase font-bold">HFO ROB</p>
+                              <p className="font-mono font-bold text-slate-900">{s.totalHFO} MT</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs text-slate-400 uppercase font-bold">MGO ROB</p>
+                              <p className="font-mono font-bold text-slate-900">{s.totalMGO} MT</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={() => handleViewDetails(s)} className="px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg">
+                              Details
+                            </button>
+                            <button onClick={() => generateSurveyPDF(s)} className="px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg" title="Télécharger PDF">
+                              <FileDown className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleDeleteSurvey(s.id)} className="px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg" title="Supprimer">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
                           </div>
                         </div>
-                        <button className="px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg">
-                          Details
-                        </button>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <div className="p-6 text-center text-slate-500">Aucun rapport trouvé pour votre compte. Créez-en un !</div>
+                    )}
                   </div>
                 </div>
               </>
@@ -349,18 +800,20 @@ const OnHire = () => {
                             <label className="block text-sm font-medium text-slate-700 mb-2">IMO Number</label>
                             <input
                               type="text"
-                              value={selectedVessel?.imo}
-                              disabled
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-600 font-mono"
+                              value={surveyDetails.vesselImoEditable}
+                              onChange={(e) => setSurveyDetails({ ...surveyDetails, vesselImoEditable: e.target.value })}
+                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono"
+                              placeholder="IMO Number"
                             />
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">Call Sign</label>
                             <input
                               type="text"
-                              value={selectedVessel?.callSign || ''}
-                              disabled
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-600 font-mono"
+                              value={surveyDetails.vesselCallSignEditable}
+                              onChange={(e) => setSurveyDetails({ ...surveyDetails, vesselCallSignEditable: e.target.value })}
+                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono"
+                              placeholder="Call Sign"
                             />
                           </div>
                         </div>
@@ -398,6 +851,28 @@ const OnHire = () => {
                               onChange={(e) => setSurveyDetails({ ...surveyDetails, charterer: e.target.value })}
                               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="0"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">Master's Name</label>
+                            <input
+                              type="text"
+                              value={surveyDetails.masterName}
+                              onChange={(e) => setSurveyDetails({ ...surveyDetails, masterName: e.target.value })}
+                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="Capt. Name"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">Chief Engineer</label>
+                            <input
+                              type="text"
+                              value={surveyDetails.chiefEngineerName}
+                              onChange={(e) => setSurveyDetails({ ...surveyDetails, chiefEngineerName: e.target.value })}
+                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="C/E Name"
                             />
                           </div>
                         </div>
@@ -505,11 +980,21 @@ const OnHire = () => {
                           <h3 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">Other Details</h3>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-sm font-medium text-slate-700 mb-2">Location/Port</label>
+                              <label className="block text-sm font-medium text-slate-700 mb-2">Place of Survey</label>
                               <input
                                 type="text"
                                 value={surveyDetails.location}
                                 onChange={(e) => setSurveyDetails({ ...surveyDetails, location: e.target.value })}
+                                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Port of survey"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-slate-700 mb-2">Place of Delivery</label>
+                              <input
+                                type="text"
+                                value={surveyDetails.placeOfDelivery}
+                                onChange={(e) => setSurveyDetails({ ...surveyDetails, placeOfDelivery: e.target.value })}
                                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Port of delivery"
                               />
@@ -653,7 +1138,7 @@ const OnHire = () => {
                 </div>
                 
                 {selectedVessel && (
-                  <FuelCalculator tanks={selectedVessel.tanks} onSave={handleSaveSurvey} />
+                  <FuelCalculator tanks={selectedVessel.tanks} onSave={handleSaveSurvey} initialData={initialFuelEntries} />
                 )}
               </div>
             )}
@@ -1017,6 +1502,68 @@ const OnHire = () => {
                         </p>
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                {/* Survey History & Certificates Section */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                  <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                      <ClipboardCheck className="w-5 h-5 text-blue-500" />
+                      Survey Certificates & History
+                    </h3>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider">
+                        <tr>
+                          <th className="px-6 py-4">Date</th>
+                          <th className="px-6 py-4">Type</th>
+                          <th className="px-6 py-4">Location</th>
+                          <th className="px-6 py-4">Commercial Parties</th>
+                          <th className="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {surveys.filter(s => s.vesselImo === detailedVessel.imo).length > 0 ? (
+                          surveys.filter(s => s.vesselImo === detailedVessel.imo).map(survey => (
+                            <tr key={survey.id} className="hover:bg-slate-50/50 transition-colors">
+                              <td className="px-6 py-4 font-semibold text-slate-800">{survey.date}</td>
+                              <td className="px-6 py-4">
+                                <span className={`px-2 py-1 rounded text-[10px] font-bold ${
+                                  survey.type.includes('ONHIRE') ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
+                                }`}>
+                                  {survey.type}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-slate-600">
+                                <div>{survey.location}</div>
+                                <div className="text-xs text-slate-400">{survey.placeOfDelivery}</div>
+                              </td>
+                              <td className="px-6 py-4 text-xs text-slate-500">
+                                <div><span className="font-semibold">Chart:</span> {survey.charterer || '-'}</div>
+                                <div><span className="font-semibold">Own:</span> {survey.owner || '-'}</div>
+                              </td>
+                              <td className="px-6 py-4 text-right">
+                                <button 
+                                  onClick={() => generateSurveyPDF(survey)}
+                                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg"
+                                >
+                                  <FileDown className="w-4 h-4" />
+                                  Certificate
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="5" className="px-6 py-8 text-center text-slate-500 italic">
+                              No surveys recorded for this vessel yet.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>

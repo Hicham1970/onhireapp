@@ -1,27 +1,96 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Calculator, Save, Info, RefreshCw, Gauge, Edit3, FileText, Plus, Trash2 } from 'lucide-react';
 
-export const FuelCalculator = ({ tanks, onSave }) => {
-  const [manualHfo, setManualHfo] = useState('');
-  const [manualMgo, setManualMgo] = useState('');
+export const FuelCalculator = ({ tanks, onSave, initialData }) => {
   const [extraTanks, setExtraTanks] = useState([]);
-  
+  const [summaryValues, setSummaryValues] = useState({
+    VLSFO: '',
+    HSFO: '',
+    MDO: '',
+    LSMGO: '',
+  });
+  const [dirtySummary, setDirtySummary] = useState({
+    VLSFO: false,
+    HSFO: false,
+    MDO: false,
+    LSMGO: false,
+  });
+
   const [entries, setEntries] = useState(() => {
     const initial = {};
+    // Créer une map des données sauvegardées pour un accès rapide
+    const savedMap = initialData ? initialData.reduce((acc, curr) => ({...acc, [curr.tankId]: curr}), {}) : {};
+
     tanks.forEach(t => {
-      initial[t.id] = {
-        tankId: t.id,
-        sounding: 0,
-        temperature: 15,
-        densityAt15: t.fuelType.includes('HFO') || t.fuelType.includes('VLSFO') ? 0.9910 : 0.8450,
-        observedVolume: 0
-      };
+      if (savedMap[t.id]) {
+        initial[t.id] = { ...savedMap[t.id] };
+      } else {
+        initial[t.id] = {
+          tankId: t.id,
+          sounding: 0,
+          temperature: 15,
+          densityAt15: t.fuelType.includes('HFO') || t.fuelType.includes('VLSFO') ? 0.9910 : 0.8450,
+          observedVolume: 0
+        };
+      }
     });
     return initial;
   });
 
   const allTanks = [...tanks, ...extraTanks];
+
+  // Reset dirty flags when tanks change (new survey)
+  useEffect(() => {
+    setDirtySummary({
+      VLSFO: false,
+      HSFO: false,
+      MDO: false,
+      LSMGO: false,
+    });
+  }, [tanks]);
+
+  const calculatedTotals = useMemo(() => {
+    const fuelTotals = {
+      VLSFO: 0,
+      HSFO: 0,
+      MDO: 0,
+      LSMGO: 0,
+    };
+
+    Object.values(entries).forEach(entry => {
+      if (entry.tankId && entry.weightInAir) {
+        const tank = allTanks.find(t => t.id === entry.tankId);
+        if (tank) {
+          if (tank.fuelType.includes('VLSFO')) {
+            fuelTotals.VLSFO += entry.weightInAir;
+          } else if (tank.fuelType.includes('HSFO') || (tank.fuelType.includes('HFO') && !tank.fuelType.includes('VLSFO'))) {
+            fuelTotals.HSFO += entry.weightInAir;
+          } else if (tank.fuelType.includes('MDO') || (tank.fuelType.includes('MGO') && !tank.fuelType.includes('LSMGO'))) {
+            fuelTotals.MDO += entry.weightInAir;
+          } else if (tank.fuelType.includes('LSMGO')) {
+            fuelTotals.LSMGO += entry.weightInAir;
+          }
+        }
+      }
+    });
+
+    return {
+      VLSFO: fuelTotals.VLSFO.toFixed(3),
+      HSFO: fuelTotals.HSFO.toFixed(3),
+      MDO: fuelTotals.MDO.toFixed(3),
+      LSMGO: fuelTotals.LSMGO.toFixed(3),
+    };
+  }, [entries, allTanks]);
+
+  useEffect(() => {
+    setSummaryValues(prev => ({
+      VLSFO: dirtySummary.VLSFO ? prev.VLSFO : calculatedTotals.VLSFO,
+      HSFO: dirtySummary.HSFO ? prev.HSFO : calculatedTotals.HSFO,
+      MDO: dirtySummary.MDO ? prev.MDO : calculatedTotals.MDO,
+      LSMGO: dirtySummary.LSMGO ? prev.LSMGO : calculatedTotals.LSMGO,
+    }));
+  }, [calculatedTotals, dirtySummary]);
 
   const calculateCorrected = (tankId) => {
     const entry = entries[tankId];
@@ -76,10 +145,17 @@ export const FuelCalculator = ({ tanks, onSave }) => {
   };
 
   const handleSave = () => {
-    const validEntries = Object.values(entries).filter(e => e.tankId);
-    const hfoVal = manualHfo ? parseFloat(manualHfo) : undefined;
-    const mgoVal = manualMgo ? parseFloat(manualMgo) : undefined;
-    onSave(validEntries, hfoVal, mgoVal);
+    const validEntries = Object.values(entries).filter(e => e.tankId).map(entry => {
+      const tank = allTanks.find(t => t.id === entry.tankId);
+      return {
+        ...entry,
+        tankName: tank ? tank.name : 'Unknown Tank',
+        fuelType: tank ? tank.fuelType : 'Unknown'
+      };
+    });
+    const hfoTotal = parseFloat(summaryValues.VLSFO || 0) + parseFloat(summaryValues.HSFO || 0);
+    const mgoTotal = parseFloat(summaryValues.MDO || 0) + parseFloat(summaryValues.LSMGO || 0);
+    onSave(validEntries, hfoTotal, mgoTotal);
   };
 
   const handleAddTank = (group) => {
@@ -289,7 +365,12 @@ export const FuelCalculator = ({ tanks, onSave }) => {
               <div className="relative">
                 <input
                   type="number"
-                  placeholder="0.000"
+                  placeholder={calculatedTotals[fuel]}
+                  value={summaryValues[fuel]}
+                  onChange={(e) => {
+                    setSummaryValues(prev => ({ ...prev, [fuel]: e.target.value }));
+                    setDirtySummary(prev => ({ ...prev, [fuel]: true }));
+                  }}
                   className="w-full px-3 py-2 border border-slate-200 rounded text-sm outline-none focus:ring-1 focus:ring-blue-500 font-mono"
                 />
               </div>

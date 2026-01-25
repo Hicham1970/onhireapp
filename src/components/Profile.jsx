@@ -21,7 +21,7 @@ function Profile({ username, email, password }) {
       <div className="h-20 w-20 rounded-full bg-gray-500 mx-auto"></div>
       <div className="flex justify-center gap-2 items-center">
         <p className="text-center font-semibold text-xl">{username}</p>{" "}
-        <Link to="/profile/edit" className="p-2 bg-gray-300 rounded-lg">Edit</Link>
+        <Link to={`/users/${username}/edit`} className="p-2 bg-gray-300 rounded-lg">Edit</Link>
       </div>
       <p>Email: {email}</p>
       {password}

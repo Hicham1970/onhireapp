@@ -10,6 +10,8 @@ import Edit from './pages/Edit';
 import User from './pages/User';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
+import Users from './pages/Users';
+import Notfound from './pages/Notfound';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/users/:username/edit" element={<Edit />} />
         <Route path="/users/:username" element={<User />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="*" element={<Notfound />} />
       </Routes>
     </>
   );

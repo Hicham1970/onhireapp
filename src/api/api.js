@@ -1,4 +1,4 @@
-import { ref, get, set, remove, update } from "firebase/database";
+import { ref, get, set, remove, update, push } from "firebase/database";
 import { database } from "../firebase";
 
 // Ajout d'un utilisateur
@@ -66,11 +66,11 @@ export const getPesageEntries = async (userId) => {
 export const saveSurvey = async (userId, surveyData) => {
     if (!userId) throw new Error("Un identifiant utilisateur est requis pour sauvegarder le survey.");
     try {
-        // Les données sont stockées sous un chemin spécifique à l'utilisateur
-        // On peut imaginer une structure `surveys/{userId}/{surveyId}` si il y a plusieurs surveys
-        // Pour cet exemple, on sauvegarde un seul objet de survey par utilisateur.
-        await set(ref(database, `surveys/${userId}`), surveyData);
-        return { success: true };
+        // On utilise push pour générer un ID unique pour chaque nouveau survey
+        const userSurveysRef = ref(database, `surveys/${userId}`);
+        const newSurveyRef = push(userSurveysRef);
+        await set(newSurveyRef, surveyData);
+        return { success: true, surveyId: newSurveyRef.key };
     } catch (error) {
         throw new Error(error.message);
     }
@@ -82,11 +82,67 @@ export const getSurveys = async (userId) => {
     try {
         const snapshot = await get(ref(database, `surveys/${userId}`));
         if (snapshot.exists()) {
-            return snapshot.val(); // Retourne les données si elles existent
+            const data = snapshot.val();
+            // Convertit l'objet de surveys en un tableau
+            return Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            })).reverse(); // reverse() pour afficher les plus récents en premier
         } else {
-            return null; // Retourne null si aucune donnée n'est trouvée
+            return []; // Retourne un tableau vide si aucune donnée n'est trouvée
         }
     } catch (error) {
+        if ((error.message && error.message.toLowerCase().includes("permission denied")) || (error.code && error.code.includes("permission-denied"))) {
+            console.warn("Firebase: Permission refusée pour getSurveys. Vérifiez les règles de la base de données.");
+            return [];
+        }
+        throw new Error(error.message);
+    }
+};
+
+// Supprimer un survey
+export const deleteSurvey = async (userId, surveyId) => {
+    if (!userId || !surveyId) throw new Error("ID utilisateur et ID survey requis.");
+    try {
+        await remove(ref(database, `surveys/${userId}/${surveyId}`));
+        return { success: true };
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+// Sauvegarder un nouveau navire pour un utilisateur
+export const saveVessel = async (userId, vesselData) => {
+    if (!userId) throw new Error("Un identifiant utilisateur est requis pour sauvegarder le navire.");
+    try {
+        const userVesselsRef = ref(database, `vessels/${userId}`);
+        const newVesselRef = push(userVesselsRef);
+        await set(newVesselRef, vesselData);
+        return { success: true, vesselId: newVesselRef.key };
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+// Récupérer les navires pour un utilisateur
+export const getVessels = async (userId) => {
+    if (!userId) throw new Error("Un identifiant utilisateur est requis pour récupérer les navires.");
+    try {
+        const snapshot = await get(ref(database, `vessels/${userId}`));
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            return Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            }));
+        } else {
+            return [];
+        }
+    } catch (error) {
+        if ((error.message && error.message.toLowerCase().includes("permission denied")) || (error.code && error.code.includes("permission-denied"))) {
+            console.warn("Firebase: Permission refusée pour getVessels. Vérifiez les règles de la base de données.");
+            return [];
+        }
         throw new Error(error.message);
     }
 };

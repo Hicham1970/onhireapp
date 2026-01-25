@@ -2,21 +2,22 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { AlertContext } from "../context/AlertContext";
 import { useAppState, useUser } from "../hooks/Hooks";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
 function Login() {
   const { dispatchUser } = useContext(UserContext);
   const { dispatchAlert } = useContext(AlertContext);
+  const navigate = useNavigate();
 
   const { user } = useUser();
 
   useEffect(() => {
     if (user) {
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const [userDetails, setUserDetails] = useState({
     email: "",
