@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { saveFullReport } from '../../api/api';
 import { storage } from '../../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { Save, X, Loader, FileDown } from 'lucide-react';
+import { Save, X, Loader, FileDown, Sun, Moon } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -33,6 +34,7 @@ const reportSections = [
 
 const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
     const { currentUser } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const [activeSection, setActiveSection] = useState(reportSections[0].id);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -415,17 +417,17 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
 
     return (
         <div className="fixed inset-0 bg-slate-800 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-slate-50 w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl flex overflow-hidden">
+            <div className="bg-slate-50 dark:bg-slate-900 w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl flex overflow-hidden transition-colors duration-300">
                 {/* Sidebar de navigation */}
-                <aside className="w-1/4 bg-white border-r border-slate-200 p-4 overflow-y-auto">
-                    <h2 className="font-bold text-lg mb-1 text-slate-800">{reportData.vesselName || 'Navire Inconnu'}</h2>
-                    <p className="text-sm text-slate-500 mb-6">Rapport d'inspection</p>
+                <aside className="w-1/4 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-4 overflow-y-auto">
+                    <h2 className="font-bold text-lg mb-1 text-slate-800 dark:text-white">{reportData.vesselName || 'Navire Inconnu'}</h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Rapport d'inspection</p>
                     <nav className="space-y-1">
                         {reportSections.map(section => (
                             <button
                                 key={section.id}
                                 onClick={() => setActiveSection(section.id)}
-                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeSection === section.id ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'}`}
+                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeSection === section.id ? 'bg-maritime-100 text-maritime-800 dark:bg-maritime-900 dark:text-maritime-200' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
                             >
                                 {section.title}
                             </button>
@@ -435,19 +437,25 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
 
                 {/* Contenu principal */}
                 <main className="w-3/4 flex flex-col">
-                    <header className="flex justify-end items-center p-4 border-b border-slate-200 bg-white">
-                        <button onClick={onCancel} className="bg-white hover:bg-slate-100 text-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 mr-3">
+                    <header className="flex justify-end items-center p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                        <button 
+                            onClick={toggleTheme} 
+                            className="p-2 mr-4 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+                        >
+                            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                        </button>
+                        <button onClick={onCancel} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600 mr-3">
                             <X className="w-4 h-4" /> Fermer
                         </button>
-                        <button onClick={generatePDF} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm mr-3">
+                        <button onClick={generatePDF} className="bg-maritime-600 hover:bg-maritime-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm mr-3">
                             <FileDown className="w-4 h-4" /> Télécharger PDF
                         </button>
-                        <button onClick={handleSave} disabled={isSaving} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50">
+                        <button onClick={handleSave} disabled={isSaving} className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50">
                             {isSaving ? <Loader className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                             {isSaving ? 'Sauvegarde...' : 'Sauvegarder le Rapport'}
                         </button>
                     </header>
-                    <div className="flex-1 overflow-y-auto p-6">
+                    <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
                         {renderSectionComponent()}
                     </div>
                 </main>

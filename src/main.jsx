@@ -6,15 +6,18 @@ import './index.css'
 import UserProvider from './context/UserContext'
 import AlertProvider from './context/AlertContext' // Assurez-vous que ce fichier existe aussi
 import { AuthProvider } from './context/AuthContext.jsx'
+import { ThemeProvider } from './context/ThemeContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <UserProvider>
         <AlertProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <ThemeProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ThemeProvider>
         </AlertProvider>
       </UserProvider>
     </AuthProvider>

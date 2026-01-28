@@ -199,10 +199,10 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
 
   const getColorStyles = (color) => {
     const styles = {
-      amber: { bg: 'bg-amber-50', text: 'text-amber-600', textBold: 'text-amber-700', hover: 'hover:bg-amber-100' },
-      orange: { bg: 'bg-orange-50', text: 'text-orange-600', textBold: 'text-orange-700', hover: 'hover:bg-orange-100' },
-      blue: { bg: 'bg-blue-50', text: 'text-blue-600', textBold: 'text-blue-700', hover: 'hover:bg-blue-100' },
-      sky: { bg: 'bg-sky-50', text: 'text-sky-600', textBold: 'text-sky-700', hover: 'hover:bg-sky-100' },
+      amber: { bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400', textBold: 'text-amber-700 dark:text-amber-300', hover: 'hover:bg-amber-100 dark:hover:bg-amber-900/50' },
+      orange: { bg: 'bg-orange-50 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400', textBold: 'text-orange-700 dark:text-orange-300', hover: 'hover:bg-orange-100 dark:hover:bg-orange-900/50' },
+      blue: { bg: 'bg-blue-50 dark:bg-blue-900/30', text: 'text-blue-600 dark:text-blue-400', textBold: 'text-blue-700 dark:text-blue-300', hover: 'hover:bg-blue-100 dark:hover:bg-blue-900/50' },
+      sky: { bg: 'bg-sky-50 dark:bg-sky-900/30', text: 'text-sky-600 dark:text-sky-400', textBold: 'text-sky-700 dark:text-sky-300', hover: 'hover:bg-sky-100 dark:hover:bg-sky-900/50' },
     };
     return styles[color] || styles.blue;
   };
@@ -214,34 +214,34 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
     const styles = getColorStyles(group.color);
 
     return (
-      <div key={group.name} className="mb-8 overflow-hidden bg-white border border-slate-200">
+      <div key={group.name} className="mb-8 overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
         <div className={`px-4 py-2 ${styles.bg} border-b border-slate-200 text-center font-bold text-slate-700 text-sm uppercase tracking-widest`}>
           {group.name}
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[11px] text-center border-collapse">
-            <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+            <thead className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
               <tr>
-                <th className="px-2 py-3 border-r border-slate-200 min-w-[100px]">Tank Nº</th>
-                <th className="px-2 py-3 border-r border-slate-200">Tank Depth (m)</th>
-                <th className="px-2 py-3 border-r border-slate-200">Sound./Ullage Corr'd (m)</th>
-                <th className="px-2 py-3 border-r border-slate-200">Volume (m³)</th>
-                <th className="px-2 py-3 border-r border-slate-200">Density (T/m³) @15°C</th>
-                <th className="px-2 py-3 border-r border-slate-200">T° Deg (C)</th>
-                <th className="px-2 py-3 border-r border-slate-200">V.C.F. T (54B)</th>
-                <th className="px-2 py-3 border-r border-slate-200">G.S.V (m³) @ 15°C</th>
-                <th className="px-2 py-3 border-r border-slate-200">T (In Vac.)</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700 min-w-[100px]">Tank Nº</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">Tank Depth (m)</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">Sound./Ullage Corr'd (m)</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">Volume (m³)</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">Density (T/m³) @15°C</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">T° Deg (C)</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">V.C.F. T (54B)</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">G.S.V (m³) @ 15°C</th>
+                <th className="px-2 py-3 border-r border-slate-200 dark:border-slate-700">T (In Vac.)</th>
                 <th className="px-2 py-3">T (In Air)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
               {filteredTanks.map((tank) => (
-                <tr key={tank.id} className="hover:bg-slate-50">
-                  <td className="px-2 py-2 border-r border-slate-200 font-medium text-slate-800">
+                <tr key={tank.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700 font-medium text-slate-800 dark:text-slate-200">
                     {tank.isManual ? (
                       <input 
                         type="text" 
-                        className="w-full bg-transparent border-b border-slate-200 outline-none focus:border-blue-500 text-center"
+                        className="w-full bg-transparent border-b border-slate-200 dark:border-slate-600 outline-none focus:border-blue-500 text-center"
                         value={tank.name}
                         onChange={(e) => handleTankNameChange(tank.id, e.target.value)}
                       />
@@ -250,57 +250,57 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
                     )}
                     <div className="text-[9px] text-slate-400 font-normal uppercase">{tank.fuelType}</div>
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700">
                      <input
                       type="number"
                       step="0.001"
-                      className="w-full text-center outline-none bg-transparent"
+                      className="w-full text-center outline-none bg-transparent dark:text-slate-200"
                       defaultValue={tank.depth || 0}
                     />
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700">
                     <input
                       type="number"
                       step="0.001"
-                      className="w-full text-center outline-none bg-transparent font-mono"
+                      className="w-full text-center outline-none bg-transparent font-mono dark:text-slate-200"
                       value={entries[tank.id]?.sounding || 0}
                       onChange={(e) => handleInputChange(tank.id, 'sounding', e.target.value)}
                     />
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700">
                     <input
                       type="number"
                       step="0.01"
-                      className="w-full text-center outline-none bg-transparent font-mono"
+                      className="w-full text-center outline-none bg-transparent font-mono dark:text-slate-200"
                       value={entries[tank.id]?.observedVolume || 0}
                       onChange={(e) => handleInputChange(tank.id, 'observedVolume', e.target.value)}
                     />
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700">
                     <input
                       type="number"
                       step="0.0001"
-                      className="w-full text-center outline-none bg-transparent font-mono"
+                      className="w-full text-center outline-none bg-transparent font-mono dark:text-slate-200"
                       value={entries[tank.id]?.densityAt15 || 0}
                       onChange={(e) => handleInputChange(tank.id, 'densityAt15', e.target.value)}
                     />
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700">
                     <input
                       type="number"
                       step="0.1"
-                      className="w-full text-center outline-none bg-transparent font-mono"
+                      className="w-full text-center outline-none bg-transparent font-mono dark:text-slate-200"
                       value={entries[tank.id]?.temperature || 0}
                       onChange={(e) => handleInputChange(tank.id, 'temperature', e.target.value)}
                     />
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200 font-mono text-slate-500">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700 font-mono text-slate-500 dark:text-slate-400">
                     {entries[tank.id]?.vcf || '0,00000'}
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200 font-mono text-slate-500">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700 font-mono text-slate-500 dark:text-slate-400">
                     {entries[tank.id]?.gsv || '0,00'}
                   </td>
-                  <td className="px-2 py-2 border-r border-slate-200 font-mono text-slate-500">
+                  <td className="px-2 py-2 border-r border-slate-200 dark:border-slate-700 font-mono text-slate-500 dark:text-slate-400">
                     {entries[tank.id]?.weightInVacuum || '0,000'}
                   </td>
                   <td className={`px-2 py-2 font-mono font-bold ${styles.textBold}`}>
@@ -308,7 +308,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
                       <span>{entries[tank.id]?.weightInAir || '0,000'}</span>
                       <button 
                         onClick={() => calculateCorrected(tank.id)}
-                        className={`p-1 hover:bg-slate-200 rounded text-slate-400 ${styles.hover} transition-colors`}
+                        className={`p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-400 ${styles.hover} transition-colors`}
                       >
                         <RefreshCw className="w-3 h-3" />
                       </button>
@@ -327,8 +327,8 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
             </tbody>
           </table>
         </div>
-        <div className="p-2 bg-slate-50 border-t border-slate-200">
-          <button onClick={() => handleAddTank(group)} className={`w-full py-2 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider ${styles.text} hover:bg-white rounded border border-transparent hover:border-slate-200 transition-all`}>
+        <div className="p-2 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+          <button onClick={() => handleAddTank(group)} className={`w-full py-2 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider ${styles.text} hover:bg-white dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-200 dark:hover:border-slate-600 transition-all`}>
             <Plus className="w-4 h-4" />
             Add {group.defaultType} Tank
           </button>
@@ -340,7 +340,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <FileText className="w-6 h-6 text-blue-600" />
           Tank Sounding Details
         </h2>
@@ -353,8 +353,8 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
         </button>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
-        <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-4 text-sm">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm mb-6">
+        <h3 className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-4 text-sm">
           <Edit3 className="w-4 h-4 text-indigo-600" />
           Summary Overrides
         </h3>
@@ -371,7 +371,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
                     setSummaryValues(prev => ({ ...prev, [fuel]: e.target.value }));
                     setDirtySummary(prev => ({ ...prev, [fuel]: true }));
                   }}
-                  className="w-full px-3 py-2 border border-slate-200 rounded text-sm outline-none focus:ring-1 focus:ring-blue-500 font-mono"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm outline-none focus:ring-1 focus:ring-blue-500 font-mono"
                 />
               </div>
             </div>
@@ -381,7 +381,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
 
       {fuelGroups.map(renderTable)}
 
-      <div className="p-4 bg-slate-50 border border-slate-200 rounded text-[10px] text-slate-500 italic">
+      <div className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded text-[10px] text-slate-500 dark:text-slate-400 italic">
         * Standard ASTM D1250 Table 54B used for V.C.F calculation. Tab (In Air) uses density buoyancy factor of -0.0011.
       </div>
     </div>

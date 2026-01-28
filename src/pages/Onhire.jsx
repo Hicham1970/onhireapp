@@ -603,13 +603,13 @@ const OnHire = () => {
           <div className="space-y-6">
             <header className="flex justify-between items-end">
               <div>
-                <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-blue-600 tracking-tight">Fleet Dashboard</h1>
-                <p className="text-slate-500 mt-1">Operational summary and fuel trends.</p>
+                <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-maritime-600 dark:from-white dark:to-maritime-400 tracking-tight">Fleet Dashboard</h1>
+                <p className="text-slate-500 dark:text-slate-400 mt-1">Operational summary and fuel trends.</p>
               </div>
               <div className="flex gap-3">
                 <button 
                   onClick={() => setActiveTab('surveys')}
-                  className="bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2"
+                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-slate-700 dark:text-slate-200"
                 >
                   <History className="w-4 h-4" />
                   View History
@@ -618,23 +618,23 @@ const OnHire = () => {
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-emerald-500">
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-emerald-500">
                 <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Active Charters</p>
-                <p className="text-4xl font-bold text-slate-900 mt-2">12</p>
+                <p className="text-4xl font-bold text-slate-900 dark:text-white mt-2">12</p>
                 <div className="mt-4 flex items-center gap-1 text-green-600 text-sm font-medium">
                   <ArrowRight className="w-4 h-4" />
                   <span>+2 this month</span>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-blue-500">
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-maritime-500">
                 <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total ROB (HFO)</p>
-                <p className="text-4xl font-bold text-slate-900 mt-2">5,420 <span className="text-lg font-normal text-slate-400">MT</span></p>
-                <div className="mt-4 flex items-center gap-1 text-blue-600 text-sm font-medium">
+                <p className="text-4xl font-bold text-slate-900 dark:text-white mt-2">5,420 <span className="text-lg font-normal text-slate-400">MT</span></p>
+                <div className="mt-4 flex items-center gap-1 text-maritime-600 dark:text-maritime-400 text-sm font-medium">
                   <BarChart3 className="w-4 h-4" />
                   <span>Fleet average: 450 MT/vessel</span>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-rose-500">
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-rose-500">
                 <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Pending Surveys</p>
                 <p className="text-4xl font-bold text-red-600 mt-2">3</p>
                 <div className="mt-4 flex items-center gap-1 text-red-600 text-sm font-medium">
@@ -645,8 +645,8 @@ const OnHire = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-80 hover:shadow-md transition-shadow">
-                <h3 className="font-semibold text-slate-800 mb-6">Fuel Inventory Trends (Last 7 Days)</h3>
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm h-80 hover:shadow-md transition-shadow">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-6">Fuel Inventory Trends (Last 7 Days)</h3>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={[
                     { day: 'Mon', hfo: 5200 },
@@ -663,15 +663,15 @@ const OnHire = () => {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <h3 className="font-semibold text-slate-800 mb-4">Upcoming Offhires</h3>
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-4">Upcoming Offhires</h3>
                 <div className="space-y-4">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer group">
+                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer group">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-700 font-bold shadow-sm">V{i}</div>
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-maritime-100 to-maritime-200 dark:from-maritime-800 dark:to-maritime-700 flex items-center justify-center text-maritime-700 dark:text-maritime-200 font-bold shadow-sm">V{i}</div>
                         <div>
-                          <p className="font-medium text-slate-900">Vessel Delta {i}</p>
+                          <p className="font-medium text-slate-900 dark:text-white">Vessel Delta {i}</p>
                           <p className="text-xs text-slate-500">Scheduled: May {20 + i}, 2024</p>
                         </div>
                       </div>
@@ -690,11 +690,11 @@ const OnHire = () => {
             {!isCreatingSurvey ? (
               <>
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold text-slate-900">Onhire / Offhire Reports</h2>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Onhire / Offhire Reports</h2>
                   <div className="flex gap-4">
                     <button
                       onClick={() => handleCreateSurvey(null)}
-                      className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors flex items-center gap-2 shadow-sm"
+                      className="bg-slate-900 dark:bg-maritime-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 dark:hover:bg-maritime-600 transition-colors flex items-center gap-2 shadow-sm"
                     >
                       <Plus className="w-4 h-4" />
                       Blank Survey
@@ -705,7 +705,7 @@ const OnHire = () => {
                       <input 
                         type="text" 
                         placeholder="Search vessel or IMO..." 
-                        className="pl-10 pr-4 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-maritime-500/20"
                       />
                     </div>
                   </div>
@@ -713,19 +713,19 @@ const OnHire = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {vessels.map(v => (
-                    <div key={v.id} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                    <div key={v.id} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                       <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+                        <div className="p-3 bg-maritime-50 dark:bg-maritime-900/50 rounded-lg text-maritime-600 dark:text-maritime-400">
                           <Ship className="w-6 h-6" />
                         </div>
                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">IMO {v.imo}</span>
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900">{v.name}</h3>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white">{v.name}</h3>
                       <p className="text-slate-500 text-sm mb-6">{v.type}</p>
                       
                       <button 
                         onClick={() => handleCreateSurvey(v)}
-                        className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors shadow-lg shadow-slate-200"
+                        className="w-full flex items-center justify-center gap-2 bg-slate-900 dark:bg-maritime-700 text-white py-3 rounded-lg font-medium hover:bg-maritime-600 transition-colors shadow-lg shadow-slate-200 dark:shadow-none"
                       >
                         <Plus className="w-4 h-4" />
                         New Survey
@@ -735,20 +735,20 @@ const OnHire = () => {
                 </div>
 
                 {/* SECTION: Inspection Reports (Full Reports) */}
-                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden mt-8">
-                  <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-                    <h3 className="font-semibold text-slate-800">Inspection Reports (Full Condition Surveys)</h3>
-                    <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">{fullReports.length} Reports</span>
+                <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden mt-8">
+                  <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-200">Inspection Reports (Full Condition Surveys)</h3>
+                    <span className="bg-maritime-100 dark:bg-maritime-900 text-maritime-800 dark:text-maritime-200 text-xs font-bold px-2 py-1 rounded-full">{fullReports.length} Reports</span>
                   </div>
-                  <div className="divide-y divide-slate-100">
+                  <div className="divide-y divide-slate-100 dark:divide-slate-700">
                     {fullReports.length > 0 ? (
                       fullReports.map(report => (
-                        <div key={report.id} className="p-4 flex flex-wrap md:flex-nowrap items-center gap-6 hover:bg-slate-50 transition-colors">
-                          <div className="w-12 h-12 bg-blue-50 rounded flex items-center justify-center text-blue-500">
+                        <div key={report.id} className="p-4 flex flex-wrap md:flex-nowrap items-center gap-6 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                          <div className="w-12 h-12 bg-maritime-50 dark:bg-maritime-900/30 rounded flex items-center justify-center text-maritime-500">
                             <ClipboardCheck className="w-6 h-6" />
                           </div>
                           <div className="flex-1 min-w-[200px]">
-                            <p className="font-bold text-slate-900">{report.vesselName}</p>
+                            <p className="font-bold text-slate-900 dark:text-white">{report.vesselName}</p>
                             <p className="text-xs text-slate-500">Created: {new Date(report.createdAt).toLocaleDateString()}</p>
                           </div>
                           <div className="flex-1">
@@ -759,7 +759,7 @@ const OnHire = () => {
                           <div className="flex gap-2">
                             <button 
                               onClick={() => handleEditFullReport(report)} 
-                              className="px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-2"
+                              className="px-4 py-2 text-sm font-medium text-maritime-600 dark:text-maritime-400 hover:bg-maritime-50 dark:hover:bg-maritime-900/30 rounded-lg flex items-center gap-2"
                             >
                               Ouvrir / Éditer
                             </button>
@@ -776,21 +776,21 @@ const OnHire = () => {
                 </div>
 
                 {/* SECTION: Bunker Surveys (Existing) */}
-                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden mt-8">
-                  <div className="p-4 bg-slate-50 border-b border-slate-200">
-                    <h3 className="font-semibold text-slate-800">Bunker Surveys</h3>
+                <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden mt-8">
+                  <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-200">Bunker Surveys</h3>
                   </div>
-                  <div className="divide-y divide-slate-100">
+                  <div className="divide-y divide-slate-100 dark:divide-slate-700">
                     {isLoadingSurveys ? (
                       <div className="p-6 text-center text-slate-500">Chargement des rapports...</div>
                     ) : surveys.length > 0 ? (
                       surveys.map(s => (
-                        <div key={s.id} className="p-4 flex flex-wrap md:flex-nowrap items-center gap-6 hover:bg-slate-50 transition-colors">
-                          <div className="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-slate-400">
+                        <div key={s.id} className="p-4 flex flex-wrap md:flex-nowrap items-center gap-6 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded flex items-center justify-center text-slate-400">
                             <ClipboardCheck className="w-6 h-6" />
                           </div>
                           <div className="flex-1 min-w-[200px]">
-                            <p className="font-bold text-slate-900">{s.vesselName}</p>
+                            <p className="font-bold text-slate-900 dark:text-white">{s.vesselName}</p>
                             <p className="text-xs text-slate-500">{s.date} • {s.location}</p>
                           </div>
                           <div className="flex-1">
@@ -803,15 +803,15 @@ const OnHire = () => {
                           <div className="flex gap-8">
                             <div className="text-right">
                               <p className="text-xs text-slate-400 uppercase font-bold">HFO ROB</p>
-                              <p className="font-mono font-bold text-slate-900">{s.totalHFO} MT</p>
+                              <p className="font-mono font-bold text-slate-900 dark:text-white">{s.totalHFO} MT</p>
                             </div>
                             <div className="text-right">
                               <p className="text-xs text-slate-400 uppercase font-bold">MGO ROB</p>
-                              <p className="font-mono font-bold text-slate-900">{s.totalMGO} MT</p>
+                              <p className="font-mono font-bold text-slate-900 dark:text-white">{s.totalMGO} MT</p>
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={() => handleViewDetails(s)} className="px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg">
+                            <button onClick={() => handleViewDetails(s)} className="px-4 py-2 text-sm font-medium text-maritime-600 dark:text-maritime-400 hover:bg-maritime-50 dark:hover:bg-maritime-900/30 rounded-lg">
                               Details
                             </button>
                             <button onClick={() => {
@@ -844,40 +844,40 @@ const OnHire = () => {
                   Cancel Survey
                 </button>
                 <div className="space-y-6">
-                  <div className="bg-white p-6 rounded-xl border border-slate-200">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Bunker Survey Report</h2>
+                  <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Bunker Survey Report</h2>
                     <div className="space-y-6">
                       
                       {/* Vessel Information Section */}
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">Vessel Information</h3>
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">Vessel Information</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">M/V: Vessel Name</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">M/V: Vessel Name</label>
                             <input
                               type="text"
                               {...register("vesselNameEditable")}
-                              className={`w-full px-3 py-2 border ${errors.vesselNameEditable ? 'border-red-500' : 'border-slate-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold`}
+                              className={`w-full px-3 py-2 border ${errors.vesselNameEditable ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'} dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold`}
                               placeholder="Vessel name"
                             />
                             {errors.vesselNameEditable && <p className="text-red-500 text-xs mt-1">{errors.vesselNameEditable.message}</p>}
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">IMO Number</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">IMO Number</label>
                             <input
                               type="text"
                               {...register("vesselImoEditable")}
-                              className={`w-full px-3 py-2 border ${errors.vesselImoEditable ? 'border-red-500' : 'border-slate-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono`}
+                              className={`w-full px-3 py-2 border ${errors.vesselImoEditable ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'} dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono`}
                               placeholder="IMO Number"
                             />
                             {errors.vesselImoEditable && <p className="text-red-500 text-xs mt-1">{errors.vesselImoEditable.message}</p>}
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Call Sign</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Call Sign</label>
                             <input
                               type="text"
                               {...register("vesselCallSignEditable")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono"
                               placeholder="Call Sign"
                             />
                           </div>
@@ -886,52 +886,52 @@ const OnHire = () => {
 
                       {/* Survey Parties Section */}
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">Survey Parties</h3>
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">Survey Parties</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Client</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Client</label>
                             <input
                               type="text"
                               {...register("client")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="0"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Owners</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Owners</label>
                             <input
                               type="text"
                               {...register("owner")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="0"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Charterers</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Charterers</label>
                             <input
                               type="text"
                               {...register("charterer")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="0"
                             />
                           </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Master's Name</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Master's Name</label>
                             <input
                               type="text"
                               {...register("masterName")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="Capt. Name"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Chief Engineer</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Chief Engineer</label>
                             <input
                               type="text"
                               {...register("chiefEngineerName")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="C/E Name"
                             />
                           </div>
@@ -940,22 +940,22 @@ const OnHire = () => {
 
                       {/* Survey Date/Time Section */}
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">Survey Duration</h3>
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">Survey Duration</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">From: Date & Time</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">From: Date & Time</label>
                             <input
                               type="datetime-local"
                               {...register("fromTime")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">To: Date & Time</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">To: Date & Time</label>
                             <input
                               type="datetime-local"
                               {...register("toTime")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                           </div>
                         </div>
@@ -963,63 +963,63 @@ const OnHire = () => {
 
                       {/* Vessel Conditions Section */}
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">Vessel Conditions</h3>
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">Vessel Conditions</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Draft FWD (m)</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Draft FWD (m)</label>
                             <input
                               type="number"
                               step="0.01"
                               {...register("draftFwd")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="3.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Draft AFT (m)</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Draft AFT (m)</label>
                             <input
                               type="number"
                               step="0.01"
                               {...register("draftAft")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="4.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">VOY</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">VOY</label>
                             <input
                               type="text"
                               {...register("voy")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="1"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">List (°)</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">List (°)</label>
                             <input
                               type="number"
                               step="0.01"
                               {...register("list")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="2.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">E.R. T° (°C)</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">E.R. T° (°C)</label>
                             <input
                               type="number"
                               step="0.1"
                               {...register("er")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="30.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Thermometer</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Thermometer</label>
                             <input
                               type="text"
                               {...register("thermometer")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="CIAS"
                             />
                           </div>
@@ -1028,63 +1028,63 @@ const OnHire = () => {
 
                       {/* Body Data Section */}
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">Body Data</h3>
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">Body Data</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Draft FWD</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Draft FWD</label>
                             <input
                               type="number"
                               step="0.01"
                               {...register("draftFwd")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="3.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Draft AFT</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Draft AFT</label>
                             <input
                               type="number"
                               step="0.01"
                               {...register("draftAft")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="4.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">VOY</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">VOY</label>
                             <input
                               type="text"
                               {...register("voy")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="1"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">List</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">List</label>
                             <input
                               type="number"
                               step="0.01"
                               {...register("list")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="2.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">E.R. Temperature</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">E.R. Temperature</label>
                             <input
                               type="number"
                               step="0.1"
                               {...register("er")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="30.00"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Thermometer</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Thermometer</label>
                             <input
                               type="text"
                               {...register("thermometer")}
-                              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="CIAS"
                             />
                           </div>
@@ -1094,31 +1094,31 @@ const OnHire = () => {
                       {/* Other Details Section */}
                       <div className="space-y-6">
                         <div>
-                          <h3 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">Other Details</h3>
+                          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">Other Details</h3>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-sm font-medium text-slate-700 mb-2">Place of Survey</label>
+                              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Place of Survey</label>
                               <input
                                 type="text"
                                 {...register("location")}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Port of survey"
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-slate-700 mb-2">Place of Delivery</label>
+                              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Place of Delivery</label>
                               <input
                                 type="text"
                                 {...register("placeOfDelivery")}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Port of delivery"
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-slate-700 mb-2">Survey Type</label>
+                              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Survey Type</label>
                               <select 
                                 {...register("surveyType")}
-                                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-700 dark:text-white"
                               >
                                 <option>ONHIRE SURVEY</option>
                                 <option>OFFHIRE SURVEY</option>
@@ -1129,9 +1129,9 @@ const OnHire = () => {
                         </div>
 
                         {/* Log Book Table Section */}
-                        <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-                          <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-                            <h4 className="font-semibold text-slate-800">Abstract of Log Book</h4>
+                        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                            <h4 className="font-semibold text-slate-800 dark:text-slate-200">Abstract of Log Book</h4>
                             <button
                               onClick={handleAddLogBookEntry}
                               className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
@@ -1144,26 +1144,26 @@ const OnHire = () => {
                           <div className="overflow-x-auto">
                             <table className="w-full">
                               <thead>
-                                <tr className="bg-slate-100 border-b border-slate-200">
-                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">Arrival Pilot Station</th>
-                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">Time (Hrs. L.T.)</th>
-                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">Date</th>
-                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">VLSFO (T)</th>
-                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">HSFO (T)</th>
-                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">MDO (T)</th>
-                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">LSMGO (T)</th>
-                                  <th className="px-4 py-3 text-center text-sm font-semibold text-slate-700">Action</th>
+                                <tr className="bg-slate-100 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">Arrival Pilot Station</th>
+                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">Time (Hrs. L.T.)</th>
+                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">Date</th>
+                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">VLSFO (T)</th>
+                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">HSFO (T)</th>
+                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">MDO (T)</th>
+                                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">LSMGO (T)</th>
+                                  <th className="px-4 py-3 text-center text-sm font-semibold text-slate-700 dark:text-slate-200">Action</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {fields.length > 0 ? (
                                   fields.map((entry, index) => (
-                                    <tr key={entry.id} className="border-b border-slate-200 hover:bg-slate-50">
+                                    <tr key={entry.id} className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
                                       <td className="px-4 py-3">
                                         <input
                                           type="text"
                                           {...register(`logBookEntries.${index}.pilotStation`)}
-                                          className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                           placeholder="Station name"
                                         />
                                       </td>
@@ -1171,7 +1171,7 @@ const OnHire = () => {
                                         <input
                                           type="text"
                                           {...register(`logBookEntries.${index}.time`)}
-                                          className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                           placeholder="HH:MM"
                                         />
                                       </td>
@@ -1179,14 +1179,14 @@ const OnHire = () => {
                                         <input
                                           type="date"
                                           {...register(`logBookEntries.${index}.date`)}
-                                          className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         />
                                       </td>
                                       <td className="px-4 py-3">
                                         <input
                                           type="number"
                                           {...register(`logBookEntries.${index}.vlsfo`)}
-                                          className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                           placeholder="0"
                                           step="0.01"
                                         />
@@ -1195,7 +1195,7 @@ const OnHire = () => {
                                         <input
                                           type="number"
                                           {...register(`logBookEntries.${index}.hsfo`)}
-                                          className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                           placeholder="0"
                                           step="0.01"
                                         />
@@ -1204,7 +1204,7 @@ const OnHire = () => {
                                         <input
                                           type="number"
                                           {...register(`logBookEntries.${index}.mdo`)}
-                                          className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                           placeholder="0"
                                           step="0.01"
                                         />
@@ -1213,7 +1213,7 @@ const OnHire = () => {
                                         <input
                                           type="number"
                                           {...register(`logBookEntries.${index}.lsmgo`)}
-                                          className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                           placeholder="0"
                                           step="0.01"
                                         />
@@ -1230,7 +1230,7 @@ const OnHire = () => {
                                   ))
                                 ) : (
                                   <tr>
-                                    <td colSpan="8" className="px-4 py-6 text-center text-slate-500 text-sm">
+                                    <td colSpan="8" className="px-4 py-6 text-center text-slate-500 dark:text-slate-400 text-sm">
                                       No entries yet. Click "Add Entry" to start logging fuel data.
                                     </td>
                                   </tr>
