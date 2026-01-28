@@ -166,47 +166,82 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
         }
     };
 
-    const generatePDF = () => {
+    const generatePDF = async () => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         const margin = 14;
         let yPos = 20;
 
+        // --- Personnalisation de la marque ---
+        const brand = {
+            colors: {
+                primary: '#2980b9',   // Bleu maritime pour les en-têtes de section
+                secondary: '#2c3e50', // Gris foncé pour les titres principaux
+                text: '#34495e',      // Couleur de texte normale
+                white: '#FFFFFF',
+            },
+            fonts: {
+                main: 'helvetica', // Police principale ('helvetica', 'times', 'courier')
+            }
+        };
+
+        // Fonction pour charger une image de manière asynchrone
+        const loadImage = (src) => new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => resolve(img);
+            img.onerror = (err) => reject(err);
+            img.src = src;
+        });
+
+        try {
+            // Le logo est dans le dossier /public, accessible à la racine
+            const companyLogo = await loadImage('/logolighouse.jpg');
+            doc.addImage(companyLogo, 'JPEG', margin, 10, 50, 15);
+        } catch (error) {
+            console.error("Impossible de charger le logo pour le PDF.", error);
+        }
+
         const addSectionTitle = (title) => {
             if (yPos > 270) { doc.addPage(); yPos = 20; }
             doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(41, 128, 185);
+            doc.setFont(brand.fonts.main, "bold");
+            doc.setTextColor(brand.colors.primary);
             doc.text(title, margin, yPos);
             yPos += 10;
-            doc.setFont("helvetica", "normal");
-            doc.setTextColor(0);
+            doc.setTextColor(brand.colors.text);
             doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
         };
 
         const addTextBlock = (text, label = "") => {
             if (!text) return;
             if (yPos > 270) { doc.addPage(); yPos = 20; }
             if (label) {
-                doc.setFont("helvetica", "bold");
+                doc.setFont(brand.fonts.main, "bold");
                 doc.text(label, margin, yPos);
-                yPos += 5;
-                doc.setFont("helvetica", "normal");
+                yPos += 6;
             }
-            const splitText = doc.splitTextToSize(text, pageWidth - (margin * 2));
-            doc.text(splitText, margin, yPos);
-            yPos += (splitText.length * 5) + 5;
+            doc.setFont(brand.fonts.main, "normal");
+            const split = doc.splitTextToSize(text, pageWidth - (margin * 2));
+            doc.text(split, margin, yPos);
+            yPos += (split.length * 5) + 5;
         };
 
         // --- PAGE DE GARDE ---
+        doc.setFont(brand.fonts.main, "normal");
         doc.setFontSize(22);
-        doc.setTextColor(44, 62, 80);
-        doc.text("ON-HIRE CONDITION SURVEY REPORT", pageWidth / 2, 105, { align: "center" });
-        doc.setFontSize(16);
+        doc.setTextColor(brand.colors.secondary);
+        doc.text("ON-HIRE CONDITION SURVEY", pageWidth / 2, 110, { align: "center" });
+        
+        doc.setFontSize(14);
         doc.text(reportData.vesselName, pageWidth / 2, 120, { align: "center" });
+        
         doc.setFontSize(12);
         doc.text(`Date: ${new Date().toLocaleDateString()}`, pageWidth / 2, 135, { align: "center" });
+        
         doc.addPage();
+        yPos = 20;
 
         // 1.0 SHIP PERSONNEL
         addSectionTitle("1.0 SHIP PERSONNEL");
@@ -218,7 +253,8 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                 ['Chief Engineer', reportData.shipPersonnel.chiefEngineer],
             ],
             theme: 'striped',
-            headStyles: { fillColor: [41, 128, 185] }
+            headStyles: { fillColor: brand.colors.primary, font: brand.fonts.main },
+            styles: { font: brand.fonts.main }
         });
         yPos = doc.lastAutoTable.finalY + 10;
         addTextBlock(reportData.shipPersonnel.crewList, "Crew List / Comments:");
@@ -231,51 +267,56 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
             body: [
                 ['Name of Vessel', vp.vesselName, 'Type', vp.vesselType],
                 ['Flag / Registry', vp.flagRegistry, 'Call Sign', vp.callSign],
-                ['IMO', vp.imo, 'Class', vp.classifications],
-                ['Built', vp.placeBuilt, 'Owners', vp.owners],
-                ['LOA', vp.loa, 'LBP', vp.lbp],
-                ['Breadth', vp.breadth, 'Depth', vp.depthMolded],
-                ['Gross Tonnage', vp.grossTonnage, 'Net Tonnage', vp.netTonnage],
-                ['Summer DWT', vp.summerDeadweight, 'Summer Draft', vp.summerDraft],
-                ['Light Disp.', vp.lightDisplacement, 'Hatches/Holds', vp.hatchesHolds],
+                ['IMO', vp.imo, 'Class', vp.classifications || ''],
+                ['Built', vp.placeBuilt || '', 'Owners', vp.owners],
+                ['LOA', vp.loa || '', 'LBP', vp.lbp || ''],
+                ['Breadth', vp.breadth || '', 'Depth', vp.depthMolded || ''],
+                ['Gross Tonnage', vp.grossTonnage, 'Net Tonnage', vp.netTonnage || ''],
+                ['Summer DWT', vp.summerDeadweight || '', 'Summer Draft', vp.summerDraft || ''],
+                ['Light Disp.', vp.lightDisplacement || '', '', '']
             ],
             theme: 'grid',
-            styles: { fontSize: 8 },
+            styles: { fontSize: 8, font: brand.fonts.main },
             columnStyles: { 0: { fontStyle: 'bold', cellWidth: 40 }, 2: { fontStyle: 'bold', cellWidth: 40 } }
         });
         yPos = doc.lastAutoTable.finalY + 10;
 
-        // 3.0 CERTIFICATES
-        addSectionTitle("3.0 VESSEL'S CERTIFICATES");
+        // 3.0 VESSEL'S CERTIFICATES
+        addSectionTitle("3.0 VESSEL’S CERTIFICATES");
         autoTable(doc, {
             startY: yPos,
             head: [['Certificate', 'Issue Date', 'Expiry Date']],
             body: (reportData.vesselCertificates || []).map(c => [c.name, c.issueDate, c.expiryDate]),
             theme: 'striped',
-            headStyles: { fillColor: [41, 128, 185] }
+            headStyles: { fillColor: brand.colors.primary, font: brand.fonts.main },
+            styles: { font: brand.fonts.main }
         });
         yPos = doc.lastAutoTable.finalY + 10;
 
-        // 4.0 TANKS
+        // 4.0 VESSEL'S TANKS
         addSectionTitle("4.0 VESSEL'S TANKS");
-        doc.text("4.1 Cargo Hold Capacity", margin, yPos);
+        doc.text("4.1 Cargo Holds", margin, yPos);
         yPos += 6;
         autoTable(doc, {
             startY: yPos,
-            head: [['Hold No.', 'Grain (M3)', 'Bale (M3)']],
+            head: [['Hold No.', 'Grain (m3)', 'Bale (m3)']],
             body: (reportData.vesselTanks?.holds || []).map(h => [h.no, h.grain, h.bale]),
-            theme: 'striped'
+            theme: 'striped',
+            headStyles: { fillColor: brand.colors.primary, font: brand.fonts.main },
+            styles: { font: brand.fonts.main }
         });
         yPos = doc.lastAutoTable.finalY + 10;
-        
+
         if (yPos > 250) { doc.addPage(); yPos = 20; }
         doc.text("4.2 Tank Capacity", margin, yPos);
         yPos += 6;
         autoTable(doc, {
             startY: yPos,
-            head: [['Product', 'Capacity', 'Unit']],
+            head: [['Tank', 'Capacity', 'Unit']],
             body: (reportData.vesselTanks?.tanks || []).map(t => [t.product, t.capacity, t.unit]),
-            theme: 'striped'
+            theme: 'striped',
+            headStyles: { fillColor: brand.colors.primary, font: brand.fonts.main },
+            styles: { font: brand.fonts.main }
         });
         yPos = doc.lastAutoTable.finalY + 10;
 
@@ -286,8 +327,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
         addTextBlock(gi.previousVoyage, "6.0 Previous Voyage");
         addTextBlock(gi.deliveryRedelivery, "7.0 Delivery / Redelivery");
         addTextBlock(gi.inspectionSurvey, "8.0 Inspection / Survey");
-
-        // 9.0 - 13.0 DECK INSPECTION
+        
         doc.addPage(); yPos = 20;
         addSectionTitle("9.0 - 13.0 DECK INSPECTION");
         const di = reportData.deckInspection || {};
@@ -301,10 +341,10 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
         deckSections.forEach(sect => {
             if (yPos > 250) { doc.addPage(); yPos = 20; }
             const item = di[sect.k];
-            doc.setFont("helvetica", "bold");
+            doc.setFont(brand.fonts.main, "bold");
             doc.text(`${sect.t} (${item?.condition || '-'})`, margin, yPos);
             yPos += 6;
-            doc.setFont("helvetica", "normal");
+            doc.setFont(brand.fonts.main, "normal");
             const split = doc.splitTextToSize(item?.comments || '', pageWidth - (margin * 2));
             doc.text(split, margin, yPos);
             yPos += (split.length * 5) + 10;
@@ -316,10 +356,10 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
         const ch = reportData.cargoHolds || {};
         (ch.holds || []).forEach(hold => {
              if (yPos > 220) { doc.addPage(); yPos = 20; }
-             doc.setFont("helvetica", "bold");
+             doc.setFont(brand.fonts.main, "bold");
              doc.text(`Hold No. ${hold.holdNumber}`, margin, yPos);
              yPos += 6;
-             doc.setFont("helvetica", "normal");
+             doc.setFont(brand.fonts.main, "normal");
              doc.setFontSize(9);
              const details = [`Fwd Bulkhead: ${hold.fwdBulkhead}`, `Aft Bulkhead: ${hold.aftBulkhead}`, `Port Shell: ${hold.portShellPlating}`, `Stbd Shell: ${hold.stbdShellPlating}`, `Tank Top: ${hold.tankTop}`, `Ladders: ${hold.ladders}`, `Bilges: ${hold.bilges}`];
              details.forEach(line => {
@@ -339,13 +379,13 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
         const oi = reportData.otherInspections || {};
         addTextBlock(oi.deckMachinery, "17.0 Deck Machinery");
         addTextBlock(oi.engineRoom, "18.0 Engine Room");
-        addTextBlock(oi.bridgeAccommodation, "19.0 Bridge / Accommodation");
+        addTextBlock(oi.bridgeAccommodation, "19.0 Bridge & Accommodation");
 
         // 20.0 PHOTOGRAPHS
         doc.addPage(); yPos = 20;
         addSectionTitle("20.0 PHOTOGRAPHS");
         const photoSections = [
-            { k: 'hull', t: '1/ HULL (EXTERNAL)', intro: 'hullIntro', outro: 'hullOutro', imgs: 'hullImages' },
+            { k: 'hull', t: '1/ HULL', intro: 'hullIntro', imgs: 'hullImages' },
             { k: 'forecastle', t: '2/ FORECASTLE', intro: 'forecastleIntro', imgs: 'forecastleImages' },
             { k: 'mainDeck', t: '3/ MAIN DECK', intro: 'mainDeckIntro', imgs: 'mainDeckImages' },
             { k: 'aftDeck', t: '4/ AFT DECK', intro: 'aftDeckIntro', imgs: 'aftDeckImages' },
@@ -354,19 +394,33 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
             { k: 'bridgeDeck', t: '7/ BRIDGE DECK', intro: 'bridgeDeckIntro', imgs: 'bridgeDeckImages' },
             { k: 'lifeboat', t: '8/ LIFEBOAT', intro: 'lifeboatIntro', imgs: 'lifeboatImages' },
             { k: 'engineRoom', t: '9/ ENGINE ROOM', intro: 'engineRoomIntro', imgs: 'engineRoomImages' },
-            { k: 'bunkerRob', t: '10/ BUNKER ROB', intro: 'bunkerRobIntro', imgs: 'bunkerRobImages' },
+            { k: 'bunkerRob', t: '10/ BUNKER ROB', intro: 'bunkerRobIntro', imgs: 'bunkerRobImages' }
         ];
         const photos = reportData.photographs || {};
         photoSections.forEach(sect => {
             if (yPos > 250) { doc.addPage(); yPos = 20; }
-            doc.setFont("helvetica", "bold"); doc.text(sect.t, margin, yPos); yPos += 7;
-            doc.setFont("helvetica", "normal");
-            if (photos[sect.intro]) { const split = doc.splitTextToSize(photos[sect.intro], pageWidth - (margin * 2)); doc.text(split, margin, yPos); yPos += (split.length * 5) + 5; }
+            doc.setFont(brand.fonts.main, "bold");
+            doc.text(sect.t, margin, yPos);
+            yPos += 6;
+            doc.setFont(brand.fonts.main, "normal");
+            
+            if (sect.intro && photos[sect.intro]) { 
+                const split = doc.splitTextToSize(photos[sect.intro], pageWidth - (margin * 2)); 
+                doc.text(split, margin, yPos); 
+                yPos += (split.length * 5) + 5; 
+            }
+            
             const images = photos[sect.imgs] || [];
             if (images.length > 0) {
-                let xOffset = margin; const imgWidth = 80; const imgHeight = 60;
+                let xOffset = margin; 
+                const imgWidth = 80; 
+                const imgHeight = 60;
+                
                 images.forEach((img, index) => {
-                    if (yPos + imgHeight + 20 > 280) { doc.addPage(); yPos = 20; }
+                    if (index % 2 === 0 && yPos + imgHeight + 20 > 280) { doc.addPage(); yPos = 20; }
+                    
+                    xOffset = (index % 2 === 0) ? margin : margin + imgWidth + 10;
+                    
                     try { 
                         // Utiliser img.src pour l'affichage (base64) ou img.url si disponible
                         const imgSrc = img.src || img.url;
@@ -374,17 +428,30 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                             doc.addImage(imgSrc, 'JPEG', xOffset, yPos, imgWidth, imgHeight); 
                             if (img.description) { 
                                 doc.setFontSize(8); 
-                                const descSplit = doc.splitTextToSize(img.description, imgWidth); 
+                                const descSplit = doc.splitTextToSize(img.description, imgWidth);
                                 doc.text(descSplit, xOffset, yPos + imgHeight + 5); 
-                                doc.setFontSize(10); 
                             }
                         }
                     } catch (e) { console.error("Error adding image", e); }
-                    if (index % 2 === 0) { xOffset += imgWidth + 10; } else { xOffset = margin; yPos += imgHeight + 25; }
+                    
+                    if (index % 2 !== 0 || index === images.length - 1) {
+                         if (index % 2 !== 0) {
+                            yPos += imgHeight + 25;
+                         } else if (index === images.length - 1) {
+                            yPos += imgHeight + 25;
+                         }
+                    }
                 });
-                if (images.length % 2 !== 0) { yPos += imgHeight + 25; }
             }
-            if (sect.outro && photos[sect.outro]) { if (yPos > 270) { doc.addPage(); yPos = 20; } const split = doc.splitTextToSize(photos[sect.outro], pageWidth - (margin * 2)); doc.text(split, margin, yPos); yPos += (split.length * 5) + 10; } else { yPos += 5; }
+            
+            if (sect.outro && photos[sect.outro]) { 
+                if (yPos > 270) { doc.addPage(); yPos = 20; } 
+                const split = doc.splitTextToSize(photos[sect.outro], pageWidth - (margin * 2)); 
+                doc.text(split, margin, yPos); 
+                yPos += (split.length * 5) + 10; 
+            } else { 
+                yPos += 5; 
+            }
         });
 
         doc.save(`${reportData.vesselName}_FullReport.pdf`);
@@ -447,7 +514,12 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                         <button onClick={onCancel} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600 mr-3">
                             <X className="w-4 h-4" /> Fermer
                         </button>
-                        <button onClick={generatePDF} className="bg-maritime-600 hover:bg-maritime-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm mr-3">
+                        <button onClick={() => {
+                            generatePDF().catch(error => {
+                                console.error('Erreur lors de la génération du PDF:', error);
+                                alert('Erreur lors de la génération du PDF. Vérifiez la console pour plus de détails.');
+                            });
+                        }} className="bg-maritime-600 hover:bg-maritime-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm mr-3">
                             <FileDown className="w-4 h-4" /> Télécharger PDF
                         </button>
                         <button onClick={handleSave} disabled={isSaving} className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50">

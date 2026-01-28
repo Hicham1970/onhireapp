@@ -257,9 +257,23 @@ const OnHire = () => {
   const generateSurveyPDF = async (survey) => {
     const doc = new jsPDF();
 
+    // --- Personnalisation de la marque ---
+    const brand = {
+      colors: {
+        primary: '#2980b9',   // Bleu maritime pour les en-têtes
+        secondary: '#2c3e50', // Gris foncé pour les sous-titres
+        text: '#34495e',      // Couleur de texte principale
+        white: '#FFFFFF',
+      },
+      fonts: {
+        main: 'helvetica', // ou 'times', 'courier'
+      }
+    };
+
     // Fonction pour charger une image de manière asynchrone
     const loadImage = (src) => new Promise((resolve, reject) => {
       const img = new Image();
+      img.crossOrigin = "anonymous";
       img.onload = () => resolve(img);
       img.onerror = (err) => reject(err);
       img.src = src;
@@ -267,19 +281,19 @@ const OnHire = () => {
 
     try {
       // Le logo est dans le dossier /public, accessible à la racine
-      const companyLogo = await loadImage('/logoClair.jpg');
-      doc.addImage(companyLogo, 'JPEG', 15, 10, 40, 15);
+      const companyLogo = await loadImage('/logolighouse.jpg');
+      doc.addImage(companyLogo, 'JPEG', 15, 10, 50, 15);
     } catch (error) {
       console.error("Impossible de charger le logo pour le PDF.", error);
     }
 
     // Header
+    doc.setFont(brand.fonts.main, 'bold');
     doc.setFontSize(20);
-    doc.setTextColor(40, 40, 40);
+    doc.setTextColor(brand.colors.secondary);
     doc.text("BUNKER SURVEY REPORT", 105, 22, null, null, "center");
 
     doc.setFontSize(10);
-    doc.setTextColor(100);
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, null, null, "center");
 
     // Vessel Info Box with Body Data included
@@ -296,8 +310,8 @@ const OnHire = () => {
         [`Thermometer: ${survey.thermometer || 'N/A'}`, ``, ``]
       ],
       theme: 'grid',
-      headStyles: { fillColor: [41, 128, 185] },
-      styles: { fontSize: 8, cellPadding: 3 } // Smaller font to save space
+      headStyles: { fillColor: brand.colors.primary },
+      styles: { fontSize: 8, cellPadding: 3, font: brand.fonts.main }
     });
 
     let lastY = doc.lastAutoTable.finalY + 10;
@@ -315,17 +329,17 @@ const OnHire = () => {
         ['Date & Time Survey Completed', 'CASABLANCA - 15:00']
       ],
       theme: 'grid',
-      headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255] },
-      bodyStyles: { textColor: [0, 0, 0] },
+      headStyles: { fillColor: brand.colors.primary, textColor: brand.colors.white },
+      bodyStyles: { textColor: brand.colors.text },
       columnStyles: { 0: { cellWidth: 80 }, 1: { cellWidth: 90 } },
-      styles: { fontSize: 7, cellPadding: 2 }, // Very small font to save space
+      styles: { fontSize: 7, cellPadding: 2, font: brand.fonts.main },
       margin: { left: 14, right: 14 }
     });
 
     // Page 2: Calculated Quantity Tables
     doc.addPage();
     doc.setFontSize(16);
-    doc.setTextColor(40, 40, 40);
+    doc.setTextColor(brand.colors.secondary);
     doc.text("CALCULATED QUANTITIES", 105, 20, null, null, "center");
 
     // Préparation des données pour les tables par produit
@@ -378,7 +392,7 @@ const OnHire = () => {
 
         // Titre de la catégorie
         doc.setFontSize(11);
-        doc.setTextColor(0);
+        doc.setTextColor(brand.colors.text);
         doc.text(cat.title, 14, lastY);
 
         autoTable(doc, {
@@ -386,8 +400,8 @@ const OnHire = () => {
           head: [['Tank Name', 'Fuel Type', 'Sounding (m)', 'Temp (C)', 'Density', 'Vol (m3)', 'Weight (MT)']],
           body: tableBody,
           theme: 'striped',
-          headStyles: { fillColor: [52, 73, 94] },
-          styles: { fontSize: 9 },
+          headStyles: { fillColor: brand.colors.secondary },
+          styles: { fontSize: 9, font: brand.fonts.main },
           columnStyles: { 6: { fontStyle: 'bold' } } // Colonne poids en gras
         });
 
@@ -398,14 +412,14 @@ const OnHire = () => {
     // Page 3: Signatures
     doc.addPage();
     doc.setFontSize(16);
-    doc.setTextColor(40, 40, 40);
+    doc.setTextColor(brand.colors.secondary);
     doc.text("SIGNATURES", 105, 20, null, null, "center");
 
     lastY = 40;
 
     // Texte explicatif
     doc.setFontSize(9);
-    doc.setTextColor(0, 0, 0);
+    doc.setTextColor(brand.colors.text);
     doc.setFont(undefined, 'normal');
 
     const descriptionText = "This is to certify that MV NIKE, which has above mentioned details, Re-delivered between the parties below subject to all terms conditions and exceptions agreed between Owner and Charterers as per governing Charter Party";
