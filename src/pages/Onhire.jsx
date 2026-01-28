@@ -172,6 +172,7 @@ const OnHire = () => {
       alert("Vous devez être connecté pour enregistrer un survey.");
       return;
     }
+    //  "E:/Dev/javascript/Mes Sites Web/OnhireApp/.git/config.lock"
 
     // Valider le formulaire avant de sauvegarder
     const isFormValid = await trigger();
