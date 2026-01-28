@@ -69,8 +69,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
             wheelHouseImages: [],
             bridgeDeckImages: [],
             lifeboatImages: [],
-            engineRoomImages: [],
-            bunkerRobImages: []
+            engineRoomImages: []
         },
         robActivity: {},
     });
@@ -143,7 +142,6 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                 bridgeDeckImages: await processAndUploadImages(photoData.bridgeDeckImages, vessel),
                 lifeboatImages: await processAndUploadImages(photoData.lifeboatImages, vessel),
                 engineRoomImages: await processAndUploadImages(photoData.engineRoomImages, vessel),
-                bunkerRobImages: await processAndUploadImages(photoData.bunkerRobImages, vessel),
             };
 
             // 2. Préparer les données finales du rapport
@@ -393,8 +391,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
             { k: 'wheelHouse', t: '6/ WHEEL HOUSE', intro: 'wheelHouseIntro', imgs: 'wheelHouseImages' },
             { k: 'bridgeDeck', t: '7/ BRIDGE DECK', intro: 'bridgeDeckIntro', imgs: 'bridgeDeckImages' },
             { k: 'lifeboat', t: '8/ LIFEBOAT', intro: 'lifeboatIntro', imgs: 'lifeboatImages' },
-            { k: 'engineRoom', t: '9/ ENGINE ROOM', intro: 'engineRoomIntro', imgs: 'engineRoomImages' },
-            { k: 'bunkerRob', t: '10/ BUNKER ROB', intro: 'bunkerRobIntro', imgs: 'bunkerRobImages' }
+            { k: 'engineRoom', t: '9/ ENGINE ROOM', intro: 'engineRoomIntro', imgs: 'engineRoomImages' }
         ];
         const photos = reportData.photographs || {};
         photoSections.forEach(sect => {
