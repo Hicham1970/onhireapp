@@ -5,6 +5,8 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useUser } from '../hooks/Hooks';
 import { useTheme } from '../context/ThemeContext';
+import { Analytics } from "@vercel/analytics/next";
+
 
 export const Layout = ({ children, activeTab, setActiveTab }) => {
   const navItems = [
