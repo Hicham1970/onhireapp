@@ -23,7 +23,7 @@ function Navbar() {
         payload: "Déconnexion réussie",
         variant: "Success",
       });
-      navigate('/');
+      window.location.href = "/";
     } catch (error) {
       console.error("Erreur de déconnexion:", error);
     }
