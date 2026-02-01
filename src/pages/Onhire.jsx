@@ -124,7 +124,7 @@ const OnHire = () => {
       setSurveys([]);
       setVessels(INITIAL_VESSELS);
       setIsLoadingSurveys(false);
-      navigate('/login');
+      navigate('/');
     }
   }, [currentUser, loading, navigate]);
 

@@ -16,7 +16,7 @@ const LogoutButton = () => {
                 payload: "Déconnexion réussie",
                 variant: "Success",
             });
-            navigate('/login'); // Redirection vers la page de connexion
+            navigate('/'); // Redirection vers la page d'accueil
         } catch (error) {
             console.error('Erreur de déconnexion:', error);
         }

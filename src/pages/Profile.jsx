@@ -6,8 +6,8 @@ const Profile = () => {
     const { user } = useUser();
 
     if (!user) {
-        // Rediriger vers la page de connexion si l'utilisateur n'est pas authentifié
-        return <Navigate to="/login" replace />;
+        
+        return <Navigate to="/" replace />;
     }
 
     return (

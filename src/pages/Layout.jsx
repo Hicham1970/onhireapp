@@ -28,7 +28,7 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
     try {
       await signOut(auth);
       dispatchUser({ type: "LOG_OUT" });
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error);
     }
