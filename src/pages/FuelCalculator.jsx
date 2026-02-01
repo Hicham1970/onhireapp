@@ -1,6 +1,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { Calculator, Save, Info, RefreshCw, Gauge, Edit3, FileText, Plus, Trash2 } from 'lucide-react';
+import { calculateVCF, getDefaultDensityForFuelType } from '../utils/vcfCalculator';
 
 export const FuelCalculator = ({ tanks, onSave, initialData }) => {
   const [extraTanks, setExtraTanks] = useState([]);
@@ -22,7 +23,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
     // Créer une map des données sauvegardées pour un accès rapide
     const savedMap = initialData ? initialData.reduce((acc, curr) => ({...acc, [curr.tankId]: curr}), {}) : {};
 
-    tanks.forEach(t => {
+      tanks.forEach(t => {
       if (savedMap[t.id]) {
         initial[t.id] = { ...savedMap[t.id] };
       } else {
@@ -30,7 +31,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
           tankId: t.id,
           sounding: 0,
           temperature: 15,
-          densityAt15: t.fuelType.includes('HFO') || t.fuelType.includes('VLSFO') ? 0.9910 : 0.8450,
+          densityAt15: getDefaultDensityForFuelType(t.fuelType),
           observedVolume: 0
         };
       }
@@ -99,40 +100,21 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
     const tank = allTanks.find(t => t.id === tankId);
     if (!tank) return;
 
-    const rho15 = entry.densityAt15 || 0.9;
+    const rho15 = entry.densityAt15 || getDefaultDensityForFuelType(tank.fuelType);
     const tempObs = entry.temperature || 15;
-    const deltaT = tempObs - 15;
-
-    let k0 = 0;
-    let k1 = 0;
-
-    const isFuelOil = tank.fuelType.includes('HFO') || tank.fuelType.includes('VLSFO') || tank.fuelType.includes('HSFO');
-    
-    if (isFuelOil) {
-      k0 = 103.8720;
-      k1 = 0.2701;
-    } else {
-      k0 = 186.9696;
-      k1 = 0.4862;
-    }
-
-    const alpha15 = (k0 / Math.pow(rho15 * 1000, 2)) + (k1 / (rho15 * 1000));
-    const vcf = Math.exp(-alpha15 * deltaT * (1 + 0.8 * alpha15 * deltaT));
-    
     const obsVol = entry.observedVolume || 0;
-    const gsv = obsVol * vcf;
-    const weightInVacuum = gsv * rho15;
-    const weightInAir = gsv * (rho15 - 0.0011);
+
+    const vcfResult = calculateVCF(rho15, tempObs);
 
     setEntries(prev => ({
       ...prev,
       [tankId]: {
         ...prev[tankId],
-        vcf: parseFloat(vcf.toFixed(5)),
-        gsv: parseFloat(gsv.toFixed(2)),
-        weightInVacuum: parseFloat(weightInVacuum.toFixed(3)),
-        weightInAir: parseFloat(weightInAir.toFixed(3)),
-        correctedVolume: parseFloat(weightInAir.toFixed(3)) // backward compatibility
+        vcf: vcfResult.vcf,
+        gsv: vcfResult.gsv(obsVol),
+        weightInVacuum: vcfResult.weightInVacuum(obsVol),
+        weightInAir: vcfResult.weightInAir(obsVol),
+        correctedVolume: vcfResult.weightInAir(obsVol)
       }
     }));
   };
@@ -176,7 +158,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
         tankId: newId,
         sounding: 0,
         temperature: 15,
-        densityAt15: group.defaultType.includes('HFO') || group.defaultType.includes('VLSFO') ? 0.9910 : 0.8450,
+        densityAt15: getDefaultDensityForFuelType(group.defaultType),
         observedVolume: 0
       }
     }));
