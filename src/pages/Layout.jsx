@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, ClipboardList, Bot, Ship, LogOut, Camera, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Bot, Ship, LogOut, Camera, Sun, Moon, Settings, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -13,6 +13,8 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
     { id: 'ai', label: 'AI Consultant', icon: Bot },
     { id: 'vessels', label: 'Vessels', icon: Ship },
     { id: 'pictures', label: 'Pictures Report', icon: Camera },
+    { id: 'users', label: 'User Management', icon: Users },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
     try {
       await signOut(auth);
       dispatchUser({ type: "LOG_OUT" });
-      navigate('/');
+      window.location.href = "/";
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error);
     }

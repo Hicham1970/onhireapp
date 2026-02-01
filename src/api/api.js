@@ -72,6 +72,17 @@ export const getUsers = async () => {
     }
 };
 
+// Supprimer un utilisateur (Admin)
+export const deleteUser = async (userId) => {
+    if (!userId) throw new Error("ID utilisateur requis.");
+    try {
+        await remove(ref(database, `users/${userId}`));
+        return { success: true };
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 // Mise à jour d'un utilisateur
 export const updateUser = async (userId, userData) => {
     try {

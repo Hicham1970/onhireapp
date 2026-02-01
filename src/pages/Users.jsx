@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getUsers } from "@/api/api";
+import { getUsers } from "../api/api";
+import { useAuth } from "../context/AuthContext";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { loading: authLoading } = useAuth();
 
   useEffect(() => {
+    if (authLoading) return;
+
     const fetchUsers = async () => {
       setLoading(true);
       try {
@@ -26,9 +30,9 @@ function Users() {
       }
     };
     fetchUsers();
-  }, []);
+  }, [authLoading]);
 
-  if (loading) return <div className="mt-20 text-center">Chargement des utilisateurs...</div>;
+  if (loading || authLoading) return <div className="mt-20 text-center">Chargement des utilisateurs...</div>;
 
   return (
     <div className="space-y-3 grid mt-20 px-10 max-w-2xl mx-auto">

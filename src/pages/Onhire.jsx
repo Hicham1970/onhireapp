@@ -5,13 +5,13 @@ import { Layout } from './Layout';
 import { FuelCalculator } from './FuelCalculator';
 import { INITIAL_VESSELS } from './constants';
 import { SurveyType } from './types';
-import { Plus, History, Ship, Search, ArrowRight, MessageSquare, Send, Sparkles, BarChart3, Settings, ClipboardCheck, Bot, Info, ChevronLeft, Droplets, Ruler, Trash2, FileDown } from 'lucide-react';
+import { Plus, History, Ship, Search, ArrowRight, MessageSquare, Send, Sparkles, BarChart3, Settings, ClipboardCheck, Bot, Info, ChevronLeft, Droplets, Ruler, Trash2, FileDown, User, Mail, Shield } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { getMaritimeAssistantResponse } from '../services/gemini';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useAuth } from '../context/AuthContext.jsx';
-import { getSurveys, getVessels, saveSurvey, deleteSurvey, getFullReports, deleteFullReport } from '../api/api';
+import { getSurveys, getVessels, saveSurvey, deleteSurvey, getFullReports, deleteFullReport, getUsers, deleteUser } from '../api/api';
 import { useForm, useFieldArray } from "react-hook-form";
 import PicturesReport from '../components/PicturesReport.jsx';
 import FullReport from '../components/reports/FullReport';
@@ -59,6 +59,7 @@ const OnHire = () => {
   const [vessels] = useState(INITIAL_VESSELS);
   const [surveys, setSurveys] = useState([]);
   const [fullReports, setFullReports] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [isLoadingSurveys, setIsLoadingSurveys] = useState(true);
   const [isCreatingSurvey, setIsCreatingSurvey] = useState(false);
   const [selectedVessel, setSelectedVessel] = useState(null);
@@ -120,6 +121,17 @@ const OnHire = () => {
           }
         })
         .catch(error => console.error("Erreur lors du chargement des navires:", error));
+        
+      // Charger les utilisateurs (Admin)
+      getUsers()
+        .then(data => {
+          const usersList = Object.keys(data || {}).map(key => ({
+            id: key,
+            ...data[key]
+          }));
+          setAllUsers(usersList);
+        })
+        .catch(err => console.error("Erreur chargement utilisateurs", err));
     } else {
       setSurveys([]);
       setVessels(INITIAL_VESSELS);
@@ -250,6 +262,18 @@ const OnHire = () => {
       } catch (error) {
         console.error("Erreur suppression rapport:", error);
         alert("Erreur lors de la suppression du rapport.");
+      }
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.")) {
+      try {
+        await deleteUser(userId);
+        setAllUsers(prev => prev.filter(u => u.id !== userId));
+      } catch (error) {
+        console.error("Erreur suppression utilisateur:", error);
+        alert("Erreur lors de la suppression.");
       }
     }
   };
@@ -1764,6 +1788,111 @@ const OnHire = () => {
             onCancel={() => { setSelectedVessel(null); setSelectedReport(null); setActiveTab('surveys'); }}
             onSaved={() => { setSelectedVessel(null); setSelectedReport(null); setActiveTab('surveys'); }}
           />
+        )}
+
+        {/* USERS MANAGEMENT TAB */}
+        {activeTab === 'users' && (
+          <div className="space-y-6">
+            <header className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">User Management</h1>
+                <p className="text-slate-500 dark:text-slate-400 mt-1">Administer application users and permissions.</p>
+              </div>
+              <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg font-bold text-sm">
+                {allUsers.length} Registered Users
+              </div>
+            </header>
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 uppercase text-xs font-semibold">
+                  <tr>
+                    <th className="px-6 py-4">User</th>
+                    <th className="px-6 py-4">Email</th>
+                    <th className="px-6 py-4">Role</th>
+                    <th className="px-6 py-4">Joined Date</th>
+                    <th className="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                  {allUsers.map(user => (
+                    <tr key={user.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                      <td className="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-600 flex items-center justify-center text-xs">
+                          {user.username?.charAt(0).toUpperCase() || 'U'}
+                        </div>
+                        {user.username || 'Unknown'}
+                      </td>
+                      <td className="px-6 py-4 text-slate-600 dark:text-slate-300">{user.email}</td>
+                      <td className="px-6 py-4"><span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-bold">USER</span></td>
+                      <td className="px-6 py-4 text-slate-500">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</td>
+                      <td className="px-6 py-4 text-right">
+                        <button 
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                          title="Delete User"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* SETTINGS TAB */}
+        {activeTab === 'settings' && (
+          <div className="space-y-6">
+            <header>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Account Settings</h1>
+              <p className="text-slate-500 dark:text-slate-400 mt-1">Manage your profile and application preferences.</p>
+            </header>
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden max-w-2xl">
+              <div className="p-6 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                    {currentUser?.email?.charAt(0).toUpperCase() || 'U'}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">{currentUser?.displayName || 'Utilisateur'}</h2>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">{currentUser?.email}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-6 space-y-6">
+                <div className="grid gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <Mail className="w-4 h-4" /> Email Address
+                    </label>
+                    <div className="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-300">
+                      {currentUser?.email}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <Shield className="w-4 h-4" /> Account ID
+                    </label>
+                    <div className="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 font-mono text-xs">
+                      {currentUser?.uid}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-slate-100 dark:border-slate-700">
+                  <button className="text-blue-600 hover:text-blue-700 text-sm font-medium hover:underline">
+                    Change Password
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
 
       </div>

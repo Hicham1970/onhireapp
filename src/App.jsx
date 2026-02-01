@@ -8,8 +8,6 @@ import Register from './pages/Register';
 import OnHire from './pages/Onhire';
 import Edit from './pages/Edit';
 import User from './pages/User';
-import Profile from './pages/Profile';
-import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Notfound from './pages/Notfound';
 import { useAuth } from './context/AuthContext';
@@ -32,9 +30,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/onhire" element={<OnHire />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/dashboard" element={<OnHire />} />
         <Route path="/users/:username/edit" element={<Edit />} />
         <Route path="/users/:username" element={<User />} />
         <Route path="/users" element={<Users />} />

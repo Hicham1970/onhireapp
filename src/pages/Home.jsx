@@ -1,13 +1,13 @@
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
-import { useUser } from "../hooks/Hooks";
+import { useAuth } from "../context/AuthContext";
 import { Ship, LogIn } from 'lucide-react';
 
 export const Home = () => {
-  const { user } = useUser();
+  const { currentUser } = useAuth();
 
   // Si l'utilisateur est connecté, on le redirige vers le tableau de bord.
-  if (user) {
+  if (currentUser) {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -27,7 +27,7 @@ export const Home = () => {
           </h1>
         </div>
         <p className="text-xl text-slate-200 max-w-2xl mx-auto mb-10">
-          La plateforme nouvelle génération pour les expertises maritimes complètes, la gestion de carburant et les rapports assistés par IA.
+          La plateforme nouvelle génération pour les expertises maritimes complètes, la gestion de carburant et les rapports photos.
         </p>
         <div className="flex justify-center gap-4">
           <Link
@@ -46,7 +46,7 @@ export const Home = () => {
         </div>
       </div>
        <div className="absolute bottom-4 text-center w-full text-xs text-slate-400">
-        <p>&copy; {new Date().getFullYear()} OnHire App. Tous droits réservés.</p>
+        <p>&copy; {new Date().getFullYear()} OnHire App/ h.garoum Tous droits réservés.</p>
       </div>
     </div>
   );

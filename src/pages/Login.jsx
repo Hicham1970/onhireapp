@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { AlertContext } from "../context/AlertContext";
-import { useUser } from "../hooks/Hooks";
+import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
@@ -22,13 +22,13 @@ function Login() {
   const { dispatchAlert } = useContext(AlertContext);
   const navigate = useNavigate();
 
-  const { user } = useUser();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    if (user) {
+    if (currentUser) {
       navigate("/dashboard");
     }
-  }, [user, navigate]);
+  }, [currentUser, navigate]);
 
   // 3. Initialiser le formulaire avec useForm et le resolver Zod
   const {

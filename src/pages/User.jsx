@@ -30,7 +30,7 @@ function User() {
         } else if (!result.success) {
           throw new Error(result.error);
         } else if (user.username === result.data.username) {
-          window.location.href = "/profile";
+          window.location.href = "/dashboard";
         } else {
           setOtherUser(result.data);
         }
