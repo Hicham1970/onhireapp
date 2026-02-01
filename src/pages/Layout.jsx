@@ -5,7 +5,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useUser } from '../hooks/Hooks';
 import { useTheme } from '../context/ThemeContext';
-// import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/react";
 
 
 export const Layout = ({ children, activeTab, setActiveTab }) => {
@@ -42,7 +42,7 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Analytics />
       {/* Sidebar */}
-      <aside className="w-64 bg-maritime-900 dark:bg-slate-950 text-white fixed h-full z-20 flex flex-col border-r border-slate-800">
+      <aside className="w-64 bg-maritime-900 dark:bg-slate-950 text-white fixed top-16 h-[calc(100vh-4rem)] z-20 flex flex-col border-r border-slate-800">
         <div className="p-6 border-b border-slate-800">
           <Link to="/" className="text-xl font-bold flex items-center gap-2 tracking-tight">
             <Ship className="text-blue-400" />
@@ -83,7 +83,7 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-8">
+      <main className="flex-1 ml-64 p-8 mt-16">
         {children}
       </main>
 

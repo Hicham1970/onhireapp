@@ -14,9 +14,6 @@ function Navbar() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
 
-  // Masquer la Navbar globale sur la page OnHire car elle a son propre layout
-  if (location.pathname === '/onhire') return null;
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -34,7 +31,7 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between px-6 backdrop-blur-md bg-white/70 dark:bg-slate-900/80 border-b border-slate-200/50 dark:border-slate-700/50 shadow-sm transition-all duration-300">
-      <Link to={currentUser ? "/onhire" : "/"} className="flex items-center gap-2 text-xl font-bold text-slate-800 dark:text-white hover:opacity-80 transition-opacity">
+      <Link to={currentUser ? "/dashboard" : "/"} className="flex items-center gap-2 text-xl font-bold text-slate-800 dark:text-white hover:opacity-80 transition-opacity">
         <Ship className="w-8 h-8 text-blue-600" />
         <span>OnHire</span>
       </Link>
