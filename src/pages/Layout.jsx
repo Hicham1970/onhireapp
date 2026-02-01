@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, ClipboardList, Bot, Ship, LogOut, Camera, Sun, Moon, Settings, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
@@ -6,6 +6,8 @@ import { auth } from '../firebase';
 import { useUser } from '../hooks/Hooks';
 import { useTheme } from '../context/ThemeContext';
 import { Analytics } from "@vercel/analytics/react";
+import { useAuth } from '../context/AuthContext';
+import { getUser } from '../api/api';
 
 
 export const Layout = ({ children, activeTab, setActiveTab }) => {
@@ -15,14 +17,28 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
     { id: 'ai', label: 'AI Consultant', icon: Bot },
     { id: 'vessels', label: 'Vessels', icon: Ship },
     { id: 'pictures', label: 'Pictures Report', icon: Camera },
-    { id: 'users', label: 'User Management', icon: Users },
+    { id: 'users', label: 'User Management', icon: Users, adminOnly: true },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const { dispatchUser } = useUser();
   const { theme, toggleTheme } = useTheme();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      getUser(currentUser.uid).then(userData => {
+        if (userData && userData.role === 'admin') {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      }).catch(err => console.error("Erreur vérification rôle:", err));
+    }
+  }, [currentUser]);
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
@@ -51,7 +67,7 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
         </div>
         
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-          {navItems.map((item) => (
+          {navItems.filter(item => !item.adminOnly || isAdmin).map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}

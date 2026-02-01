@@ -11,7 +11,7 @@ import autoTable from 'jspdf-autotable';
 import { getMaritimeAssistantResponse } from '../services/gemini';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useAuth } from '../context/AuthContext.jsx';
-import { getSurveys, getVessels, saveSurvey, deleteSurvey, getFullReports, deleteFullReport, getUsers, deleteUser } from '../api/api';
+import { getSurveys, getVessels, saveSurvey, deleteSurvey, getFullReports, deleteFullReport, getUsers, deleteUser, getUser } from '../api/api';
 import { useForm, useFieldArray } from "react-hook-form";
 import PicturesReport from '../components/PicturesReport.jsx';
 import FullReport from '../components/reports/FullReport';
@@ -65,6 +65,7 @@ const OnHire = () => {
   const [selectedVessel, setSelectedVessel] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
   const [detailedVessel, setDetailedVessel] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   
   // Initialisation de React Hook Form
   const { register, control, handleSubmit, reset, getValues, trigger, formState: { errors } } = useForm({
@@ -122,16 +123,19 @@ const OnHire = () => {
         })
         .catch(error => console.error("Erreur lors du chargement des navires:", error));
         
-      // Charger les utilisateurs (Admin)
-      getUsers()
-        .then(data => {
-          const usersList = Object.keys(data || {}).map(key => ({
-            id: key,
-            ...data[key]
-          }));
-          setAllUsers(usersList);
-        })
-        .catch(err => console.error("Erreur chargement utilisateurs", err));
+      // Vérifier le rôle et charger les utilisateurs si Admin
+      getUser(currentUser.uid).then(userData => {
+        if (userData && userData.role === 'admin') {
+          setIsAdmin(true);
+          getUsers().then(data => {
+            const usersList = Object.keys(data || {}).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+            setAllUsers(usersList);
+          }).catch(err => console.error("Erreur chargement utilisateurs", err));
+        }
+      });
     } else {
       setSurveys([]);
       setVessels(INITIAL_VESSELS);
@@ -1791,7 +1795,7 @@ const OnHire = () => {
         )}
 
         {/* USERS MANAGEMENT TAB */}
-        {activeTab === 'users' && (
+        {activeTab === 'users' && isAdmin && (
           <div className="space-y-6">
             <header className="flex justify-between items-center">
               <div>

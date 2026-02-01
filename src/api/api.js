@@ -58,6 +58,20 @@ export const deleteFullReport = async (userId, reportId) => {
     }
 };
 
+// Récupérer un utilisateur spécifique (pour vérifier le rôle par exemple)
+export const getUser = async (userId) => {
+    try {
+        const snapshot = await get(ref(database, `users/${userId}`));
+        if (snapshot.exists()) {
+            return snapshot.val();
+        } else {
+            return null;
+        }
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 // Obtention de tous les utilisateurs
 export const getUsers = async () => {
     try {
@@ -68,6 +82,10 @@ export const getUsers = async () => {
             return {};
         }
     } catch (error) {
+        if ((error.message && error.message.toLowerCase().includes("permission denied")) || (error.code && error.code.includes("permission-denied"))) {
+            console.warn("Firebase: Permission refusée pour getUsers. Vérifiez les règles de la base de données.");
+            // On relance l'erreur pour que l'UI puisse l'afficher
+        }
         throw new Error(error.message);
     }
 };
