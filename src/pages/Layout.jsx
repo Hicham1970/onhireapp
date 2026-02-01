@@ -5,7 +5,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useUser } from '../hooks/Hooks';
 import { useTheme } from '../context/ThemeContext';
-import { Analytics } from "@vercel/analytics/react";
+// import { Analytics } from "@vercel/analytics/react";
 
 
 export const Layout = ({ children, activeTab, setActiveTab }) => {
