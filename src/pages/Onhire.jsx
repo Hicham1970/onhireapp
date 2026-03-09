@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
 import { FuelCalculator } from './FuelCalculator';
@@ -82,11 +82,44 @@ const OnHire = () => {
   });
 
   const [initialFuelEntries, setInitialFuelEntries] = useState(null);
-  
+
   // AI Assistant State
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
+
+  // Dashboard metrics calculations
+  const dashboardMetrics = useMemo(() => {
+    const totalVessels = vessels.length;
+    const totalSurveys = surveys.length;
+    const totalHFOROB = surveys.reduce((sum, s) => sum + (parseFloat(s.totalHFO) || 0), 0);
+    const totalMGOROB = surveys.reduce((sum, s) => sum + (parseFloat(s.totalMGO) || 0), 0);
+    const avgHFO = totalVessels > 0 ? totalHFOROB / totalVessels : 0;
+
+    // Recent surveys for upcoming offhires (last 3 surveys)
+    const recentSurveys = surveys
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 3);
+
+    // Fuel trends data (mock data based on surveys)
+    const fuelTrends = [
+      { day: 'Mon', hfo: totalHFOROB * 0.95 },
+      { day: 'Tue', hfo: totalHFOROB * 0.97 },
+      { day: 'Wed', hfo: totalHFOROB * 1.02 },
+      { day: 'Thu', hfo: totalHFOROB * 1.01 },
+      { day: 'Fri', hfo: totalHFOROB },
+    ];
+
+    return {
+      totalVessels,
+      totalSurveys,
+      totalHFOROB,
+      totalMGOROB,
+      avgHFO,
+      recentSurveys,
+      fuelTrends
+    };
+  }, [vessels, surveys]);
 
   useEffect(() => {
     if (loading) return;
@@ -661,42 +694,36 @@ const OnHire = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-emerald-500">
-                <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Active Charters</p>
-                <p className="text-4xl font-bold text-slate-900 dark:text-white mt-2">12</p>
+                <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Vessels</p>
+                <p className="text-4xl font-bold text-slate-900 dark:text-white mt-2">{dashboardMetrics.totalVessels}</p>
                 <div className="mt-4 flex items-center gap-1 text-green-600 text-sm font-medium">
-                  <ArrowRight className="w-4 h-4" />
-                  <span>+2 this month</span>
+                  <Ship className="w-4 h-4" />
+                  <span>Active fleet</span>
                 </div>
               </div>
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-maritime-500">
                 <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total ROB (HFO)</p>
-                <p className="text-4xl font-bold text-slate-900 dark:text-white mt-2">5,420 <span className="text-lg font-normal text-slate-400">MT</span></p>
+                <p className="text-4xl font-bold text-slate-900 dark:text-white mt-2">{dashboardMetrics.totalHFOROB.toLocaleString()} <span className="text-lg font-normal text-slate-400">MT</span></p>
                 <div className="mt-4 flex items-center gap-1 text-maritime-600 dark:text-maritime-400 text-sm font-medium">
                   <BarChart3 className="w-4 h-4" />
-                  <span>Fleet average: 450 MT/vessel</span>
+                  <span>Avg: {dashboardMetrics.avgHFO.toFixed(0)} MT/vessel</span>
                 </div>
               </div>
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-l-rose-500">
-                <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Pending Surveys</p>
-                <p className="text-4xl font-bold text-red-600 mt-2">3</p>
+                <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Surveys</p>
+                <p className="text-4xl font-bold text-red-600 mt-2">{dashboardMetrics.totalSurveys}</p>
                 <div className="mt-4 flex items-center gap-1 text-red-600 text-sm font-medium">
-                  <Settings className="w-4 h-4" />
-                  <span>Overdue: 1</span>
+                  <ClipboardCheck className="w-4 h-4" />
+                  <span>Completed reports</span>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm h-80 hover:shadow-md transition-shadow">
-                <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-6">Fuel Inventory Trends (Last 7 Days)</h3>
+                <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-6">Fuel Inventory Trends</h3>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={[
-                    { day: 'Mon', hfo: 5200 },
-                    { day: 'Tue', hfo: 5100 },
-                    { day: 'Wed', hfo: 5400 },
-                    { day: 'Thu', hfo: 5350 },
-                    { day: 'Fri', hfo: 5420 },
-                  ]}>
+                  <LineChart data={dashboardMetrics.fuelTrends}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="day" axisLine={false} tickLine={false} />
                     <YAxis axisLine={false} tickLine={false} />
@@ -706,20 +733,58 @@ const OnHire = () => {
                 </ResponsiveContainer>
               </div>
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-4">Upcoming Offhires</h3>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="font-semibold text-slate-800 dark:text-slate-200">Recent Surveys</h3>
+                  <button
+                    onClick={() => setActiveTab('surveys')}
+                    className="text-sm text-maritime-600 dark:text-maritime-400 hover:text-maritime-700 font-medium flex items-center gap-1"
+                  >
+                    View All <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
                 <div className="space-y-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer group">
+                  {dashboardMetrics.recentSurveys.length > 0 ? dashboardMetrics.recentSurveys.map((survey, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer group">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-maritime-100 to-maritime-200 dark:from-maritime-800 dark:to-maritime-700 flex items-center justify-center text-maritime-700 dark:text-maritime-200 font-bold shadow-sm">V{i}</div>
+                        <div className="w-10 h-10 bg-maritime-100 dark:bg-maritime-900 rounded-full flex items-center justify-center">
+                          <Ship className="w-5 h-5 text-maritime-600 dark:text-maritime-400" />
+                        </div>
                         <div>
-                          <p className="font-medium text-slate-900 dark:text-white">Vessel Delta {i}</p>
-                          <p className="text-xs text-slate-500">Scheduled: May {20 + i}, 2024</p>
+                          <p className="font-medium text-slate-900 dark:text-white">{survey.vesselNameEditable || 'Unknown Vessel'}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            {survey.surveyType} • {new Date(survey.date).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                      <div className="flex items-center gap-2">
+                        <div className="text-right mr-4">
+                          <p className="text-xs text-slate-400 uppercase font-bold">HFO ROB</p>
+                          <p className="font-mono font-bold text-slate-900 dark:text-white">{parseFloat(survey.totalHFO || 0).toFixed(1)} MT</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                      </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                      <Ship className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p>No recent surveys found</p>
+                      <button
+                        onClick={() => setActiveTab('surveys')}
+                        className="mt-2 text-maritime-600 dark:text-maritime-400 hover:text-maritime-700 font-medium text-sm"
+                      >
+                        Create your first survey
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700">
+                  <button
+                    onClick={() => handleCreateSurvey(null)}
+                    className="w-full bg-maritime-600 hover:bg-maritime-700 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Create New Survey
+                  </button>
                 </div>
               </div>
             </div>

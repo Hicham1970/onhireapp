@@ -22,6 +22,7 @@ export const ThemeProvider = ({ children }) => {
         root.classList.remove('light', 'dark');
         root.classList.add(theme);
         localStorage.setItem('color-theme', theme);
+        console.log('Theme changed to:', theme, 'Classes on html:', root.className);
     }, [theme]);
 
     const toggleTheme = () => {

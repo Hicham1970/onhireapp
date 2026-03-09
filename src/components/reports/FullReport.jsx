@@ -35,6 +35,9 @@ const reportSections = [
 const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
     const { currentUser } = useAuth();
     const { theme, toggleTheme } = useTheme();
+    
+    // Debug: vérifier la valeur du thème
+    console.log('Current theme:', theme);
     const [activeSection, setActiveSection] = useState(reportSections[0].id);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -224,6 +227,64 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
             const split = doc.splitTextToSize(text, pageWidth - (margin * 2));
             doc.text(split, margin, yPos);
             yPos += (split.length * 5) + 5;
+        };
+
+        // Fonction utilitaire pour le footer professionnel
+        const addFooter = (doc, pageWidth, margin) => {
+            const footerY = 270;
+            const lineY = footerY - 5;
+            
+            // Couleur gris clair pour les lignes
+            doc.setDrawColor(150);
+            doc.setLineWidth(0.3);
+            
+            // Ligne de séparation
+            doc.line(margin, lineY, pageWidth - margin, lineY);
+            
+            // Disclaimer
+            doc.setFontSize(7);
+            doc.setFont(brand.fonts.main, "italic");
+            doc.setTextColor(100);
+            const disclaimerEn = "These measurements and information are valid only at the time of taking measurements.";
+            const disclaimerFr = "Ces mesures et informations ne sont valables qu'au moment des prises de mesures.";
+            const disclaimer = `${disclaimerEn} / ${disclaimerFr}`;
+            const disclaimerLines = doc.splitTextToSize(disclaimer, pageWidth - (margin * 2));
+            doc.text(disclaimerLines, margin, footerY);
+            
+            // Zone de signatures (uniquement sur la dernière page)
+            const signatureY = 285;
+            const colWidth = (pageWidth - (margin * 2)) / 3;
+            
+            doc.setFontSize(8);
+            doc.setFont(brand.fonts.main, "bold");
+            doc.setTextColor(brand.colors.secondary);
+            
+            // Signature 1: For the Ship / Bord
+            doc.text("For the Ship / Bord", margin + (colWidth / 2), signatureY, { align: "center" });
+            doc.line(margin, signatureY + 3, margin + colWidth - 10, signatureY + 3);
+            doc.setFont(brand.fonts.main, "normal");
+            doc.setFontSize(7);
+            doc.text("Signature:", margin, signatureY + 8);
+            
+            // Signature 2: Witness / Témoin
+            const col2X = margin + colWidth;
+            doc.setFontSize(8);
+            doc.setFont(brand.fonts.main, "bold");
+            doc.text("Witness / Témoin", col2X + (colWidth / 2), signatureY, { align: "center" });
+            doc.line(col2X, signatureY + 3, col2X + colWidth - 10, signatureY + 3);
+            doc.setFont(brand.fonts.main, "normal");
+            doc.setFontSize(7);
+            doc.text("Signature:", col2X, signatureY + 8);
+            
+            // Signature 3: Inspector / Surveyor
+            const col3X = margin + (colWidth * 2);
+            doc.setFontSize(8);
+            doc.setFont(brand.fonts.main, "bold");
+            doc.text("Inspector / Surveyor", col3X + (colWidth / 2), signatureY, { align: "center" });
+            doc.line(col3X, signatureY + 3, col3X + colWidth - 10, signatureY + 3);
+            doc.setFont(brand.fonts.main, "normal");
+            doc.setFontSize(7);
+            doc.text("Signature:", col3X, signatureY + 8);
         };
 
         // --- PAGE DE GARDE ---
@@ -451,6 +512,9 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
             }
         });
 
+        // Ajouter le footer professionnel sur la dernière page
+        addFooter(doc, pageWidth, margin);
+
         doc.save(`${reportData.vesselName}_FullReport.pdf`);
     };
 
@@ -501,28 +565,39 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
 
                 {/* Contenu principal */}
                 <main className="w-3/4 flex flex-col">
-                    <header className="flex justify-end items-center p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                        <button 
-                            onClick={toggleTheme} 
-                            className="p-2 mr-4 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
-                        >
-                            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                        </button>
-                        <button onClick={onCancel} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600 mr-3">
-                            <X className="w-4 h-4" /> Fermer
-                        </button>
-                        <button onClick={() => {
-                            generatePDF().catch(error => {
-                                console.error('Erreur lors de la génération du PDF:', error);
-                                alert('Erreur lors de la génération du PDF. Vérifiez la console pour plus de détails.');
-                            });
-                        }} className="bg-maritime-600 hover:bg-maritime-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm mr-3">
-                            <FileDown className="w-4 h-4" /> Télécharger PDF
-                        </button>
-                        <button onClick={handleSave} disabled={isSaving} className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50">
-                            {isSaving ? <Loader className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                            {isSaving ? 'Sauvegarde...' : 'Sauvegarder le Rapport'}
-                        </button>
+                    <header className="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                                {theme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button 
+                                onClick={() => {
+                                    console.log('Toggle theme button clicked, current theme:', theme);
+                                    toggleTheme();
+                                }} 
+                                className="p-2 mr-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+                                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                            >
+                                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                            </button>
+                            <button onClick={onCancel} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600 mr-3">
+                                <X className="w-4 h-4" /> Fermer
+                            </button>
+                            <button onClick={() => {
+                                generatePDF().catch(error => {
+                                    console.error('Erreur lors de la génération du PDF:', error);
+                                    alert('Erreur lors de la génération du PDF. Vérifiez la console pour plus de détails.');
+                                });
+                            }} className="bg-maritime-600 hover:bg-maritime-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm mr-3">
+                                <FileDown className="w-4 h-4" /> Télécharger PDF
+                            </button>
+                            <button onClick={handleSave} disabled={isSaving} className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50">
+                                {isSaving ? <Loader className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                {isSaving ? 'Sauvegarde...' : 'Sauvegarder le Rapport'}
+                            </button>
+                        </div>
                     </header>
                     <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
                         {renderSectionComponent()}
