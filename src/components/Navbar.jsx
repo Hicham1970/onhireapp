@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAlert, useUser } from "../hooks/Hooks";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
-import { Ship, Menu, X } from "lucide-react";
+import { Ship, Menu, X, Shield, Home, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
@@ -11,7 +11,7 @@ function Navbar() {
   const { user, dispatchUser } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser, userData, isAdmin } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -46,6 +46,9 @@ function Navbar() {
     { label: "Témoignages", href: "#testimonials" },
     { label: "Contact", href: "#contact" }
   ];
+
+  // Get user display name
+  const userName = userData?.username || currentUser?.displayName || "Utilisateur";
 
   return (
     <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -98,17 +101,46 @@ function Navbar() {
               </>
             ) : (
               <>
+                {/* Home Link */}
+                <Link
+                  to="/dashboard"
+                  className="flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-sm px-4 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  title="Tableau de bord"
+                >
+                  <Home className="w-5 h-5" />
+                </Link>
+
+                {/* Admin Link - Only for admins */}
+                {isAdmin() && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center justify-center gap-2 bg-purple-600 text-white font-medium text-sm px-4 py-2 rounded-full hover:bg-purple-700 transition-colors shadow-sm"
+                    title="Admin Dashboard"
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span className="hidden md:inline">Admin</span>
+                  </Link>
+                )}
+
+                {/* User Profile */}
                 <Link
                   to="/users"
-                  className="flex items-center justify-center bg-blue-600 text-white font-medium text-sm px-5 py-2 rounded-full hover:bg-blue-700 transition-colors shadow-sm"
+                  className="flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-sm px-4 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  title="Profil"
                 >
-                  Admin
+                  <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    {userName.charAt(0).toUpperCase()}
+                  </div>
                 </Link>
+
+                {/* Logout */}
                 <button
                   onClick={handleLogout}
-                  className="bg-red-600 text-white font-medium text-sm px-5 py-2 rounded-full hover:bg-red-700 transition-colors shadow-sm"
+                  className="bg-red-600 text-white font-medium text-sm px-4 py-2 rounded-full hover:bg-red-700 transition-colors shadow-sm"
+                  title="Déconnexion"
                 >
-                  Déconnexion
+                  <span className="hidden md:inline">Déconnexion</span>
+                  <span className="md:hidden">Exit</span>
                 </button>
               </>
             )}
@@ -125,7 +157,7 @@ function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Home Page */}
         {!currentUser && location.pathname === "/" && isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-slate-200 dark:border-slate-700">
             <nav className="flex flex-col gap-1">
@@ -156,6 +188,53 @@ function Navbar() {
                 </Link>
               </div>
             </nav>
+          </div>
+        )}
+
+        {/* Mobile Menu - Logged In User */}
+        {currentUser && isMobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-slate-200 dark:border-slate-700">
+            <div className="flex flex-col gap-3">
+              <div className="px-4 py-2 text-sm text-slate-500">
+                Connecté: <span className="font-semibold text-slate-900 dark:text-white">{userName}</span>
+              </div>
+              
+              <Link
+                to="/dashboard"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg"
+              >
+                <Home className="w-5 h-5" />
+                Tableau de bord
+              </Link>
+
+              {isAdmin() && (
+                <Link
+                  to="/admin"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg"
+                >
+                  <Shield className="w-5 h-5" />
+                  Admin Dashboard
+                </Link>
+              )}
+
+              <Link
+                to="/users"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg"
+              >
+                <User className="w-5 h-5" />
+                Profil
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg mx-4 mb-2"
+              >
+                Déconnexion
+              </button>
+            </div>
           </div>
         )}
       </div>

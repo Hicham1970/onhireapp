@@ -12,8 +12,20 @@ import { Ship, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().min(1, "L'email est requis").email("Format d'email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  password: z.string().min(1, "Le mot de passe est requis"),
 });
+
+// Map Firebase auth errors to user-friendly messages
+const getAuthErrorMessage = (errorCode) => {
+  switch (errorCode) {
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+    case 'auth/invalid-credential':
+      return "Email or password is incorrect";
+    default:
+      return "Something went wrong. Please try again.";
+  }
+};
 
 function Login() {
   const { dispatchUser } = useContext(UserContext);
@@ -24,6 +36,7 @@ function Login() {
 
   useEffect(() => {
     if (currentUser) {
+      // Redirect will be handled by AuthContext/ProtectedRoute
       navigate("/dashboard");
     }
   }, [currentUser, navigate]);
@@ -39,18 +52,18 @@ function Login() {
   const onSubmit = async (data) => {
     try {
       dispatchUser({ type: "LOADING" });
-      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
-      const user = userCredential.user;
-
+      await signInWithEmailAndPassword(auth, data.email, data.password);
       dispatchAlert({
         type: "SHOW",
         payload: "Connexion réussie",
         variant: "Success",
       });
+      // Redirect will be handled by onAuthStateChanged
     } catch (err) {
+      const errorMessage = getAuthErrorMessage(err.code);
       dispatchAlert({
         type: "SHOW",
-        payload: err.message,
+        payload: errorMessage,
         variant: "Warning",
       });
       dispatchUser({ type: "ERROR" });
@@ -63,7 +76,7 @@ function Login() {
       setIsGoogleLoading(true);
       dispatchUser({ type: "LOADING" });
       
-      const result = await signInWithPopup(auth, googleProvider);
+      await signInWithPopup(auth, googleProvider);
       
       dispatchAlert({
         type: "SHOW",
@@ -71,9 +84,10 @@ function Login() {
         variant: "Success",
       });
     } catch (err) {
+      const errorMessage = getAuthErrorMessage(err.code);
       dispatchAlert({
         type: "SHOW",
-        payload: err.message,
+        payload: errorMessage,
         variant: "Warning",
       });
       dispatchUser({ type: "ERROR" });

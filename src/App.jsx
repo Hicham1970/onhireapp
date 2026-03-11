@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import OnHire from './pages/Onhire';
+import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import Edit from './pages/Edit';
 import User from './pages/User';
 import Users from './pages/Users';
@@ -30,7 +32,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<OnHire />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/onhire" element={<OnHire />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/users/:username/edit" element={<Edit />} />
         <Route path="/users/:username" element={<User />} />
         <Route path="/users" element={<Users />} />
@@ -41,3 +45,4 @@ function App() {
 }
 
 export default App;
+
