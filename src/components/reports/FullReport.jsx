@@ -567,22 +567,19 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                 <main className="w-3/4 flex flex-col">
                     <header className="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
                         <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                                {theme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode'}
-                            </span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                             <button 
                                 onClick={() => {
                                     console.log('Toggle theme button clicked, current theme:', theme);
                                     toggleTheme();
                                 }} 
-                                className="p-2 mr-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+                                className="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
                                 title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                             >
                                 {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                             </button>
-                            <button onClick={onCancel} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600 mr-3">
+                            <button onClick={onCancel} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600">
                                 <X className="w-4 h-4" /> Fermer
                             </button>
                             <button onClick={() => {
@@ -590,7 +587,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                                     console.error('Erreur lors de la génération du PDF:', error);
                                     alert('Erreur lors de la génération du PDF. Vérifiez la console pour plus de détails.');
                                 });
-                            }} className="bg-maritime-600 hover:bg-maritime-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm mr-3">
+                            }} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm">
                                 <FileDown className="w-4 h-4" /> Télécharger PDF
                             </button>
                             <button onClick={handleSave} disabled={isSaving} className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm disabled:opacity-50">

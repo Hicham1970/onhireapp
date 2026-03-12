@@ -47,12 +47,18 @@ export function AuthProvider({ children }) {
         return currentUser !== null;
     };
 
+    // Fonction pour vérifier si l'utilisateur a un rôle spécifique
+    const hasRole = (role) => {
+        return userData?.role === role;
+    };
+
     const value = {
         currentUser,
         userData,
         loading,
         isAdmin,
-        isClient
+        isClient,
+        hasRole
     };
 
     return (

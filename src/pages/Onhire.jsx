@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Layout } from './Layout';
 import { FuelCalculator } from './FuelCalculator';
 import { INITIAL_VESSELS } from './constants';
@@ -52,10 +52,11 @@ const surveySchema = z.object({
   })).optional()
 });
 
-const OnHire = () => {
-  const { currentUser, loading } = useAuth();
+const OnHire = ({ tab: initialTab }) => {
+  const { currentUser, loading, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(initialTab || 'dashboard');
   const [vessels] = useState(INITIAL_VESSELS);
   const [surveys, setSurveys] = useState([]);
   const [fullReports, setFullReports] = useState([]);
@@ -65,7 +66,6 @@ const OnHire = () => {
   const [selectedVessel, setSelectedVessel] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
   const [detailedVessel, setDetailedVessel] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   
   // Initialisation de React Hook Form
   const { register, control, handleSubmit, reset, getValues, trigger, formState: { errors } } = useForm({
@@ -82,6 +82,14 @@ const OnHire = () => {
   });
 
   const [initialFuelEntries, setInitialFuelEntries] = useState(null);
+
+  // Handle query parameter for tab navigation
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['dashboard', 'surveys', 'ai', 'vessels', 'pictures', 'settings', 'users'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   // AI Assistant State
   const [aiPrompt, setAiPrompt] = useState('');

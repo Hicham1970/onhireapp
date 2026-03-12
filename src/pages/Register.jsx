@@ -6,7 +6,26 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTheme } from "../context/ThemeContext";
 import { Ship, User, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+
+// Map Firebase auth errors to user-friendly messages
+const getAuthErrorMessage = (errorCode) => {
+  switch (errorCode) {
+    case 'auth/email-already-in-use':
+      return "User already exists. Please sign in";
+    case 'auth/weak-password':
+      return "Password is too weak";
+    case 'auth/invalid-email':
+      return "Invalid email address";
+    case 'auth/operation-not-allowed':
+      return "Operation not allowed";
+    case 'auth/phone-number-already-exists':
+      return "Phone number already exists";
+    default:
+      return "Something went wrong. Please try again.";
+  }
+};
 
 const registerSchema = z.object({
   username: z.string().min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères"),
@@ -16,6 +35,8 @@ const registerSchema = z.object({
 
 const Register = () => {
     const navigate = useNavigate();
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
     const {
@@ -35,13 +56,15 @@ const Register = () => {
             await addUser(user.uid, {
                 username: data.username,
                 email: data.email,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                role: 'user' // Default role for new users
             });
 
             navigate('/dashboard');
         } catch (err) {
             console.error(err);
-            setError("root", { message: err.message });
+            const errorMessage = getAuthErrorMessage(err.code);
+            setError("root", { message: errorMessage });
         }
     };
 
@@ -56,20 +79,26 @@ const Register = () => {
                 username: user.displayName || "User",
                 email: user.email,
                 createdAt: new Date().toISOString(),
-                photoURL: user.photoURL
+                photoURL: user.photoURL,
+                role: 'user' // Default role for new users
             });
 
             navigate('/dashboard');
         } catch (err) {
             console.error(err);
-            setError("root", { message: err.message });
+            const errorMessage = getAuthErrorMessage(err.code);
+            setError("root", { message: errorMessage });
         } finally {
             setIsGoogleLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 px-4 py-20">
+        <div className={`min-h-screen flex items-center justify-center px-4 py-20 ${
+            isDark 
+                ? 'bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'
+                : 'bg-gradient-to-br from-blue-50 via-white to-slate-100'
+        }`}>
             {/* Background Effects */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -79,17 +108,21 @@ const Register = () => {
             <div className="relative w-full max-w-md">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <Link to="/" className="inline-flex items-center gap-2 text-3xl font-bold text-white">
-                        <Ship className="w-10 h-10 text-blue-400" />
+                    <Link to="/" className={`inline-flex items-center gap-2 text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                        <Ship className={`w-10 h-10 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
                         <span>OnHireApp</span>
                     </Link>
                 </div>
 
                 {/* Card */}
-                <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-8">
+                <div className={`backdrop-blur-xl rounded-2xl shadow-2xl p-8 ${
+                    isDark 
+                        ? 'bg-white/10 border border-white/20'
+                        : 'bg-white/80 border border-slate-200'
+                }`}>
                     <div className="text-center mb-8">
-                        <h1 className="text-2xl font-bold text-white mb-2">Créer un compte</h1>
-                        <p className="text-blue-200/70">Commencez votre essai gratuit</p>
+                        <h1 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>Créer un compte</h1>
+                        <p className={isDark ? 'text-blue-200/70' : 'text-slate-600'}>Commencez votre essai gratuit</p>
                     </div>
 
                     {/* Google Button */}
@@ -114,70 +147,80 @@ const Register = () => {
 
                     {/* Divider */}
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="flex-1 h-px bg-white/20"></div>
-                        <span className="text-blue-200/60 text-sm">ou</span>
-                        <div className="flex-1 h-px bg-white/20"></div>
+                        <div className={`flex-1 h-px ${isDark ? 'bg-white/20' : 'bg-slate-200'}`}></div>
+                        <span className={isDark ? 'text-blue-200/60 text-sm' : 'text-slate-500 text-sm'}>ou</span>
+                        <div className={`flex-1 h-px ${isDark ? 'bg-white/20' : 'bg-slate-200'}`}></div>
                     </div>
 
                     {/* Form */}
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         {errors.root && (
-                            <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm">
+                            <div className={`p-3 rounded-lg text-sm ${
+                                isDark 
+                                    ? 'bg-red-500/20 border border-red-500/50 text-red-300'
+                                    : 'bg-red-50 border border-red-200 text-red-600'
+                            }`}>
                                 {errors.root.message}
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-blue-200 mb-2">Nom d'utilisateur</label>
+                            <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-blue-200' : 'text-slate-700'}`}>Nom d'utilisateur</label>
                             <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
+                                <User className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${isDark ? 'text-blue-300' : 'text-slate-400'}`} />
                                 <input
                                     type="text"
                                     placeholder="johndoe"
-                                    className={`w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border-2 text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-400 transition-all duration-200 ${
-                                        errors.username ? 'border-red-500' : 'border-white/20'
-                                    }`}
+                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 focus:outline-none focus:border-blue-400 transition-all duration-200 ${
+                                        isDark 
+                                            ? 'bg-white/10 text-white placeholder-blue-300/50 border-white/20'
+                                            : 'bg-slate-50 text-slate-900 placeholder-slate-400 border-slate-200'
+                                    } ${errors.username ? 'border-red-500' : ''}`}
                                     {...register("username")}
                                 />
                             </div>
                             {errors.username && (
-                                <p className="text-red-400 text-sm mt-1">{errors.username.message}</p>
+                                <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-blue-200 mb-2">Email</label>
+                            <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-blue-200' : 'text-slate-700'}`}>Email</label>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
+                                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${isDark ? 'text-blue-300' : 'text-slate-400'}`} />
                                 <input
                                     type="email"
                                     placeholder="vous@email.com"
-                                    className={`w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border-2 text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-400 transition-all duration-200 ${
-                                        errors.email ? 'border-red-500' : 'border-white/20'
-                                    }`}
+                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 focus:outline-none focus:border-blue-400 transition-all duration-200 ${
+                                        isDark 
+                                            ? 'bg-white/10 text-white placeholder-blue-300/50 border-white/20'
+                                            : 'bg-slate-50 text-slate-900 placeholder-slate-400 border-slate-200'
+                                    } ${errors.email ? 'border-red-500' : ''}`}
                                     {...register("email")}
                                 />
                             </div>
                             {errors.email && (
-                                <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+                                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-blue-200 mb-2">Mot de passe</label>
+                            <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-blue-200' : 'text-slate-700'}`}>Mot de passe</label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
+                                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${isDark ? 'text-blue-300' : 'text-slate-400'}`} />
                                 <input
                                     type="password"
                                     placeholder="••••••••"
-                                    className={`w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border-2 text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-400 transition-all duration-200 ${
-                                        errors.password ? 'border-red-500' : 'border-white/20'
-                                    }`}
+                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 focus:outline-none focus:border-blue-400 transition-all duration-200 ${
+                                        isDark 
+                                            ? 'bg-white/10 text-white placeholder-blue-300/50 border-white/20'
+                                            : 'bg-slate-50 text-slate-900 placeholder-slate-400 border-slate-200'
+                                    } ${errors.password ? 'border-red-500' : ''}`}
                                     {...register("password")}
                                 />
                             </div>
                             {errors.password && (
-                                <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+                                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
                             )}
                         </div>
 
@@ -200,18 +243,18 @@ const Register = () => {
                         </button>
                     </form>
 
-                    <p className="text-center mt-6 text-blue-200/70">
+                    <p className={`text-center mt-6 ${isDark ? 'text-blue-200/70' : 'text-slate-600'}`}>
                         Déjà un compte?{" "}
-                        <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium">
+                        <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
                             Se connecter
                         </Link>
                     </p>
 
-                    <p className="text-center mt-4 text-xs text-blue-300/50">
+                    <p className={`text-center mt-4 text-xs ${isDark ? 'text-blue-300/50' : 'text-slate-500'}`}>
                         En vous inscrivant, vous acceptez nos{" "}
-                        <a href="#" className="underline hover:text-blue-300">Conditions d'utilisation</a>
+                        <a href="#" className="underline hover:text-blue-600">Conditions d'utilisation</a>
                         {" "}et notre{" "}
-                        <a href="#" className="underline hover:text-blue-300">Politique de confidentialité</a>
+                        <a href="#" className="underline hover:text-blue-600">Politique de confidentialité</a>
                     </p>
                 </div>
             </div>

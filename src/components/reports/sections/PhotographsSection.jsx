@@ -1,7 +1,11 @@
 import React from 'react';
+import { useTheme } from '../../../context/ThemeContext';
 import { Camera, Trash2 } from 'lucide-react';
 
 const PhotographsSection = ({ data, onChange }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+    
     // Initialisation sécurisée des données
     const hullImages = data?.hullImages || [];
     const forecastleImages = data?.forecastleImages || [];
@@ -75,8 +79,12 @@ const PhotographsSection = ({ data, onChange }) => {
     const renderImageGrid = (images, sectionKey) => (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {images.map((img, idx) => (
-                <div key={img.id} className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
-                    <div className="relative aspect-video bg-white rounded-lg overflow-hidden flex items-center justify-center border border-slate-100">
+                <div key={img.id} className={`p-4 rounded-xl border flex flex-col gap-3 ${
+                    isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'
+                }`}>
+                    <div className={`relative aspect-video bg-white rounded-lg overflow-hidden flex items-center justify-center border ${
+                        isDark ? 'border-slate-600' : 'border-slate-100'
+                    }`}>
                         <img src={img.src} alt={`Photo ${idx + 1}`} className="w-full h-full object-contain" />
                         <button 
                             onClick={() => deleteImage(img.id, sectionKey)}
@@ -89,7 +97,9 @@ const PhotographsSection = ({ data, onChange }) => {
                         value={img.description || ""} 
                         onChange={(e) => updateImageDescription(img.id, e.target.value, sectionKey)}
                         placeholder="Photo description..." 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none ${
+                            isDark ? 'bg-slate-700 border-slate-600 text-white placeholder-slate-400' : 'border-slate-300 text-slate-900 placeholder-slate-400'
+                        }`}
                         rows="2"
                     />
                 </div>
@@ -97,12 +107,44 @@ const PhotographsSection = ({ data, onChange }) => {
         </div>
     );
 
+    const renderPhotoSection = (title, introKey, introValue, imagesKey, images, introRows) => (
+        <div className={`p-6 rounded-xl border shadow-sm space-y-6 ${
+            isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
+        }`}>
+            <h4 className={`text-lg font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{title}</h4>
+            
+            <textarea
+                name={introKey}
+                value={introValue}
+                onChange={handleTextChange}
+                rows={introRows}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed ${
+                    isDark ? 'bg-slate-700 border-slate-600 text-white placeholder-slate-400' : 'border-slate-300 text-slate-900 placeholder-slate-400'
+                }`}
+                placeholder="Enter description..."
+            />
+
+            <div className="flex justify-end">
+                <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
+                    <Camera className="w-4 h-4" />
+                    Add Photos
+                    <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, imagesKey)} />
+                </label>
+            </div>
+
+            {renderImageGrid(images, imagesKey)}
+        </div>
+    );
+
     return (
         <div className="max-w-5xl space-y-8">
-            <h3 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-4">20.0 PHOTOGRAPHS</h3>
+            <h3 className={`text-xl font-bold border-b pb-4 ${isDark ? 'text-white border-slate-700' : 'text-slate-800 border-slate-200'}`}>20.0 PHOTOGRAPHS</h3>
 
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">1/ HULL (EXTERNAL)</h4>
+            {/* 1/ HULL (EXTERNAL) */}
+            <div className={`p-6 rounded-xl border shadow-sm space-y-6 ${
+                isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
+            }`}>
+                <h4 className={`text-lg font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>1/ HULL (EXTERNAL)</h4>
                 
                 {/* Texte d'introduction */}
                 <textarea
@@ -110,7 +152,9 @@ const PhotographsSection = ({ data, onChange }) => {
                     value={hullIntro}
                     onChange={handleTextChange}
                     rows="5"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed ${
+                        isDark ? 'bg-slate-700 border-slate-600 text-white placeholder-slate-400' : 'border-slate-300 text-slate-900 placeholder-slate-400'
+                    }`}
                     placeholder="Enter introduction text..."
                 />
 
@@ -131,228 +175,25 @@ const PhotographsSection = ({ data, onChange }) => {
                     value={hullOutro}
                     onChange={handleTextChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed ${
+                        isDark ? 'bg-slate-700 border-slate-600 text-white placeholder-slate-400' : 'border-slate-300 text-slate-900 placeholder-slate-400'
+                    }`}
                     placeholder="Enter concluding text..."
                 />
             </div>
 
-            {/* 2/ FORECASTLE */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">2/ FORECASTLE</h4>
-                
-                <textarea
-                    name="forecastleIntro"
-                    value={forecastleIntro}
-                    onChange={handleTextChange}
-                    rows="8"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter forecastle description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'forecastleImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(forecastleImages, 'forecastleImages')}
-            </div>
-
-            {/* 3/ MAIN DECK */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">3/ MAIN DECK</h4>
-                
-                <textarea
-                    name="mainDeckIntro"
-                    value={mainDeckIntro}
-                    onChange={handleTextChange}
-                    rows="6"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter main deck description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'mainDeckImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(mainDeckImages, 'mainDeckImages')}
-            </div>
-
-            {/* 4/ AFT DECK */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">4/ AFT DECK</h4>
-                
-                <textarea
-                    name="aftDeckIntro"
-                    value={aftDeckIntro}
-                    onChange={handleTextChange}
-                    rows="6"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter aft deck description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'aftDeckImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(aftDeckImages, 'aftDeckImages')}
-            </div>
-
-            {/* 5/ HATCH COVERS & CARGO HOLDS */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">5/ HATCH COVERS & CARGO HOLDS</h4>
-                
-                <textarea
-                    name="hatchCoversIntro"
-                    value={hatchCoversIntro}
-                    onChange={handleTextChange}
-                    rows="8"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter hatch covers description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'hatchCoversImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(hatchCoversImages, 'hatchCoversImages')}
-            </div>
-
-            {/* 6/ WHEEL HOUSE */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">6/ WHEEL HOUSE</h4>
-                
-                <textarea
-                    name="wheelHouseIntro"
-                    value={wheelHouseIntro}
-                    onChange={handleTextChange}
-                    rows="8"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter wheel house description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'wheelHouseImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(wheelHouseImages, 'wheelHouseImages')}
-            </div>
-
-            {/* 7/ BRIDGE DECK */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">7/ BRIDGE DECK</h4>
-                
-                <textarea
-                    name="bridgeDeckIntro"
-                    value={bridgeDeckIntro}
-                    onChange={handleTextChange}
-                    rows="4"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter bridge deck description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'bridgeDeckImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(bridgeDeckImages, 'bridgeDeckImages')}
-            </div>
-
-            {/* 8/ LIFEBOAT */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">8/ LIFEBOAT</h4>
-                
-                <textarea
-                    name="lifeboatIntro"
-                    value={lifeboatIntro}
-                    onChange={handleTextChange}
-                    rows="8"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter lifeboat description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'lifeboatImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(lifeboatImages, 'lifeboatImages')}
-            </div>
-
-            {/* 9/ ENGINE ROOM */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">9/ ENGINE ROOM</h4>
-                
-                <textarea
-                    name="engineRoomIntro"
-                    value={engineRoomIntro}
-                    onChange={handleTextChange}
-                    rows="10"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter engine room description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'engineRoomImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(engineRoomImages, 'engineRoomImages')}
-            </div>
-
-            {/* 10/ VIEW OF THE ACTIVITY MEASURING BUNKER ROB */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <h4 className="text-lg font-bold text-slate-700">10/ VIEW OF THE ACTIVITY MEASURING BUNKER ROB</h4>
-                
-                <textarea
-                    name="bunkerRobIntro"
-                    value={bunkerRobIntro}
-                    onChange={handleTextChange}
-                    rows="4"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y text-sm leading-relaxed"
-                    placeholder="Enter description..."
-                />
-
-                <div className="flex justify-end">
-                    <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors shadow-sm">
-                        <Camera className="w-4 h-4" />
-                        Add Photos
-                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'bunkerRobImages')} />
-                    </label>
-                </div>
-
-                {renderImageGrid(bunkerRobImages, 'bunkerRobImages')}
-            </div>
+            {renderPhotoSection('2/ FORECASTLE', 'forecastleIntro', forecastleIntro, 'forecastleImages', forecastleImages, 8)}
+            {renderPhotoSection('3/ MAIN DECK', 'mainDeckIntro', mainDeckIntro, 'mainDeckImages', mainDeckImages, 6)}
+            {renderPhotoSection('4/ AFT DECK', 'aftDeckIntro', aftDeckIntro, 'aftDeckImages', aftDeckImages, 6)}
+            {renderPhotoSection('5/ HATCH COVERS & CARGO HOLDS', 'hatchCoversIntro', hatchCoversIntro, 'hatchCoversImages', hatchCoversImages, 8)}
+            {renderPhotoSection('6/ WHEEL HOUSE', 'wheelHouseIntro', wheelHouseIntro, 'wheelHouseImages', wheelHouseImages, 8)}
+            {renderPhotoSection('7/ BRIDGE DECK', 'bridgeDeckIntro', bridgeDeckIntro, 'bridgeDeckImages', bridgeDeckImages, 4)}
+            {renderPhotoSection('8/ LIFEBOAT', 'lifeboatIntro', lifeboatIntro, 'lifeboatImages', lifeboatImages, 8)}
+            {renderPhotoSection('9/ ENGINE ROOM', 'engineRoomIntro', engineRoomIntro, 'engineRoomImages', engineRoomImages, 10)}
+            {renderPhotoSection('10/ VIEW OF THE ACTIVITY MEASURING BUNKER ROB', 'bunkerRobIntro', bunkerRobIntro, 'bunkerRobImages', bunkerRobImages, 4)}
         </div>
     );
 };
 
 export default PhotographsSection;
+

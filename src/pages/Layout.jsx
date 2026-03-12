@@ -25,6 +25,7 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
   const { currentUser } = useAuth();
   const { dispatchUser } = useUser();
   const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -58,11 +59,13 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Analytics />
       {/* Sidebar */}
-      <aside className="w-64 bg-maritime-900 dark:bg-slate-950 text-white fixed top-16 h-[calc(100vh-4rem)] z-20 flex flex-col border-r border-slate-800">
-        <div className="p-6 border-b border-slate-800">
-          <Link to="/" className="text-xl font-bold flex items-center gap-2 tracking-tight">
-            <Ship className="text-blue-400" />
-            OnHire
+      <aside className={`w-64 fixed top-16 h-[calc(100vh-4rem)] z-20 flex flex-col border-r ${
+        isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'
+      }`}>
+        <div className={`p-6 border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+          <Link to="/" className={`text-xl font-bold flex items-center gap-2 tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            <Ship className={isDark ? 'text-blue-400' : 'text-blue-600'} />
+            <span>OnHire</span>
           </Link>
         </div>
         
@@ -74,24 +77,33 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                 activeTab === item.id
                   ? 'bg-gradient-to-r from-maritime-600 to-maritime-500 text-white shadow-lg shadow-maritime-900/20'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  : isDark 
+                    ? 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                    : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
               }`}
             >
-              <item.icon size={20} className={activeTab === item.id ? 'text-white' : 'text-slate-500 group-hover:text-white'} />
+              <item.icon size={20} className={activeTab === item.id ? 'text-white' : isDark ? 'text-slate-500 group-hover:text-white' : 'text-slate-500 group-hover:text-slate-900'} />
               <span className="font-medium">{item.label}</span>
             </button>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-800">
+        <div className={`p-4 border-t ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
           <button 
             onClick={toggleTheme}
-            className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors rounded-xl hover:bg-slate-800/50 mb-2"
+            className={`w-full flex items-center gap-3 px-4 py-3 transition-colors rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 mb-2 ${
+              isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             <span className="font-medium">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
-          <button onClick={handleLogoutClick} className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors rounded-xl hover:bg-slate-800">
+          <button 
+            onClick={handleLogoutClick} 
+            className={`w-full flex items-center gap-3 px-4 py-3 transition-colors rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 ${
+              isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
             <LogOut size={20} />
             <span className="font-medium">Sign Out</span>
           </button>

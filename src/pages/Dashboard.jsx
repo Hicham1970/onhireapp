@@ -31,7 +31,7 @@ function Dashboard() {
 
   if (currentUser) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-12 px-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-20 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
@@ -101,13 +101,13 @@ function Dashboard() {
               />
             </div>
 
-            {/* Quick Actions */}
+          {/* Quick Actions */}
             <div className="lg:col-span-2 space-y-6">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">Actions rapides</h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Link
-                  to="/dashboard"
+                  to="/onhire?tab=surveys"
                   className="flex items-center gap-4 p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 >
                   <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
@@ -123,7 +123,7 @@ function Dashboard() {
                 </Link>
 
                 <Link
-                  to="/dashboard"
+                  to="/onhire?tab=pictures"
                   className="flex items-center gap-4 p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 >
                   <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/25">
@@ -139,7 +139,7 @@ function Dashboard() {
                 </Link>
 
                 <Link
-                  to="/dashboard"
+                  to="/onhire?tab=vessels"
                   className="flex items-center gap-4 p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 >
                   <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25">
@@ -155,7 +155,7 @@ function Dashboard() {
                 </Link>
 
                 <Link
-                  to="/dashboard"
+                  to="/onhire?tab=ai"
                   className="flex items-center gap-4 p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 >
                   <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/25">

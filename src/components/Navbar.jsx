@@ -3,8 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAlert, useUser } from "../hooks/Hooks";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
-import { Ship, Menu, X, Shield, Home, User } from "lucide-react";
+import { Ship, Menu, X, Shield, Home, User, Sun, Moon } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 function Navbar() {
   const { dispatchAlert } = useAlert();
@@ -12,6 +13,7 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, userData, isAdmin } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -54,7 +56,7 @@ function Navbar() {
     <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
         ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg" 
-        : "bg-transparent"
+        : "bg-white/80 dark:bg-transparent"
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -145,6 +147,18 @@ function Navbar() {
               </>
             )}
 
+            {/* Theme Toggle Button */}
+            <button
+              onClick={() => {
+                console.log('Theme toggle clicked! Current theme:', theme);
+                toggleTheme();
+              }}
+              className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              title={theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+
             {/* Mobile Menu Button */}
             {!currentUser && location.pathname === "/" && (
               <button
@@ -227,6 +241,15 @@ function Navbar() {
                 <User className="w-5 h-5" />
                 Profil
               </Link>
+
+              {/* Theme Toggle in Mobile Menu */}
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-3 px-4 py-3 text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg"
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                <span>{theme === 'dark' ? 'Mode clair' : 'Mode sombre'}</span>
+              </button>
 
               <button
                 onClick={handleLogout}

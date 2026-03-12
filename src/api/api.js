@@ -236,3 +236,76 @@ export const savePhotoReport = async (userId, reportData) => {
         throw new Error(error.message);
     }
 };
+
+// ===========================================
+// ADMIN: Get ALL surveys from ALL users
+// ===========================================
+export const getAllSurveys = async () => {
+    try {
+        const snapshot = await get(ref(database, "surveys"));
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            // Transform into array with userId
+            const allSurveys = [];
+            for (const userId in data) {
+                const userSurveys = Object.keys(data[userId]).map(key => ({
+                    id: key,
+                    userId: userId,
+                    ...data[userId][key]
+                }));
+                allSurveys.push(...userSurveys);
+            }
+            return allSurveys.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error("Error fetching all surveys:", error);
+        throw new Error(error.message);
+    }
+};
+
+// ===========================================
+// ADMIN: Get ALL reports from ALL users
+// ===========================================
+export const getAllReports = async () => {
+    try {
+        const snapshot = await get(ref(database, "reports"));
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            // Transform into array with userId
+            const allReports = [];
+            for (const userId in data) {
+                const userReports = Object.keys(data[userId]).map(key => ({
+                    id: key,
+                    userId: userId,
+                    ...data[userId][key]
+                }));
+                allReports.push(...userReports);
+            }
+            return allReports.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error("Error fetching all reports:", error);
+        throw new Error(error.message);
+    }
+};
+
+// ===========================================
+// ADMIN: Get user info by userId
+// ===========================================
+export const getUserInfo = async (userId) => {
+    try {
+        const snapshot = await get(ref(database, `users/${userId}`));
+        if (snapshot.exists()) {
+            return { id: userId, ...snapshot.val() };
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+        throw new Error(error.message);
+    }
+};

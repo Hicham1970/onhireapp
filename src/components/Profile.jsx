@@ -59,7 +59,7 @@ function Profile({ username, email, password }) {
               </div>
             </div>
 
-            {/* Stats */}
+          {/* Stats */}
             <div className="grid grid-cols-3 gap-4">
               <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl text-center">
                 <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mx-auto mb-2">
@@ -84,55 +84,6 @@ function Profile({ username, email, password }) {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Quick Actions */}
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Actions rapides</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-          >
-            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-              <Ship className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
-                OnHire App
-              </h3>
-              <p className="text-sm text-slate-500">Créer une expertise</p>
-            </div>
-          </Link>
-
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-          >
-            <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center">
-              <Camera className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors">
-                Inspection Report
-              </h3>
-              <p className="text-sm text-slate-500">Créer un rapport photo</p>
-            </div>
-          </Link>
-
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-          >
-            <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center">
-              <Gauge className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
-                Fuel Calculator
-              </h3>
-              <p className="text-sm text-slate-500">Calculer le carburant</p>
-            </div>
-          </Link>
         </div>
       </div>
     </div>

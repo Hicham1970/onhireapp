@@ -33,7 +33,16 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/onhire" element={<OnHire />} />
+        <Route path="/onhire" element={<OnHire />}>
+          <Route index element={<OnHire tab="dashboard" />} />
+          <Route path="dashboard" element={<OnHire tab="dashboard" />} />
+          <Route path="surveys" element={<OnHire tab="surveys" />} />
+          <Route path="vessels" element={<OnHire tab="vessels" />} />
+          <Route path="ai" element={<OnHire tab="ai" />} />
+          <Route path="pictures" element={<OnHire tab="pictures" />} />
+          <Route path="settings" element={<OnHire tab="settings" />} />
+          <Route path="users" element={<OnHire tab="users" />} />
+        </Route>
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/users/:username/edit" element={<Edit />} />
         <Route path="/users/:username" element={<User />} />

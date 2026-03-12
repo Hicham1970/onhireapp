@@ -1,7 +1,10 @@
 import React from 'react';
+import { useTheme } from '../../../context/ThemeContext';
 import { Plus, Trash2 } from 'lucide-react';
 
 const VesselCertificates = ({ data, onChange }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const certificates = data || [];
 
     const updateCertificate = (index, field, value) => {
@@ -20,11 +23,13 @@ const VesselCertificates = ({ data, onChange }) => {
 
     return (
         <div className="max-w-5xl">
-            <h3 className="text-xl font-bold text-slate-800 mb-6 border-b border-slate-200 pb-4">3.0 VESSEL’S CERTIFICATES</h3>
+            <h3 className={`text-xl font-bold mb-6 border-b pb-4 ${isDark ? 'text-white border-slate-700' : 'text-slate-800 border-slate-200'}`}>3.0 VESSEL'S CERTIFICATES</h3>
             
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className={`rounded-xl overflow-hidden border shadow-sm ${
+                isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
+            }`}>
                 <table className="w-full text-left text-sm">
-                    <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                    <thead className={`font-semibold border-b ${isDark ? 'bg-slate-700 text-slate-300 border-slate-600' : 'bg-slate-50 text-slate-700 border-slate-200'}`}>
                         <tr>
                             <th className="px-4 py-3 w-1/2">CERTIFICATE</th>
                             <th className="px-4 py-3">DATE OF ISSUE</th>
@@ -32,15 +37,17 @@ const VesselCertificates = ({ data, onChange }) => {
                             <th className="px-4 py-3 w-10"></th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className={`divide-y ${isDark ? 'divide-slate-700' : 'divide-slate-100'}`}>
                         {certificates.map((cert, index) => (
-                            <tr key={index} className="hover:bg-slate-50 transition-colors">
+                            <tr key={index} className={`hover:${isDark ? 'bg-slate-700' : 'bg-slate-50'} transition-colors`}>
                                 <td className="px-4 py-2">
                                     <input 
                                         type="text" 
                                         value={cert.name} 
                                         onChange={(e) => updateCertificate(index, 'name', e.target.value)}
-                                        className="w-full bg-transparent border-none focus:ring-0 p-0 font-medium text-slate-900 placeholder-slate-400"
+                                        className={`w-full bg-transparent border-none focus:ring-0 p-0 font-medium placeholder-slate-400 ${
+                                            isDark ? 'text-white' : 'text-slate-900'
+                                        }`}
                                         placeholder="Certificate Name"
                                     />
                                 </td>
@@ -49,7 +56,9 @@ const VesselCertificates = ({ data, onChange }) => {
                                         type="date" 
                                         value={cert.issueDate} 
                                         onChange={(e) => updateCertificate(index, 'issueDate', e.target.value)}
-                                        className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-600"
+                                        className={`w-full bg-transparent border-none focus:ring-0 p-0 ${
+                                            isDark ? 'text-slate-300' : 'text-slate-600'
+                                        }`}
                                     />
                                 </td>
                                 <td className="px-4 py-2">
@@ -57,13 +66,15 @@ const VesselCertificates = ({ data, onChange }) => {
                                         type="date" 
                                         value={cert.expiryDate} 
                                         onChange={(e) => updateCertificate(index, 'expiryDate', e.target.value)}
-                                        className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-600"
+                                        className={`w-full bg-transparent border-none focus:ring-0 p-0 ${
+                                            isDark ? 'text-slate-300' : 'text-slate-600'
+                                        }`}
                                     />
                                 </td>
                                 <td className="px-4 py-2 text-center">
                                     <button 
                                         onClick={() => removeCertificate(index)}
-                                        className="text-slate-400 hover:text-red-500 transition-colors p-1"
+                                        className={`transition-colors p-1 ${isDark ? 'text-slate-400 hover:text-red-400' : 'text-slate-400 hover:text-red-500'}`}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -72,8 +83,10 @@ const VesselCertificates = ({ data, onChange }) => {
                         ))}
                     </tbody>
                 </table>
-                <div className="p-3 bg-slate-50 border-t border-slate-200">
-                    <button onClick={addCertificate} className="flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors"><Plus className="w-4 h-4" /> Add Certificate</button>
+                <div className={`p-3 border-t ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-slate-50 border-slate-200'}`}>
+                    <button onClick={addCertificate} className={`flex items-center gap-2 text-sm font-bold transition-colors ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
+                        <Plus className="w-4 h-4" /> Add Certificate
+                    </button>
                 </div>
             </div>
         </div>
@@ -81,3 +94,4 @@ const VesselCertificates = ({ data, onChange }) => {
 };
 
 export default VesselCertificates;
+
