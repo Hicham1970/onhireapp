@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Alert from './components/Alert';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import OnHire from './pages/Onhire';
-import Dashboard from './pages/Dashboard';
+import DashboardUser from './pages/DashboardUser';
+import DashboardAdmin from './pages/DashboardAdmin';
+import CreateSurvey from './pages/CreateSurvey';
 import AdminDashboard from './pages/AdminDashboard';
 import Edit from './pages/Edit';
 import User from './pages/User';
@@ -15,7 +16,7 @@ import Notfound from './pages/Notfound';
 import { useAuth } from './context/AuthContext';
 
 function App() {
-  const { currentUser } = useAuth();
+  const { currentUser, userData, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,26 +25,23 @@ function App() {
     }
   }, [currentUser, navigate]);
 
+  if (loading) {
+    return <div className="flex h-screen items-center justify-center">Chargement...</div>;
+  }
+
   return (
     <>
       <Navbar />
       <Alert />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={currentUser ? <Navigate to="/dashboard" /> : <Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/onhire" element={<OnHire />}>
-          <Route index element={<OnHire tab="dashboard" />} />
-          <Route path="dashboard" element={<OnHire tab="dashboard" />} />
-          <Route path="surveys" element={<OnHire tab="surveys" />} />
-          <Route path="vessels" element={<OnHire tab="vessels" />} />
-          <Route path="ai" element={<OnHire tab="ai" />} />
-          <Route path="pictures" element={<OnHire tab="pictures" />} />
-          <Route path="settings" element={<OnHire tab="settings" />} />
-          <Route path="users" element={<OnHire tab="users" />} />
-        </Route>
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/dashboard" element={<DashboardUser />} />
+        <Route path="/create-survey" element={<CreateSurvey />} />
+        <Route path="/admin" element={userData?.role === 'admin' ? <DashboardAdmin /> : <Navigate to="/dashboard" /> } />
+        <Route path="/admin/dashboard" element={userData?.role === 'admin' ? <DashboardAdmin /> : <Navigate to="/dashboard" /> } />
+        <Route path="/admin/*" element={userData?.role === 'admin' ? <DashboardAdmin /> : <Navigate to="/dashboard" /> } />
         <Route path="/users/:username/edit" element={<Edit />} />
         <Route path="/users/:username" element={<User />} />
         <Route path="/users" element={<Users />} />

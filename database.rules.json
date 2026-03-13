@@ -7,28 +7,26 @@
         ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
-   
     "pesageData": {
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
         ".write": "auth != null && auth.uid == $uid"
       }
     },
- 
     "surveys": {
       "$uid": {
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid"
+        ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && auth.uid == $uid",
+        ".indexOn": ["createdAt", "type", "name"]
       }
     },
-    
     "vessels": {
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
         ".write": "auth != null && auth.uid == $uid"
       }
     },
-        "photoReports": {
+    "photoReports": {
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
         ".write": "auth != null && auth.uid == $uid"
@@ -42,3 +40,4 @@
     }
   }
 }
+

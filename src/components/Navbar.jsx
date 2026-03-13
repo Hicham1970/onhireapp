@@ -113,15 +113,11 @@ function Navbar() {
                 </Link>
 
                 {/* Admin Link - Only for admins */}
-                {isAdmin() && (
-                  <Link
-                    to="/admin"
-                    className="flex items-center justify-center gap-2 bg-purple-600 text-white font-medium text-sm px-4 py-2 rounded-full hover:bg-purple-700 transition-colors shadow-sm"
-                    title="Admin Dashboard"
-                  >
+{isAdmin() && (
+                  <div className="flex items-center gap-2 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 px-3 py-1 rounded-full text-xs font-medium">
                     <Shield className="w-4 h-4" />
-                    <span className="hidden md:inline">Admin</span>
-                  </Link>
+                    <span>ADMIN</span>
+                  </div>
                 )}
 
                 {/* User Profile */}
