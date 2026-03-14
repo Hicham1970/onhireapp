@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { getUsers, getUser, updateUser, deleteUser } from "../api/api";
 import { 
-  Users, Package, FileText, BarChart3, Settings, Search, 
-  Edit, Trash2, MoreVertical, ChevronDown, Shield, 
+  getUsers, getUser, updateUser, deleteUser,
+  getAllSurveys, getAllReports, deleteSurvey, deleteFullReport, getUserInfo 
+} from "../api/api";
+import { 
+  Users, Package, FileText, BarChart3, Settings, Search, Ship,
+  Edit3, Trash2, MoreVertical, ChevronDown, Shield, 
   TrendingUp, DollarSign, Eye, Activity, Loader2,
   Menu, X, LogOut, Home, Package as OrderIcon
 } from "lucide-react";
@@ -17,6 +20,10 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [allSurveys, setAllSurveys] = useState([]);
+  const [allReports, setAllReports] = useState([]);
+  const [loadingSurveys, setLoadingSurveys] = useState(false);
+  const [loadingReports, setLoadingReports] = useState(false);
 
   // Vérification d'accès admin
   useEffect(() => {
@@ -46,6 +53,47 @@ function AdminDashboard() {
     
     fetchUsers();
   }, [currentUser, isAdmin]);
+
+  // Load all surveys and reports
+  useEffect(() => {
+    const loadData = async () => {
+      if (!currentUser || !isAdmin()) return;
+      setLoadingSurveys(true);
+      setLoadingReports(true);
+      try {
+        const surveys = await getAllSurveys();
+        setAllSurveys(surveys);
+        const reports = await getAllReports();
+        setAllReports(reports);
+      } catch (error) {
+        console.error('Error loading admin data:', error);
+      } finally {
+        setLoadingSurveys(false);
+        setLoadingReports(false);
+      }
+    };
+    loadData();
+  }, [currentUser, isAdmin]);
+
+  const handleDeleteSurvey = async (userId, surveyId) => {
+    if (!window.confirm(`Supprimer ce survey de l'utilisateur ${userId.slice(0,8)}...?`)) return;
+    try {
+      await deleteSurvey(userId, surveyId);
+      setAllSurveys(allSurveys.filter(s => s.id !== surveyId || s.userId !== userId));
+    } catch (error) {
+      alert(`Erreur suppression: ${error.message}`);
+    }
+  };
+
+  const handleDeleteReport = async (userId, reportId) => {
+    if (!window.confirm('Supprimer ce rapport?')) return;
+    try {
+      await deleteFullReport(userId, reportId);
+      setAllReports(allReports.filter(r => r.id !== reportId || r.userId !== userId));
+    } catch (error) {
+      alert(`Erreur suppression: ${error.message}`);
+    }
+  };
 
   const handleDeleteUser = async (userId) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur?")) {
@@ -79,6 +127,8 @@ function AdminDashboard() {
 
   const adminTabs = [
     { id: "overview", label: "Aperçu", icon: BarChart3 },
+    { id: "surveys", label: "Surveys", icon: Ship },
+    { id: "rapports", label: "Rapports", icon: FileText },
     { id: "clients", label: "Clients", icon: Users },
     { id: "orders", label: "Commandes", icon: OrderIcon },
     { id: "blog", label: "Blog", icon: FileText },
@@ -214,6 +264,14 @@ function AdminDashboard() {
               <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Actions rapides</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <button onClick={() => setActiveTab("surveys")} className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">
+                    <Ship className="w-6 h-6 mx-auto mb-2" />
+                    <span className="text-sm font-medium">Surveys ({allSurveys.length})</span>
+                  </button>
+                  <button onClick={() => setActiveTab("rapports")} className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
+                    <FileText className="w-6 h-6 mx-auto mb-2" />
+                    <span className="text-sm font-medium">Rapports ({allReports.length})</span>
+                  </button>
                   <button onClick={() => setActiveTab("clients")} className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
                     <Users className="w-6 h-6 mx-auto mb-2" />
                     <span className="text-sm font-medium">Gérer clients</span>
@@ -222,16 +280,150 @@ function AdminDashboard() {
                     <Package className="w-6 h-6 mx-auto mb-2" />
                     <span className="text-sm font-medium">Voir commandes</span>
                   </button>
-                  <button onClick={() => setActiveTab("settings")} className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors">
-                    <Settings className="w-6 h-6 mx-auto mb-2" />
-                    <span className="text-sm font-medium">Paramètres</span>
-                  </button>
-                  <button onClick={() => setActiveTab("analytics")} className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors">
-                    <Activity className="w-6 h-6 mx-auto mb-2" />
-                    <span className="text-sm font-medium">Analytics</span>
-                  </button>
                 </div>
               </div>
+
+              {/* Bottom Buttons */}
+              <div className="bg-gradient-to-r from-blue-500 to-emerald-600 text-white rounded-2xl p-8 text-center">
+                <h3 className="text-xl font-bold mb-4">Accès Rapide OnHireApp</h3>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <Link 
+                    to="/onhire" 
+                    className="group flex items-center gap-3 bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl hover:bg-white/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1"
+                  >
+                    <Ship className="w-8 h-8 group-hover:rotate-12 transition-transform" />
+                    <span className="text-lg font-semibold">OnHireApp</span>
+                  </Link>
+                  <Link 
+                    to="/onhire?tab=pictures" 
+                    className="group flex items-center gap-3 bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl hover:bg-white/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1"
+                  >
+                    <FileText className="w-8 h-8" />
+                    <span className="text-lg font-semibold">Rapport Inspection</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
+
+          {/* Surveys Tab */}
+          {activeTab === "surveys" && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Gestion des Surveys</h1>
+              </div>
+
+              {loadingSurveys ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-blue-600 mr-3" />
+                  Chargement surveys...
+                </div>
+              ) : allSurveys.length === 0 ? (
+                <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                  <Ship className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>Aucun survey trouvé</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {allSurveys.map((survey) => (
+                    <div key={`${survey.userId}-${survey.id}`} className="bg-white dark:bg-slate-800 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900 rounded-xl flex items-center justify-center">
+                            <Ship className="w-8 h-8 text-emerald-600" />
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-bold text-xl text-slate-900 dark:text-white truncate">{survey.name}</span>
+                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full dark:bg-blue-900/50 dark:text-blue-300">
+                              {survey.userId.slice(0,8)}
+                            </span>
+                          </div>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">IMO: {survey.imo}</p>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">{survey.date}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            HFO: <span className="font-mono">{survey.finalHFO || 0}</span> MT | MGO: <span className="font-mono">{survey.finalMGO || 0}</span> MT
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => navigate(`/admin/edit-survey/${survey.userId}/${survey.id}`)}
+                            className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
+                            title="Editer"
+                          >
+                            <Edit3 className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteSurvey(survey.userId, survey.id)}
+                            className="p-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
+                            title="Supprimer"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Rapports Tab */}
+          {activeTab === "rapports" && (
+            <div className="space-y-6">
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Gestion des Rapports</h1>
+              {loadingReports ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-blue-600 mr-3" />
+                  Chargement rapports...
+                </div>
+              ) : allReports.length === 0 ? (
+                <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                  <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>Aucun rapport trouvé</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {allReports.map((report) => (
+                    <div key={`${report.userId}-${report.id}`} className="bg-white dark:bg-slate-800 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center">
+                            <FileText className="w-8 h-8 text-purple-600" />
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-bold text-xl text-slate-900 dark:text-white truncate">{report.vesselName || 'Rapport'}</span>
+                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full dark:bg-blue-900/50 dark:text-blue-300">
+                              {report.userId.slice(0,8)}
+                            </span>
+                          </div>
+                          <p className="text-sm text-slate-500 dark:text-slate-400">{report.createdAt ? new Date(report.createdAt).toLocaleDateString('fr-FR') : 'N/A'}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button 
+                            className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
+                            title="Editer"
+                          >
+                            <Edit3 className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteReport(report.userId, report.id)}
+                            className="p-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
+                            title="Supprimer"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -325,6 +517,7 @@ function AdminDashboard() {
               </div>
             </div>
           )}
+
 
           {/* Orders Tab */}
           {activeTab === "orders" && (

@@ -1,47 +1,80 @@
-import React, { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FuelCalculator } from './FuelCalculator';
 import { INITIAL_VESSELS } from './constants';
 import { ChevronLeft } from 'lucide-react';
-import { saveSurvey } from '../api/surveyApi';
+import { updateSurvey } from '../api/api';
+import { getSurveys } from '../api/api';
 
-const CreateSurvey = () => {
+const EditSurvey = () => {
   const { currentUser } = useAuth();
+  const { surveyId } = useParams();
   const navigate = useNavigate();
 
-  // Ship Particulars State
+  // Ship Particulars State - load from survey
   const [shipData, setShipData] = useState({
-    name: 'SUNDERS KNIGHT',
-    date: '2026-03-05',
-    owner: 'china buildings co',
-    imo: '9388623',
-    time: '2026-03-12T12:00',
-    charterer: 'Fertiberia Brazil',
+    name: '',
+    date: '',
+    owner: '',
+    imo: '',
+    time: '',
+    charterer: '',
     type: 'ONHIRE SURVEY',
     status: 'Completed',
-    placeOfSurvey: 'CASABLANCA PORT BERTH R2',
-    callSign: 'AZ9ZE1',
-    master: 'Wiliams Andrew',
-    placeOfDelivery: 'DLOPS',
-    chiefEngineer: 'carlos maringa roubio',
-    draftFwd: '10.34',
-    draftAft: '12.33',
-    voy: '12L/26',
-    list: '0',
-    erTemp: '31',
-    thermometer: 'CIAS',
-    // Certificates
-    portOfRegistry: 'MAJURO',
-    grossTons: '24,087',
-    netTons: '12,210',
-    placeOfRedelivery: 'DLOSP CASABLANCA',
-    redeliveryDate: '28.09.2025 - 12:00',
-    surveyCompletedDate: 'CASABLANCA - 15:00'
+    placeOfSurvey: '',
+    callSign: '',
+    master: '',
+    placeOfDelivery: '',
+    chiefEngineer: '',
+    draftFwd: '',
+    draftAft: '',
+    voy: '',
+    list: '',
+    erTemp: '',
+    thermometer: '',
+    portOfRegistry: '',
+    grossTons: '',
+    netTons: '',
+    placeOfRedelivery: '',
+    redeliveryDate: '',
+    surveyCompletedDate: ''
   });
+  const [fuelEntries, setFuelEntries] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (currentUser?.uid && surveyId) {
+      loadSurvey();
+    }
+  }, [currentUser, surveyId]);
+
+  const loadSurvey = async () => {
+    try {
+      const surveys = await getSurveys(currentUser.uid);
+      const foundSurvey = surveys.find(s => s.id === surveyId);
+      if (foundSurvey) {
+        const data = foundSurvey;
+        // Set shipData
+        Object.keys(shipData).forEach(key => {
+          if (data[key] !== undefined) {
+            setShipData(prev => ({ ...prev, [key]: data[key] }));
+          }
+        });
+        // Set fuel entries if exist
+        if (data.fuelEntries) {
+          setFuelEntries(data.fuelEntries);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading survey:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCancel = () => {
-    navigate('/dashboard');
+    navigate('/onhire');
   };
 
   const handleSave = useCallback(async (entries, finalHFO, finalMGO) => {
@@ -56,22 +89,36 @@ const CreateSurvey = () => {
         fuelEntries: entries,
         finalHFO,
         finalMGO,
-        userId: currentUser.uid,
-        createdAt: new Date().toISOString()
+        updatedAt: new Date().toISOString()
       };
       
-      const result = await saveSurvey(currentUser.uid, surveyData);
-      alert(`Expertise sauvée ! ID: ${result.surveyId}`);
-      navigate('/dashboard');
+      await updateSurvey(currentUser.uid, surveyId, surveyData);
+      alert('Expertise mise à jour !');
+      navigate('/onhire');
     } catch (error) {
-      console.error('Save error:', error);
-      alert('Erreur sauvegarde: ' + error.message);
+      console.error('Update error:', error);
+      alert('Erreur mise à jour: ' + error.message);
     }
-  }, [currentUser, shipData, navigate]);
+  }, [currentUser, shipData, surveyId, navigate]);
 
   const updateShipData = (field, value) => {
     setShipData(prev => ({ ...prev, [field]: value }));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <div className="text-center">
+
+            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse">
+            </div>
+
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400">Chargement du survey...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-20 px-4">
@@ -84,10 +131,9 @@ const CreateSurvey = () => {
           >
             <ChevronLeft className="w-5 h-5" />
             Retour Onhire
-
           </button>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-            Créer Nouvelle Expertise
+            Editer Expertise
           </h1>
           <div className="w-32" />
         </div>
@@ -95,7 +141,7 @@ const CreateSurvey = () => {
         {/* Ship Particulars Form */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 shadow-xl">
           <h2 className="text-2xl font-bold mb-8 flex items-center gap-3 text-slate-900 dark:text-white">
-<div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
+            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold">E</div>
             Ship Particulars
           </h2>
 
@@ -284,8 +330,9 @@ const CreateSurvey = () => {
           <FuelCalculator 
             tanks={INITIAL_VESSELS[0]?.tanks || []} 
             onSave={handleSave}
-            initialData={[]}
+            initialData={fuelEntries}
             shipData={shipData}
+            isEditMode={true}
           />
         </div>
       </div>
@@ -293,5 +340,5 @@ const CreateSurvey = () => {
   );
 };
 
-export default CreateSurvey;
+export default EditSurvey;
 

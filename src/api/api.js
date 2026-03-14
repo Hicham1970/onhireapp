@@ -238,6 +238,35 @@ export const savePhotoReport = async (userId, reportData) => {
 };
 
 // ===========================================
+// ADMIN: Update a survey (for edit)
+// ===========================================
+export const updateSurvey = async (userId, surveyId, surveyData) => {
+  if (!userId || !surveyId) throw new Error("ID utilisateur et ID survey requis.");
+  try {
+    await set(ref(database, `surveys/${userId}/${surveyId}`), {
+      ...surveyData,
+      updatedAt: new Date().toISOString()
+    });
+    return { success: true };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// ===========================================
+// ADMIN: Update a full report
+// ===========================================
+export const updateFullReport = async (userId, reportId, reportData) => {
+  if (!userId || !reportId) throw new Error("ID utilisateur et ID rapport requis.");
+  try {
+    await set(ref(database, `reports/${userId}/${reportId}`), reportData);
+    return { success: true };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// ===========================================
 // ADMIN: Get ALL surveys from ALL users
 // ===========================================
 export const getAllSurveys = async () => {

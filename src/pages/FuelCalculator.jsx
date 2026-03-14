@@ -91,7 +91,7 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
       MDO: dirtySummary.MDO ? prev.MDO : calculatedTotals.MDO,
       LSMGO: dirtySummary.LSMGO ? prev.LSMGO : calculatedTotals.LSMGO,
     }));
-  }, [calculatedTotals, dirtySummary]);
+  }, [calculatedTotals.VLSFO, calculatedTotals.HSFO, calculatedTotals.MDO, calculatedTotals.LSMGO, dirtySummary]);
 
   const calculateCorrected = (tankId) => {
     const entry = entries[tankId];

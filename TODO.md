@@ -1,20 +1,19 @@
-# TODO: Fix FullReport.jsx Errors
+# Admin Dashboard Fixes - OnHireApp Buttons & Surveys Management
 
-- [ ] Fix typos and incomplete lines in generatePDF function (brand object, doc.setTextColor, etc.)
-- [ ] Define missing addTextBlock function
-- [ ] Complete addSectionTitle function
-- [ ] Fix renderSectionComponent to use proper switch-case structure
-- [ ] Correct autoTable calls and data references
-- [ ] Verify all syntax errors are resolved
-- [ ] Test PDF generation functionality
+## Plan Progress
+✅ Step 1: Create TODO.md
 
-# Todos Fix VCF:
+✅ Step 2: Update src/api/api.js - Add updateSurvey function
 
-  ┃
-  ┃  [✓] Analyser et documenter les erreurs de formules VCF (ASTM D1250 Table 54B)
-  ┃  [✓] Corriger les coefficients K0 et K1 selon les plages de densité ASTM D1250
-  ┃  [✓] Implémenter le calcul ALPHA correct (avec K1 * DEN15)
-  ┃  [✓] Ajouter la zone de transition (770 < DEN15 < 778)
-  ┃  [✓] Vérifier et corriger la densité par défaut selon le type de fuel
-  ┃  [✓] Ajouter des tests unitaires pour valider les formules
-  ┃  [✓] Créer une fonction utilitaire de calcul VCF réutilisable
+✅ Step 3: Update src/pages/AdminDashboard.jsx - Add Surveys tab with list/edit/delete, Rapports tab, bottom buttons
+
+✅ Step 4: Test functionality (login as admin, check new tabs, delete survey if exists, bottom buttons work)
+
+✅ Step 5: Update TODO.md on completion
+
+## Details
+- Add 'Surveys' tab using getAllSurveys()
+- Add 'Rapports' tab using getAllReports()
+- Surveys list: Show user, name, IMO, date, HFO/MGO, edit/delete buttons
+- Bottom buttons in overview: 'OnHireApp' → /onhire, 'Rapport Inspection' → /onhire?tab=pictures
+- Admin can delete any user's surveys/reports
