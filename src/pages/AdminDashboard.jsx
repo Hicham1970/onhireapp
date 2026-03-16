@@ -171,13 +171,7 @@ function AdminDashboard() {
                 <span className="text-sm text-slate-500">Connecté en tant que</span>
                 <span className="font-semibold text-slate-900 dark:text-white">{userData?.username}</span>
               </div>
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"
-              >
-                <Home className="w-4 h-4" />
-                Retour
-              </Link>
+
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { saveFullReport } from '../../api/api';
@@ -35,6 +36,7 @@ const reportSections = [
 const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
     const { currentUser } = useAuth();
     const { theme, toggleTheme } = useTheme();
+    const navigate = useNavigate();
     
     // Debug: vérifier la valeur du thème
     console.log('Current theme:', theme);
@@ -555,7 +557,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                             <button
                                 key={section.id}
                                 onClick={() => setActiveSection(section.id)}
-                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeSection === section.id ? 'bg-maritime-100 text-maritime-800 dark:bg-maritime-900 dark:text-maritime-200' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-all shadow-sm ${activeSection === section.id ? 'bg-maritime-100 text-maritime-800 ring-2 ring-maritime-400/30 shadow-md dark:bg-maritime-900 dark:text-maritime-100 dark:ring-maritime-400/30' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:shadow-sm'}`}
                             >
                                 {section.title}
                             </button>
@@ -579,7 +581,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                             >
                                 {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                             </button>
-                            <button onClick={() => navigate('/onhire')} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600">
+                            <button onClick={() => navigate('/admin/dashboard')} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600">
                                 <X className="w-4 h-4" /> Fermer
                             </button>
                             <button onClick={() => {
@@ -596,7 +598,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                             </button>
                         </div>
                     </header>
-                    <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+                    <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
                         {renderSectionComponent()}
                     </div>
                 </main>

@@ -66,7 +66,7 @@ function Navbar() {
             className="flex items-center gap-2 text-xl font-bold text-slate-800 dark:text-white hover:opacity-80 transition-opacity"
           >
             <Ship className="w-8 h-8 text-blue-600" />
-            <span>OnHireApp</span>
+            <span>MarineSurveyorDev</span>
           </Link>
 
           {/* Desktop Navigation */}

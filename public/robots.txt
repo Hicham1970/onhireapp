@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://marinesurveyordev.com/sitemap.xml
