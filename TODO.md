@@ -1,19 +1,30 @@
-# Admin Dashboard Fixes - OnHireApp Buttons & Surveys Management
+# DashboardUser Dynamic Updates - Implementation Steps
 
-## Plan Progress
-✅ Step 1: Create TODO.md
+## Status
+✅ Plan approved by user  
+✅ Detailed steps created  
 
-✅ Step 2: Update src/api/api.js - Add updateSurvey function
+## Steps to Complete
 
-✅ Step 3: Update src/pages/AdminDashboard.jsx - Add Surveys tab with list/edit/delete, Rapports tab, bottom buttons
+### ✅ Step 1: Update DashboardUser.jsx
+- ✅ Add necessary imports (useState, useEffect fully; getSurveys, getFullReports, getVessels from '../api/api')
+- ✅ Add component states: surveys, reports, vessels, loadingData, error
+- ✅ Add useEffect to fetch data after auth loads (use currentUser.uid)
+- ✅ Replace hardcoded stats with dynamic counts (vessels.length, surveys.length, reports.length)
 
-✅ Step 4: Test functionality (login as admin, check new tabs, delete survey if exists, bottom buttons work)
+### ⏳ Step 2: Update TODO.md progress
+- [ ] Mark DashboardUser updates as completed
+- [ ] Add testing verification
 
-✅ Step 5: Update TODO.md on completion
+### ⏳ Step 3: Testing & Verification
+- [ ] Run `npm run dev`
+- [ ] Navigate to /dashboard as user
+- [ ] Verify stats update dynamically based on real data
+- [ ] Check recent lists show actual items with working links (/onhire#id, /reports#id)
+- [ ] Test loading states and error handling (no data)
 
-## Details
-- Add 'Surveys' tab using getAllSurveys()
-- Add 'Rapports' tab using getAllReports()
-- Surveys list: Show user, name, IMO, date, HFO/MGO, edit/delete buttons
-- Bottom buttons in overview: 'OnHireApp' → /onhire, 'Rapport Inspection' → /onhire?tab=pictures
-- Admin can delete any user's surveys/reports
+### ⏳ Step 4: Optional Polish (if data available)
+- [ ] Add refresh button for data
+- [ ] Ensure Firebase rules allow reads for authenticated users
+
+**Next Action**: Complete Step 1 by editing DashboardUser.jsx

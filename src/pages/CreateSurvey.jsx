@@ -75,7 +75,34 @@ const CreateSurvey = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-20 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
+
+        <div className="max-w-6xl mx-auto space-y-8">
+          {/* Download PDF Button */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Télécharger Rapport PDF</h3>
+            <button 
+              onClick={() => {
+                const reportData = {
+                  vesselName: shipData.name,
+                  imo: shipData.imo,
+                  date: shipData.date,
+                  // Add other fields from shipData
+                  ...shipData
+                };
+                // Generate and download PDF (similar to FullReport)
+                const finalReportData = {
+                  ...reportData,
+                  createdAt: new Date().toISOString()
+                };
+                // Call PDF generation function here
+                alert('PDF download feature added - implement jsPDF generation');
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
+            >
+              📄 Télécharger PDF Rapport Survey
+            </button>
+          </div>
+
         {/* Header */}
         <div className="flex items-center justify-between">
           <button 

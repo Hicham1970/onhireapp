@@ -380,7 +380,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
         yPos = doc.lastAutoTable.finalY + 10;
 
         // 5.0 - 8.0 GENERAL INFO
-        addSectionTitle("5.0 - 8.0 GENERAL INFO");
+        // addSectionTitle("5.0 - 8.0 GENERAL INFO");
         const gi = reportData.generalInfo || {};
         addTextBlock(gi.generalDescription, "5.0 General Description");
         addTextBlock(gi.previousVoyage, "6.0 Previous Voyage");
@@ -579,7 +579,7 @@ const FullReport = ({ vessel, initialData, onCancel, onSaved }) => {
                             >
                                 {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                             </button>
-                            <button onClick={onCancel} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600">
+                            <button onClick={() => navigate('/onhire')} className="bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm border border-slate-200 dark:border-slate-600">
                                 <X className="w-4 h-4" /> Fermer
                             </button>
                             <button onClick={() => {

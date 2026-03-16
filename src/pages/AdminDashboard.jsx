@@ -405,12 +405,15 @@ function AdminDashboard() {
                           <p className="text-sm text-slate-500 dark:text-slate-400">{report.createdAt ? new Date(report.createdAt).toLocaleDateString('fr-FR') : 'N/A'}</p>
                         </div>
                         <div className="flex gap-2">
+
                           <button 
+                            onClick={() => navigate(`/admin/edit-report/${report.userId}/${report.id}`)}
                             className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
                             title="Editer"
                           >
                             <Edit3 className="w-5 h-5" />
                           </button>
+
                           <button 
                             onClick={() => handleDeleteReport(report.userId, report.id)}
                             className="p-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors shadow-sm hover:shadow-md"

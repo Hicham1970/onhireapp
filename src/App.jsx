@@ -14,8 +14,11 @@ import User from './pages/User';
 import Users from './pages/Users';
 import Onhire from './pages/Onhire';
 import EditSurvey from './pages/EditSurvey';
+
 import Notfound from './pages/Notfound';
+import Reports from './pages/Reports';
 import { useAuth } from './context/AuthContext';
+
 
 function App() {
   const { currentUser, userData, loading } = useAuth();
@@ -44,7 +47,10 @@ function App() {
         <Route path="/admin" element={userData?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/dashboard" /> } />
         <Route path="/admin/dashboard" element={userData?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/dashboard" /> } />
         <Route path="/admin/*" element={userData?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/dashboard" /> } />
+
         <Route path="/onhire" element={<Onhire />} />
+        <Route path="/reports" element={<Reports />} />
+
         <Route path="/edit-survey/:surveyId" element={<EditSurvey />} />
         <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
         <Route path="/create-survey" element={<CreateSurvey />} />
