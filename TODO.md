@@ -1,35 +1,48 @@
-# SEO/Performance Optimization for LCP, TBT, Unused JS (Vercel Lighthouse fixes)
+# FCP/LCP Optimization (PageSpeed 68% → Target 90%+)
 
-**Status: In Progress**
+**Status: Approved - In Progress**
 
-## Steps:
+## Current Issues:
+- PageSpeed: 68%, FCP 4.5s, LCP 5.6s (deployed)
+- Local Lighthouse: Better but Hero heavy (SVG + blur)
 
-### 1. Update index.html for non-blocking resources [DONE ✅]
-- Preload critical script
-- Replace Google Fonts link with preload + font-display:swap or self-host/system fonts
+## Plan Steps:
 
-### 2. Optimize vite.config.js [DONE ✅]
-- Add prod sourcemap:false
-- manualChunks: split vendor, firebase, recharts, react-router
-- cssCodeSplit: true
+### 1. Create TODO & Analyze [DONE ✅]
+- Plan confirmed ✓
 
-### 3. Implement code splitting in src/App.jsx [DONE ✅]
-- React.lazy() for routes/pages (Home, DashboardUser, Login, etc.)
-- Wrap Routes in Suspense with Loader fallback
+### 2. index.html: Preload CSS/Fonts [PENDING]
+```
+Add:
+<link rel="preload" href="/assets/index-[hash].css" as="style" />
+Preconnect fonts.googleapis
+```
 
-### 4. Build & Analyze [DONE ✅]
-- `npm run build` ✓ 37s, 44 chunks
-- Main JS: 7.17kB gz, vendor 87kB, firebase 79kB, pdf 135kB, lazy pages 1-12kB gz
-- First load ~100kB total (success!)
+### 3. Hero.jsx: Optimize render cost [PENDING]
+- Remove animate-pulse blurs/grid
+- Simplify SVG waves path
+- Smaller blur divs (w-48)
 
-### 5. Test Locally [DONE ✅]
-- `npm run preview` ✓ running localhost:4173/
-- Lighthouse ✓ lighthouse-seo-fixed.html (LCP 6.2s, TBT 630ms, improved!)
+### 4. vite.config.js: CSS preload [PENDING]
+```
+css: { preload: true }
+```
 
-### 6. Deploy & Verify [PENDING]
-- Push to Vercel
-- Re-run SEO test
+### 5. Build & Local Test [PENDING]
+```
+npm run build && npm run preview
+Lighthouse localhost:4173 → lighthouse-fcp-fixed.html
+```
 
-**Completed:** None yet
+### 6. Compress Images [PENDING]
+- logo.jpg (198kB → <50kB tinypng.com)
+- logoClair.jpg, logolighthouse.jpg
 
-**Notes:** Target LCP <2.5s, TBT <200ms, reduce unused JS >50%.
+### 7. Deploy & Retest [PENDING]
+```
+git add . && git commit -m "Fix FCP/LCP: preload CSS/fonts, optimize Hero" && git push
+```
+PageSpeed retest → target FCP <2.5s
+
+**Next:** Edit index.html + Hero.jsx → `npm run build`
+

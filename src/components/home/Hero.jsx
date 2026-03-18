@@ -15,19 +15,19 @@ const Hero = () => {
     }`}>
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Animated waves */}
-        <div className="absolute bottom-0 left-0 w-full h-64 md:h-96 opacity-20">
-          <svg className="absolute bottom-0 w-full animate-pulse" viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path fill="#3b82f6" fillOpacity="0.3" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        {/* Simplified waves - reduced complexity */}
+        <div className="absolute bottom-0 left-0 w-full h-48 md:h-64 opacity-15">
+          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path fill="#3b82f6" fillOpacity="0.25" d="M0,160L48,170C96,180,192,200,288,210C384,220,480,220,576,210C672,200,768,180,864,170C960,160,1056,160,1152,170C1248,180,1344,200,1392,220L1440,240L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
           </svg>
         </div>
         
-        {/* Floating elements */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        {/* Optimized floating elements - smaller, no pulse */}
+        <div className="absolute top-24 left-8 w-48 h-48 bg-blue-400/15 rounded-full blur-xl"></div>
+        <div className="absolute bottom-24 right-8 w-64 h-64 bg-cyan-400/15 rounded-full blur-xl"></div>
         
-        {/* Grid pattern */}
-        <div className={`absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] ${isDark ? 'opacity-30' : 'opacity-20'}`}></div>
+        {/* Lighter grid - reduced opacity */}
+        <div className={`absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAxMDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMSI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMSI8L2NpcmNsZT48L2c+PC9nPjwvc3ZnPg==')] ${isDark ? 'opacity-20' : 'opacity-10'}`}></div>
       </div>
 
       {/* Content */}

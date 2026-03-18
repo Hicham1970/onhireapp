@@ -9,6 +9,11 @@ export default defineConfig(({ mode }) => ({
       '@': '/src',
     },
   },
+  css: {
+    preload: {
+      include: 'all'
+    }
+  },
   build: {
     sourcemap: mode === 'production' ? false : 'inline',
     cssCodeSplit: true,

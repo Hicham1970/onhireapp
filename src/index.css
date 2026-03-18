@@ -3,5 +3,5 @@
 @variant dark (&:where(.dark, .dark *));
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
