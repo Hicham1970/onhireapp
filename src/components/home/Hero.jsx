@@ -104,9 +104,7 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Dashboard Preview */}
-        <div className="mt-20 relative">
-          <div className="relative mx-auto max-w-5xl">
+
             {/* Glow effect */}
             <div className={`absolute -inset-4 bg-gradient-to-r rounded-3xl blur-2xl ${
               isDark 
