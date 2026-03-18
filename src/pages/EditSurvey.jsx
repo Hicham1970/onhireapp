@@ -8,7 +8,9 @@ import { updateSurvey } from '../api/api';
 import { getSurveys } from '../api/api';
 
 const EditSurvey = () => {
-  const { currentUser } = useAuth();
+const { currentUser, userData } = useAuth();
+  const isAdmin = userData?.role === 'admin';
+  const { userId } = useParams();
   const { surveyId } = useParams();
   const navigate = useNavigate();
 
@@ -44,14 +46,15 @@ const EditSurvey = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (currentUser?.uid && surveyId) {
+    if ((currentUser?.uid && surveyId) || (isAdmin && userId && surveyId)) {
       loadSurvey();
     }
-  }, [currentUser, surveyId]);
+  }, [currentUser, userData, surveyId, userId]);
 
   const loadSurvey = async () => {
     try {
-      const surveys = await getSurveys(currentUser.uid);
+      const uidToUse = isAdmin ? userId : currentUser.uid;
+      const surveys = await getSurveys(uidToUse);
       const foundSurvey = surveys.find(s => s.id === surveyId);
       if (foundSurvey) {
         const data = foundSurvey;
@@ -84,6 +87,7 @@ const EditSurvey = () => {
     }
     
     try {
+      const uidToUse = isAdmin ? userId : currentUser.uid;
       const surveyData = {
         ...shipData,
         fuelEntries: entries,
@@ -92,14 +96,14 @@ const EditSurvey = () => {
         updatedAt: new Date().toISOString()
       };
       
-      await updateSurvey(currentUser.uid, surveyId, surveyData);
-      alert('Expertise mise à jour !');
-      navigate('/onhire');
+      await updateSurvey(uidToUse, surveyId, surveyData);
+      alert('Survey mis à jour !');
+      navigate(isAdmin ? `/admin/dashboard` : '/dashboard');
     } catch (error) {
       console.error('Update error:', error);
       alert('Erreur mise à jour: ' + error.message);
     }
-  }, [currentUser, shipData, surveyId, navigate]);
+  }, [currentUser, userData, shipData, surveyId, userId, navigate]);
 
   const updateShipData = (field, value) => {
     setShipData(prev => ({ ...prev, [field]: value }));

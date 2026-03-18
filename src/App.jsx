@@ -20,6 +20,8 @@ const EditSurvey = lazy(() => import('./pages/EditSurvey'));
 const Notfound = lazy(() => import('./pages/Notfound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const DashboardAdmin = lazy(() => import('./pages/DashboardAdmin'));
+const EditReport = lazy(() => import('./pages/EditReport'));
+
 
 function App() {
   const { currentUser, userData, loading } = useAuth();
@@ -53,6 +55,10 @@ function App() {
           <Route path="/reports" element={<Reports />} />
           <Route path="/edit-survey/:surveyId" element={<EditSurvey />} />
           <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
+          <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
+          <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
+          <Route path="/admin/edit-report/:userId/:reportId" element={<EditReport />} />
+
           <Route path="/users/:username/edit" element={<Edit />} />
           <Route path="/users/:username" element={<User />} />
           <Route path="/users" element={<Users />} />

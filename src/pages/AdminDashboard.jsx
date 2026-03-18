@@ -5,7 +5,7 @@ import {
   getUsers, getUser, updateUser, deleteUser,
   getAllSurveys, getAllReports, deleteSurvey, deleteFullReport, getUserInfo 
 } from "../api/api";
-import { 
+import {  
   Users, Package, FileText, BarChart3, Settings, Search, Ship,
   Edit3, Trash2, MoreVertical, ChevronDown, Shield, 
   TrendingUp, DollarSign, Eye, Activity, Loader2,
@@ -22,6 +22,9 @@ function AdminDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [allSurveys, setAllSurveys] = useState([]);
   const [allReports, setAllReports] = useState([]);
+  // Computed filtered data for admin's own items
+  const adminSurveys = allSurveys.filter(survey => survey.userId === currentUser?.uid);
+  const adminReports = allReports.filter(report => report.userId === currentUser?.uid);
   const [loadingSurveys, setLoadingSurveys] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
 
@@ -259,12 +262,12 @@ function AdminDashboard() {
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Actions rapides</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <button onClick={() => setActiveTab("surveys")} className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">
-                    <Ship className="w-6 h-6 mx-auto mb-2" />
-                    <span className="text-sm font-medium">Surveys ({allSurveys.length})</span>
+                  <Ship className="w-6 h-6 mx-auto mb-2" />
+                    <span className="text-sm font-medium">Surveys ({adminSurveys.length})</span>
                   </button>
                   <button onClick={() => setActiveTab("rapports")} className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
                     <FileText className="w-6 h-6 mx-auto mb-2" />
-                    <span className="text-sm font-medium">Rapports ({allReports.length})</span>
+                    <span className="text-sm font-medium">Rapports ({adminReports.length})</span>
                   </button>
                   <button onClick={() => setActiveTab("clients")} className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
                     <Users className="w-6 h-6 mx-auto mb-2" />
@@ -313,14 +316,14 @@ function AdminDashboard() {
                   <Loader2 className="w-8 h-8 animate-spin text-blue-600 mr-3" />
                   Chargement surveys...
                 </div>
-              ) : allSurveys.length === 0 ? (
+              ) : adminSurveys.length === 0 ? (
                 <div className="text-center py-12 text-slate-500 dark:text-slate-400">
                   <Ship className="w-16 h-16 mx-auto mb-4 opacity-50" />
                   <p>Aucun survey trouvé</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {allSurveys.map((survey) => (
+                  {adminSurveys.map((survey) => (
                     <div key={`${survey.userId}-${survey.id}`} className="bg-white dark:bg-slate-800 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0">
@@ -374,14 +377,14 @@ function AdminDashboard() {
                   <Loader2 className="w-8 h-8 animate-spin text-blue-600 mr-3" />
                   Chargement rapports...
                 </div>
-              ) : allReports.length === 0 ? (
+              ) : adminReports.length === 0 ? (
                 <div className="text-center py-12 text-slate-500 dark:text-slate-400">
                   <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
                   <p>Aucun rapport trouvé</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {allReports.map((report) => (
+                  {adminReports.map((report) => (
                     <div key={`${report.userId}-${report.id}`} className="bg-white dark:bg-slate-800 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0">
@@ -402,8 +405,9 @@ function AdminDashboard() {
 
                           <button 
                             onClick={() => navigate(`/admin/edit-report/${report.userId}/${report.id}`)}
+
                             className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
-                            title="Editer"
+                            title="Edit report (view mode)"
                           >
                             <Edit3 className="w-5 h-5" />
                           </button>

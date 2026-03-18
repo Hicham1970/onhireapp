@@ -7,17 +7,19 @@
         ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
+    "surveys": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".indexOn": ["createdAt", "type", "name"]
+    },
+    "reports": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+    },
     "pesageData": {
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
         ".write": "auth != null && auth.uid == $uid"
-      }
-    },
-    "surveys": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        ".write": "auth != null && auth.uid == $uid",
-        ".indexOn": ["createdAt", "type", "name"]
       }
     },
     "vessels": {
@@ -31,13 +33,6 @@
         ".read": "auth != null && auth.uid == $uid",
         ".write": "auth != null && auth.uid == $uid"
       }
-    },
-    "reports": {
-      "$uid": {
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid"
-      }
     }
   }
 }
-
