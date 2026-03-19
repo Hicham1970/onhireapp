@@ -23,8 +23,9 @@ function AdminDashboard() {
   const [allSurveys, setAllSurveys] = useState([]);
   const [allReports, setAllReports] = useState([]);
   // Computed filtered data for admin's own items
-  const adminSurveys = allSurveys.filter(survey => survey.userId === currentUser?.uid);
-  const adminReports = allReports.filter(report => report.userId === currentUser?.uid);
+  // Show ALL surveys/reports for admin
+  const adminSurveys = allSurveys;
+  const adminReports = allReports;
   const [loadingSurveys, setLoadingSurveys] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
 

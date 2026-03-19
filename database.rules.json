@@ -1,37 +1,46 @@
 {
   "rules": {
     "users": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
       "$uid": {
-        ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')"
       }
     },
     "surveys": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
-      ".indexOn": ["createdAt", "type", "name"]
+      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": ["date"]
+      }
     },
     "reports": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
     },
     "pesageData": {
+      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
       "$uid": {
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid"
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
       }
     },
     "vessels": {
+      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
       "$uid": {
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid"
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
       }
     },
     "photoReports": {
+      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
       "$uid": {
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid"
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
       }
     }
   }

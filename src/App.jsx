@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Alert from './components/Alert';
 import Loader from './components/Loader';
 import { useAuth } from './context/AuthContext';
+import AdminRoute from './components/AdminRoute';
 
 // Lazy loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -33,9 +34,6 @@ function App() {
     }
   }, [currentUser, navigate]);
 
-  if (loading) {
-    return <div className="flex h-screen items-center justify-center">Chargement...</div>;
-  }
 
   return (
     <>
@@ -48,14 +46,12 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<DashboardUser />} />
           <Route path="/create-survey" element={<CreateSurvey />} />
-          <Route path="/admin" element={userData?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/dashboard" />} />
-          <Route path="/admin/dashboard" element={userData?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/dashboard" />} />
-          <Route path="/admin/*" element={userData?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/dashboard" />} />
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/*" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/onhire" element={<Onhire />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/edit-survey/:surveyId" element={<EditSurvey />} />
-          <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
-          <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
           <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
           <Route path="/admin/edit-report/:userId/:reportId" element={<EditReport />} />
 

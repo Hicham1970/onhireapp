@@ -28,6 +28,3 @@ export const useAlert = () => {
   };
 };
 
-export default function Hook() {
-  return;
-}

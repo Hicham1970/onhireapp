@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { FuelCalculator } from './FuelCalculator';
 import { INITIAL_VESSELS } from './constants';
 import { ChevronLeft } from 'lucide-react';
-import { saveSurvey } from '../api/surveyApi';
+import { saveSurvey } from '../api/api';
 
 const CreateSurvey = () => {
   const { currentUser } = useAuth();

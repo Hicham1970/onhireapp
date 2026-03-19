@@ -7,7 +7,7 @@ export const addUser = async (userId, userData) => {
         await set(ref(database, `users/${userId}`), userData);
         return { success: true };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -27,7 +27,7 @@ export const saveFullReport = async (userId, reportData) => {
             return { success: true, reportId: newReportRef.key };
         }
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -43,7 +43,7 @@ export const getFullReports = async (userId) => {
             return [];
         }
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -54,7 +54,7 @@ export const deleteFullReport = async (userId, reportId) => {
         await remove(ref(database, `reports/${userId}/${reportId}`));
         return { success: true };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -68,7 +68,7 @@ export const getUser = async (userId) => {
             return null;
         }
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -86,7 +86,7 @@ export const getUsers = async () => {
             console.warn("Firebase: Permission refusée pour getUsers. Vérifiez les règles de la base de données.");
             // On relance l'erreur pour que l'UI puisse l'afficher
         }
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -97,7 +97,7 @@ export const deleteUser = async (userId) => {
         await remove(ref(database, `users/${userId}`));
         return { success: true };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -107,7 +107,7 @@ export const updateUser = async (userId, userData) => {
         await update(ref(database, `users/${userId}`), userData);
         return { success: true };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -119,7 +119,7 @@ export const savePesageEntries = async (userId, entries) => {
         await set(ref(database, `pesageData/${userId}`), entries);
         return { success: true };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -134,7 +134,7 @@ export const getPesageEntries = async (userId) => {
             return []; // Retourne un tableau vide si aucune donnée n'est trouvée
         }
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -145,10 +145,15 @@ export const saveSurvey = async (userId, surveyData) => {
         // On utilise push pour générer un ID unique pour chaque nouveau survey
         const userSurveysRef = ref(database, `surveys/${userId}`);
         const newSurveyRef = push(userSurveysRef);
-        await set(newSurveyRef, surveyData);
+        await set(newSurveyRef, {
+            ...surveyData,
+            id: newSurveyRef.key,
+            createdAt: surveyData.createdAt || new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        });
         return { success: true, surveyId: newSurveyRef.key };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -172,7 +177,7 @@ export const getSurveys = async (userId) => {
             console.warn("Firebase: Permission refusée pour getSurveys. Vérifiez les règles de la base de données.");
             return [];
         }
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -183,7 +188,7 @@ export const deleteSurvey = async (userId, surveyId) => {
         await remove(ref(database, `surveys/${userId}/${surveyId}`));
         return { success: true };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -196,7 +201,7 @@ export const saveVessel = async (userId, vesselData) => {
         await set(newVesselRef, vesselData);
         return { success: true, vesselId: newVesselRef.key };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -219,7 +224,7 @@ export const getVessels = async (userId) => {
             console.warn("Firebase: Permission refusée pour getVessels. Vérifiez les règles de la base de données.");
             return [];
         }
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -233,7 +238,7 @@ export const savePhotoReport = async (userId, reportData) => {
         await set(newReportRef, { ...reportData, id: newReportRef.key });
         return { success: true, reportId: newReportRef.key };
     } catch (error) {
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -290,7 +295,7 @@ export const getAllSurveys = async () => {
         }
     } catch (error) {
         console.error("Error fetching all surveys:", error);
-        throw new Error(error.message);
+        throw error;
     }
 };
 
@@ -318,7 +323,7 @@ export const getAllReports = async () => {
         }
     } catch (error) {
         console.error("Error fetching all reports:", error);
-        throw new Error(error.message);
+        throw error;
     }
 };
 
