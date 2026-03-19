@@ -343,3 +343,51 @@ export const getUserInfo = async (userId) => {
         throw new Error(error.message);
     }
 };
+
+// ===========================================
+// CONTACT MESSAGES
+// ===========================================
+
+export const saveContactMessage = async (messageData) => {
+    try {
+        const messagesRef = ref(database, 'messages');
+        const newMessageRef = push(messagesRef);
+        await set(newMessageRef, {
+            ...messageData,
+            id: newMessageRef.key,
+            createdAt: new Date().toISOString(),
+            status: 'unread'
+        });
+        return { success: true, messageId: newMessageRef.key };
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getContactMessages = async () => {
+    try {
+        const snapshot = await get(ref(database, 'messages'));
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            return Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            })).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error("Error fetching contact messages:", error);
+        throw error;
+    }
+};
+
+export const deleteContactMessage = async (messageId) => {
+    if (!messageId) throw new Error("ID message requis.");
+    try {
+        await remove(ref(database, `messages/${messageId}`));
+        return { success: true };
+    } catch (error) {
+        throw error;
+    }
+};

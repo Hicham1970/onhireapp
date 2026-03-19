@@ -3,13 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { 
   getUsers, getUser, updateUser, deleteUser,
-  getAllSurveys, getAllReports, deleteSurvey, deleteFullReport, getUserInfo 
+  getAllSurveys, getAllReports, deleteSurvey, deleteFullReport, getUserInfo,
+  getContactMessages, deleteContactMessage
 } from "../api/api";
 import {  
   Users, Package, FileText, BarChart3, Settings, Search, Ship,
   Edit3, Trash2, MoreVertical, ChevronDown, Shield, 
   TrendingUp, DollarSign, Eye, Activity, Loader2,
-  Menu, X, LogOut, Home, Package as OrderIcon
+  Menu, X, LogOut, Home, Package as OrderIcon, Mail
 } from "lucide-react";
 
 function AdminDashboard() {
@@ -28,6 +29,8 @@ function AdminDashboard() {
   const adminReports = allReports;
   const [loadingSurveys, setLoadingSurveys] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
+  const [contactMessages, setContactMessages] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
 
   // Vérification d'accès admin
   useEffect(() => {
@@ -64,16 +67,20 @@ function AdminDashboard() {
       if (!currentUser || !isAdmin()) return;
       setLoadingSurveys(true);
       setLoadingReports(true);
+      setLoadingMessages(true);
       try {
         const surveys = await getAllSurveys();
         setAllSurveys(surveys);
         const reports = await getAllReports();
         setAllReports(reports);
+        const messages = await getContactMessages();
+        setContactMessages(messages);
       } catch (error) {
         console.error('Error loading admin data:', error);
       } finally {
         setLoadingSurveys(false);
         setLoadingReports(false);
+        setLoadingMessages(false);
       }
     };
     loadData();
@@ -94,6 +101,16 @@ function AdminDashboard() {
     try {
       await deleteFullReport(userId, reportId);
       setAllReports(allReports.filter(r => r.id !== reportId || r.userId !== userId));
+    } catch (error) {
+      alert(`Erreur suppression: ${error.message}`);
+    }
+  };
+
+  const handleDeleteMessage = async (messageId) => {
+    if (!window.confirm('Supprimer ce message de contact ?')) return;
+    try {
+      await deleteContactMessage(messageId);
+      setContactMessages(contactMessages.filter(m => m.id !== messageId));
     } catch (error) {
       alert(`Erreur suppression: ${error.message}`);
     }
@@ -131,12 +148,12 @@ function AdminDashboard() {
 
   const adminTabs = [
     { id: "overview", label: "Aperçu", icon: BarChart3 },
+    { id: "messages", label: "Messages", icon: Mail },
     { id: "surveys", label: "Surveys", icon: Ship },
     { id: "rapports", label: "Rapports", icon: FileText },
     { id: "clients", label: "Clients", icon: Users },
     { id: "orders", label: "Commandes", icon: OrderIcon },
     { id: "blog", label: "Blog", icon: FileText },
-    { id: "analytics", label: "Analytics", icon: TrendingUp },
     { id: "settings", label: "Paramètres", icon: Settings },
   ];
 
@@ -262,8 +279,12 @@ function AdminDashboard() {
               <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Actions rapides</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <button onClick={() => setActiveTab("messages")} className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors">
+                    <Mail className="w-6 h-6 mx-auto mb-2" />
+                    <span className="text-sm font-medium">Messages ({contactMessages.length})</span>
+                  </button>
                   <button onClick={() => setActiveTab("surveys")} className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">
-                  <Ship className="w-6 h-6 mx-auto mb-2" />
+                    <Ship className="w-6 h-6 mx-auto mb-2" />
                     <span className="text-sm font-medium">Surveys ({adminSurveys.length})</span>
                   </button>
                   <button onClick={() => setActiveTab("rapports")} className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
@@ -273,10 +294,6 @@ function AdminDashboard() {
                   <button onClick={() => setActiveTab("clients")} className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
                     <Users className="w-6 h-6 mx-auto mb-2" />
                     <span className="text-sm font-medium">Gérer clients</span>
-                  </button>
-                  <button onClick={() => setActiveTab("orders")} className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">
-                    <Package className="w-6 h-6 mx-auto mb-2" />
-                    <span className="text-sm font-medium">Voir commandes</span>
                   </button>
                 </div>
               </div>
@@ -304,6 +321,69 @@ function AdminDashboard() {
             </div>
           )}
 
+
+          {/* Messages Tab */}
+          {activeTab === "messages" && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Boîte de réception (Contact)</h1>
+              </div>
+
+              {loadingMessages ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-blue-600 mr-3" />
+                  Chargement messages...
+                </div>
+              ) : contactMessages.length === 0 ? (
+                <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                  <Mail className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>Aucun message reçu pour le moment</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {contactMessages.map((msg) => (
+                    <div key={msg.id} className="bg-white dark:bg-slate-800 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-bold text-xl text-slate-900 dark:text-white">{msg.name}</span>
+                            <span className="text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full">
+                              {msg.interest}
+                            </span>
+                          </div>
+                          <p className="text-sm text-blue-600 dark:text-blue-400 mb-2">
+                            <a href={`mailto:${msg.email}`}>{msg.email}</a> • {msg.phone || "Pas de téléphone"} • {msg.company}
+                          </p>
+                          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-slate-700 dark:text-slate-300">
+                            {msg.message}
+                          </div>
+                          <p className="text-xs text-slate-400 mt-2">
+                            Reçu le: {new Date(msg.createdAt).toLocaleString('fr-FR')}
+                          </p>
+                        </div>
+                        <div className="flex gap-2 shrink-0">
+                          <button 
+                            onClick={() => window.open(`mailto:${msg.email}?subject=Réponse concernant: ${msg.interest}`)}
+                            className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
+                            title="Répondre par e-mail"
+                          >
+                            <Mail className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteMessage(msg.id)}
+                            className="p-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors shadow-sm hover:shadow-md"
+                            title="Supprimer"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Surveys Tab */}
           {activeTab === "surveys" && (

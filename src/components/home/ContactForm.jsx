@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { saveContactMessage } from "../../api/api";
 
 const interestOptions = [
   { value: "demo", label: "Demander une démo" },
@@ -42,9 +43,8 @@ const ContactForm = () => {
     
     setStatus("loading");
     
-    // Simulate API call - Replace with actual Firebase submission
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await saveContactMessage(formData);
       setStatus("success");
       setFormData({
         name: "",
@@ -55,6 +55,7 @@ const ContactForm = () => {
         message: ""
       });
     } catch (error) {
+      console.error("Contact form error:", error);
       setStatus("error");
     }
   };
