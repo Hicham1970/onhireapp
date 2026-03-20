@@ -38,12 +38,18 @@ const DraftCalculations = ({ step }: Props) => {
     const { particulars } = survey;
 
     const corrected = useMemo(() => {
-        return calculateSGSCorrectedDrafts(drafts, particulars);
-    }, [drafts, particulars]);
+        console.log(`[CALC ${step}] Calling SGS corrections`, { drafts, particulars });
+        const result = calculateSGSCorrectedDrafts(drafts, particulars);
+        console.log(`[CALC ${step}] SGS result:`, result);
+        return result;
+    }, [drafts, particulars, step]);
 
     const means = useMemo(() => {
-        return calculateSGSMiddleMeans(corrected.fwd.corrected, corrected.mid.corrected, corrected.aft.corrected);
-    }, [corrected]);
+        console.log(`[CALC ${step}] SGS Middle Means input:`, { fwd: corrected.fwd.corrected, mid: corrected.mid.corrected, aft: corrected.aft.corrected });
+        const result = calculateSGSMiddleMeans(corrected.fwd.corrected, corrected.mid.corrected, corrected.aft.corrected);
+        console.log(`[CALC ${step}] Middle Means result:`, result);
+        return result;
+    }, [corrected, step]);
 
     const trim = useMemo(() => {
         // We use the corrected trim for the status card

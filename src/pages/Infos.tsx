@@ -116,14 +116,14 @@ const DraftSurveyInfos = () => {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
-                            <p className="font-bold text-sm">Arrivée sur Rade (Arrived on)</p>
+                            <p className="font-bold text-sm text-slate-800 dark:text-white">Arrivée sur Rade (Arrived on)</p>
                             <div className="grid grid-cols-2 gap-4">
                                 <InputField label="Date" field="arrivedDate" value={localInfo.arrivedDate || ''} type="date" onChange={updateField} />
                                 <InputField label="Heure" field="arrivedTime" value={localInfo.arrivedTime || ''} type="time" onChange={updateField} />
                             </div>
                         </div>
                         <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
-                            <p className="font-bold text-sm">Accostage (Berthed on)</p>
+                            <p className="font-bold text-sm text-slate-800 dark:text-white">Accostage (Berthed on)</p>
                             <div className="grid grid-cols-2 gap-4">
                                 <InputField label="Date" field="berthedDate" value={localInfo.berthedDate || ''} type="date" onChange={updateField} />
                                 <InputField label="Heure" field="berthedTime" value={localInfo.berthedTime || ''} type="time" onChange={updateField} />

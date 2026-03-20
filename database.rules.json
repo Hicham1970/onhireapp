@@ -7,6 +7,12 @@
         ".write": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')"
       }
     },
+    "draftSurveys": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
     "surveys": {
       ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
       "$uid": {

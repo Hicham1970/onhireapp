@@ -50,6 +50,7 @@ const DraftHydrostatics = ({ step }: Props) => {
 
     // Automation: Interpolation Logic
     const calculatedValues = useMemo(() => {
+        console.log(`[HYDRO ${step}] Interpolation inputs:`, { localInterp, quarterMean });
         const draftSup = parseFloat(localInterp.draftSup) || 0;
         const draftInf = parseFloat(localInterp.draftInf) || 0;
         const dispSup = parseFloat(localInterp.dispSup) || 0;
@@ -62,20 +63,23 @@ const DraftHydrostatics = ({ step }: Props) => {
         const mtcMinus50 = parseFloat(localInterp.mtcMinus50) || 0;
         
         const diffDraft = draftSup - draftInf;
+        console.log(`[HYDRO ${step}] Diff Draft:`, diffDraft);
         if (diffDraft === 0) return { disp: 0, tpc: 0, lcf: 0, mtc: 0 };
 
         const qmFixed = parseFloat(quarterMean.toFixed(2));
         const dSupFixed = parseFloat(draftSup.toFixed(2));
         const dInfFixed = parseFloat(draftInf.toFixed(2));
+        console.log(`[HYDRO ${step}] Fixed values:`, { qmFixed, dSupFixed, dInfFixed });
 
         // Corrected standard linear interpolation: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
         const disp = dispInf + ((dispSup - dispInf) / diffDraft) * (qmFixed - draftInf);
         const tpc = tpcInf + ((tpcSup - tpcInf) / (dSupFixed - dInfFixed)) * (qmFixed - dInfFixed);
         const lcf = lcfInf + ((lcfSup - lcfInf) / (dSupFixed - dInfFixed)) * (qmFixed - dInfFixed);
         const mtc = mtcPlus50 - mtcMinus50; // deltaMtc
+        console.log(`[HYDRO ${step}] Calculated:`, { disp: disp.toFixed(3), tpc: tpc.toFixed(3), lcf: lcf.toFixed(3), mtc: mtc.toFixed(3) });
 
         return { disp, tpc, lcf, mtc };
-    }, [localInterp, quarterMean]);
+    }, [localInterp, quarterMean, step]);
 
     // Apply calculated values to manualHydro when they change
     useEffect(() => {
@@ -228,20 +232,20 @@ const DraftHydrostatics = ({ step }: Props) => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400">DISPLACEMENT (MT)</label>
-                        <input type="number" readOnly value={manualHydro.displacement.toFixed(2)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold" />
+                        <label className="text-xs font-bold text-slate-400 dark:text-slate-300">DISPLACEMENT (MT)</label>
+                        <input type="number" readOnly value={manualHydro.displacement.toFixed(2)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold text-slate-800 dark:text-white" />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400">TPC</label>
-                        <input type="number" readOnly value={manualHydro.tpc.toFixed(3)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold" />
+                        <label className="text-xs font-bold text-slate-400 dark:text-slate-300">TPC</label>
+                        <input type="number" readOnly value={manualHydro.tpc.toFixed(3)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold text-slate-800 dark:text-white" />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400">LCF</label>
-                        <input type="number" readOnly value={manualHydro.lcf.toFixed(3)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold" />
+                        <label className="text-xs font-bold text-slate-400 dark:text-slate-300">LCF</label>
+                        <input type="number" readOnly value={manualHydro.lcf.toFixed(3)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold text-slate-800 dark:text-white" />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400">DELTA MTC</label>
-                        <input type="number" readOnly value={manualHydro.mtc.toFixed(3)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold" />
+                        <label className="text-xs font-bold text-slate-400 dark:text-slate-300">DELTA MTC</label>
+                        <input type="number" readOnly value={manualHydro.mtc.toFixed(3)} className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-xl p-3 font-mono font-bold text-slate-800 dark:text-white" />
                     </div>
                 </div>
 

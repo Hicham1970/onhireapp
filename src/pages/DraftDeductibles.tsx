@@ -49,7 +49,7 @@ const DraftDeductibles = ({ step }: Props) => {
             navigate('/draft-survey/final/readings');
         } else {
             updateFinal({ deductibles: localDeducts });
-            navigate('/draft-survey/recap');
+            navigate('/draft-survey/report');
         }
     };
 
@@ -59,6 +59,8 @@ const DraftDeductibles = ({ step }: Props) => {
     };
 
     const total = sumDeductibles(localDeducts);
+    console.log(`[DEDUCT ${step}] Total deductibles:`, total, localDeducts);
+    console.log(`[DEDUCT ${step}] Context data:`, currentData);
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">

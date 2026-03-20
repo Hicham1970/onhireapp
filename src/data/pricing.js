@@ -3,6 +3,30 @@
 export const pricingPlans = {
   monthly: [
     {
+      id: "draft-monthly",
+      name: "Draft Survey",
+      description: "Calculs de jaugeage professionnels",
+      price: 39,
+      period: "mois",
+      features: [
+        "Draft readings illimitées",
+        "Calculs hydrostatics précis",
+        "Déductibles automatiques",
+        "Gestion tanks et volumes",
+        "Rapports PDF professionnels",
+        "Fuel Calculator gratuit",
+        "1 utilisateur"
+      ],
+      notIncluded: [
+        "Inspection Report",
+        "OnHire App"
+      ],
+      popular: true,
+      cta: "Commencer Draft Survey",
+      color: "purple",
+      badge: "Premier Choix"
+    },
+    {
       id: "onhire-monthly",
       name: "OnHire App",
       description: "Gestion des expertises maritimes",
@@ -14,11 +38,11 @@ export const pricingPlans = {
         "Calcul automatique des volumes",
         "Génération de rapports PDF",
         "Support par email",
+        "Fuel Calculator gratuit",
         "1 utilisateur"
       ],
       notIncluded: [
         "Inspection Report",
-        "Fuel Calculator",
         "API Access"
       ],
       popular: false,
@@ -37,11 +61,11 @@ export const pricingPlans = {
         "Signature numérique",
         "Export PDF professionnel",
         "Stockage cloud 10Go",
+        "Fuel Calculator gratuit",
         "1 utilisateur"
       ],
       notIncluded: [
         "OnHire App",
-        "Fuel Calculator",
         "API Access"
       ],
       popular: false,
@@ -49,35 +73,13 @@ export const pricingPlans = {
       color: "emerald"
     },
     {
-      id: "fuel-monthly",
-      name: "Fuel Calculator",
-      description: "Calculateur de carburant",
-      price: 29,
-      period: "mois",
-      features: [
-        "Calcul VCF précis",
-        "Toutes les essences Supportées",
-        "Historique des calculs",
-        "Export Excel/CSV",
-        "Tableau de bord analytique",
-        "1 utilisateur"
-      ],
-      notIncluded: [
-        "OnHire App",
-        "Inspection Report",
-        "API Access"
-      ],
-      popular: false,
-      cta: "Commencer avec Fuel",
-      color: "amber"
-    },
-    {
       id: "pack-monthly",
       name: "Pack Complet",
-      description: "Tous les modules réunis",
-      price: 99,
+      description: "Tous les modules + Draft Survey",
+      price: 119,
       period: "mois",
       features: [
+        "Draft Survey Pro",
         "OnHire App Complet",
         "Inspection Report Pro",
         "Fuel Calculator Avancé",
@@ -88,13 +90,37 @@ export const pricingPlans = {
         "Formation incluse"
       ],
       notIncluded: [],
-      popular: true,
+      popular: false,
       cta: "Commencer le Pack",
-      color: "purple",
-      badge: "Plus Populaire"
+      color: "amber"
     }
   ],
   annual: [
+    {
+      id: "draft-annual",
+      name: "Draft Survey",
+      description: "Calculs de jaugeage professionnels",
+      price: 370,
+      period: "an",
+      savings: 98,
+      features: [
+        "Draft readings illimitées",
+        "Calculs hydrostatics précis",
+        "Déductibles automatiques",
+        "Gestion tanks et volumes",
+        "Rapports PDF professionnels",
+        "Fuel Calculator gratuit",
+        "1 utilisateur"
+      ],
+      notIncluded: [
+        "Inspection Report",
+        "OnHire App"
+      ],
+      popular: true,
+      cta: "Commencer Draft Survey",
+      color: "purple",
+      badge: "Premier Choix"
+    },
     {
       id: "onhire-annual",
       name: "OnHire App",
@@ -108,11 +134,11 @@ export const pricingPlans = {
         "Calcul automatique des volumes",
         "Génération de rapports PDF",
         "Support par email",
+        "Fuel Calculator gratuit",
         "1 utilisateur"
       ],
       notIncluded: [
         "Inspection Report",
-        "Fuel Calculator",
         "API Access"
       ],
       popular: false,
@@ -132,11 +158,11 @@ export const pricingPlans = {
         "Signature numérique",
         "Export PDF professionnel",
         "Stockage cloud 10Go",
+        "Fuel Calculator gratuit",
         "1 utilisateur"
       ],
       notIncluded: [
         "OnHire App",
-        "Fuel Calculator",
         "API Access"
       ],
       popular: false,
@@ -144,37 +170,14 @@ export const pricingPlans = {
       color: "emerald"
     },
     {
-      id: "fuel-annual",
-      name: "Fuel Calculator",
-      description: "Calculateur de carburant",
-      price: 270,
-      period: "an",
-      savings: 78,
-      features: [
-        "Calcul VCF précis",
-        "Toutes les essences Supportées",
-        "Historique des calculs",
-        "Export Excel/CSV",
-        "Tableau de bord analytique",
-        "1 utilisateur"
-      ],
-      notIncluded: [
-        "OnHire App",
-        "Inspection Report",
-        "API Access"
-      ],
-      popular: false,
-      cta: "Commencer avec Fuel",
-      color: "amber"
-    },
-    {
       id: "pack-annual",
       name: "Pack Complet",
-      description: "Tous les modules réunis",
-      price: 890,
+      description: "Tous les modules + Draft Survey",
+      price: 1071,
       period: "an",
-      savings: 298,
+      savings: 357,
       features: [
+        "Draft Survey Pro",
         "OnHire App Complet",
         "Inspection Report Pro",
         "Fuel Calculator Avancé",
@@ -185,9 +188,9 @@ export const pricingPlans = {
         "Formation incluse"
       ],
       notIncluded: [],
-      popular: true,
+      popular: false,
       cta: "Commencer le Pack",
-      color: "purple",
+      color: "amber",
       badge: "Économie de 25%"
     }
   ]

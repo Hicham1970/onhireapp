@@ -3,7 +3,6 @@
 import { 
   ClipboardList, 
   Camera, 
-  Gauge, 
   FileText, 
   Shield, 
   Cloud, 
@@ -12,17 +11,37 @@ import {
   Zap,
   Globe,
   Smartphone,
-  BarChart3
+  BarChart3,
+  Ship,
+  Anchor
 } from 'lucide-react';
 
 export const features = [
   {
     id: 1,
-    title: "OnHire App",
+    title: "Draft Survey",
+    subtitle: "Expertise de Tirant d'Eau",
+    description: "Effectuez vos expertises de tirant d'eau selon les standards SGS. Calcul automatique des corrections de trim, interpolation hydrostatique, et rapport professionnel PDF.",
+    icon: Anchor,
+    color: "blue",
+    benefits: [
+      "Corrections automatiques SGS",
+      "Interpolation hydrostatique",
+      "Rapport PDF professionnel",
+      "Calcul cargo final précis"
+    ],
+    stats: {
+      value: "±0.1%",
+      label: "Précision des calculs"
+    }
+  },
+  {
+    id: 2,
+    title: "On/OffHire App",
     subtitle: "Gestion des Expertises Maritimes",
     description: "Simplifiez vos expertises OnHire, OffHire et Bunker avec une interface intuitive. Gérez les soundings, les calculs de volumes et générez des rapports professionnels en quelques clics.",
     icon: ClipboardList,
-    color: "blue",
+    color: "emerald",
     benefits: [
       "Création rapide d'expertises",
       "Calcul automatique des volumes",
@@ -35,12 +54,12 @@ export const features = [
     }
   },
   {
-    id: 2,
+    id: 3,
     title: "Inspection Report",
     subtitle: "Rapports d'Inspection Photos",
-    description: "Documentz chaque inspection avec des photos haute résolution. Créez des rapports d'inspection professionnels avec signatures numériques et export PDF.",
+    description: "Documentez chaque inspection avec des photos haute résolution. Créez des rapports d'inspection professionnels avec signatures numériques et export PDF.",
     icon: Camera,
-    color: "emerald",
+    color: "amber",
     benefits: [
       "Photos illimitées",
       "Modèles personnalisables",
@@ -50,24 +69,6 @@ export const features = [
     stats: {
       value: "100%",
       label: "Conforme aux standards IACS"
-    }
-  },
-  {
-    id: 3,
-    title: "Fuel Calculator",
-    subtitle: "Calculateur de Carburant Avancé",
-    description: "Calculez avec précision le volume de carburant en utilisant les tables ASTM. Gérez les différents types de fuel (HFO, MGO, VLSFO) et exportez vos calculs.",
-    icon: Gauge,
-    color: "amber",
-    benefits: [
-      "Précision ASTM",
-      "Tous types de carburant",
-      "Historique des calculs",
-      "Export Excel/CSV"
-    ],
-    stats: {
-      value: "99.9%",
-      label: "Précision des calculs"
     }
   }
 ];
