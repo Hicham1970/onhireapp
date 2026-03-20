@@ -6,13 +6,14 @@ import { INITIAL_VESSELS } from './constants';
 import { ChevronLeft } from 'lucide-react';
 import { updateSurvey } from '../api/api';
 import { getSurveys } from '../api/api';
+import { generateSurveyPDF } from '../utils/pdfSurveyGenerator';
 
 const EditSurvey = () => {
-const { currentUser, userData } = useAuth();
+  const { currentUser, userData } = useAuth();
   const isAdmin = userData?.role === 'admin';
-  const { userId } = useParams();
-  const { surveyId } = useParams();
+  const { userId, surveyId } = useParams();
   const navigate = useNavigate();
+  const calculatorRef = React.useRef(null);
 
   // Ship Particulars State - load from survey
   const [shipData, setShipData] = useState({
@@ -127,6 +128,29 @@ const { currentUser, userData } = useAuth();
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-20 px-4">
       <div className="max-w-6xl mx-auto space-y-8">
+        
+        {/* Download PDF Button */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Télécharger Rapport PDF</h3>
+          <button 
+            onClick={async () => {
+              const calcData = calculatorRef.current?.getCurrentData();
+              if (!calcData) {
+                 alert("Veuillez d'abord initialiser le calculateur.");
+                 return;
+              }
+              try {
+                await generateSurveyPDF(shipData, calcData);
+              } catch (e) {
+                alert("Erreur lors de la génération du PDF: " + e.message);
+              }
+            }}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
+          >
+            📄 Télécharger PDF Rapport Survey
+          </button>
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-between">
           <button 
@@ -332,6 +356,7 @@ const { currentUser, userData } = useAuth();
         {/* Fuel Calculator */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-1">
           <FuelCalculator 
+            ref={calculatorRef}
             tanks={INITIAL_VESSELS[0]?.tanks || []} 
             onSave={handleSave}
             initialData={fuelEntries}

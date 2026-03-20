@@ -5,10 +5,12 @@ import { FuelCalculator } from './FuelCalculator';
 import { INITIAL_VESSELS } from './constants';
 import { ChevronLeft } from 'lucide-react';
 import { saveSurvey } from '../api/api';
+import { generateSurveyPDF } from '../utils/pdfSurveyGenerator';
 
 const CreateSurvey = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const calculatorRef = React.useRef(null);
 
   // Ship Particulars State
   const [shipData, setShipData] = useState({
@@ -81,21 +83,17 @@ const CreateSurvey = () => {
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Télécharger Rapport PDF</h3>
             <button 
-              onClick={() => {
-                const reportData = {
-                  vesselName: shipData.name,
-                  imo: shipData.imo,
-                  date: shipData.date,
-                  // Add other fields from shipData
-                  ...shipData
-                };
-                // Generate and download PDF (similar to FullReport)
-                const finalReportData = {
-                  ...reportData,
-                  createdAt: new Date().toISOString()
-                };
-                // Call PDF generation function here
-                alert('PDF download feature added - implement jsPDF generation');
+              onClick={async () => {
+                const calcData = calculatorRef.current?.getCurrentData();
+                if (!calcData) {
+                   alert("Veuillez d'abord initialiser le calculateur.");
+                   return;
+                }
+                try {
+                  await generateSurveyPDF(shipData, calcData);
+                } catch (e) {
+                  alert("Erreur lors de la génération du PDF: " + e.message);
+                }
               }}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
             >
@@ -309,6 +307,7 @@ const CreateSurvey = () => {
         {/* Fuel Calculator */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-1">
           <FuelCalculator 
+            ref={calculatorRef}
             tanks={INITIAL_VESSELS[0]?.tanks || []} 
             onSave={handleSave}
             initialData={[]}

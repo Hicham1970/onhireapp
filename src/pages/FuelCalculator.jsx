@@ -1,9 +1,8 @@
-
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Calculator, Save, Info, RefreshCw, Gauge, Edit3, FileText, Plus, Trash2 } from 'lucide-react';
 import { calculateVCF, getDefaultDensityForFuelType } from '../utils/vcfCalculator';
 
-export const FuelCalculator = ({ tanks, onSave, initialData }) => {
+export const FuelCalculator = forwardRef(({ tanks, onSave, initialData, shipData, isEditMode }, ref) => {
   const [extraTanks, setExtraTanks] = useState([]);
   const [summaryValues, setSummaryValues] = useState({
     VLSFO: '',
@@ -139,6 +138,28 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
     const mgoTotal = parseFloat(summaryValues.MDO || 0) + parseFloat(summaryValues.LSMGO || 0);
     onSave(validEntries, hfoTotal, mgoTotal);
   };
+
+  useImperativeHandle(ref, () => ({
+    getCurrentData: () => {
+      const validEntries = Object.values(entries).filter(e => e.tankId).map(entry => {
+        const tank = allTanks.find(t => t.id === entry.tankId);
+        return {
+          ...entry,
+          tankName: tank ? tank.name : 'Unknown Tank',
+          fuelType: tank ? tank.fuelType : 'Unknown',
+          ...tank // include default depth or other info if useful
+        };
+      });
+      return {
+        entries: validEntries,
+        calculatedTotals,
+        summaryValues,
+        allTanks,
+        hfoTotal: parseFloat(summaryValues.VLSFO || 0) + parseFloat(summaryValues.HSFO || 0),
+        mgoTotal: parseFloat(summaryValues.MDO || 0) + parseFloat(summaryValues.LSMGO || 0)
+      };
+    }
+  }));
 
   const handleAddTank = (group) => {
     const newId = `ext-${Date.now()}`;
@@ -368,4 +389,4 @@ export const FuelCalculator = ({ tanks, onSave, initialData }) => {
       </div>
     </div>
   );
-};
+});
