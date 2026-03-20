@@ -81,7 +81,7 @@ function DashboardUser() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              Bienvenue, {user?.username || currentUser.displayName || "Utilisateur"}
+              Bienvenue, {user?.username || (currentUser ? currentUser.displayName : "") || "Utilisateur"}
             </h1>
             <p className="text-slate-500 dark:text-slate-400">
               Gérez vos expertises maritimes et accédez à tous vos outils
@@ -153,8 +153,8 @@ function DashboardUser() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1">
               <Profile
-                username={user?.username || currentUser.displayName || "Utilisateur"}
-                email={user?.email || currentUser.email}
+                username={user?.username || currentUser?.displayName || "Utilisateur"}
+                email={user?.email || currentUser?.email}
               />
             </div>
 
@@ -191,6 +191,21 @@ function DashboardUser() {
                     <p className="text-sm text-slate-500">Créer un rapport</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+                </Link>
+                <Link
+                  to="/draft-survey/infos"
+                  className="flex items-center gap-4 p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                  <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                    <ClipboardCheck className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors">
+                      Draft Survey
+                    </h3>
+                    <p className="text-sm text-slate-500">Nouvelle expertise</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
                 </Link>
                 <Link
                   to="/onhire?tab=vessels"

@@ -5,6 +5,7 @@ import Alert from './components/Alert';
 import Loader from './components/Loader';
 import { useAuth } from './context/AuthContext';
 import AdminRoute from './components/AdminRoute';
+import { DraftSurveyProvider } from './context/DraftSurveyContext';
 
 // Lazy loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -22,6 +23,16 @@ const Notfound = lazy(() => import('./pages/Notfound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const DashboardAdmin = lazy(() => import('./pages/DashboardAdmin'));
 const EditReport = lazy(() => import('./pages/EditReport'));
+
+// Draft Survey Pages
+const DraftSurveyInfos = lazy(() => import('./pages/Infos'));
+const DraftSurveyCaracteristiques = lazy(() => import('./pages/Caracteristiques'));
+const DraftReadings = lazy(() => import('./pages/DraftReadings'));
+const DraftCalculations = lazy(() => import('./pages/DraftCalculations'));
+const DraftHydrostatics = lazy(() => import('./pages/DraftHydrostatics'));
+const DraftDeductibles = lazy(() => import('./pages/DraftDeductibles'));
+const DraftSurveyReport = lazy(() => import('./pages/DraftSurveyReport'));
+const DraftSurveyLayout = lazy(() => import('./layouts/DraftSurveyLayout'));
 
 
 function App() {
@@ -54,6 +65,32 @@ function App() {
           <Route path="/edit-survey/:surveyId" element={<EditSurvey />} />
           <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
           <Route path="/admin/edit-report/:userId/:reportId" element={<EditReport />} />
+
+          {/* Draft Survey Routes */}
+          <Route path="/draft-survey/*" element={
+            <DraftSurveyProvider>
+              <Routes>
+                <Route element={<DraftSurveyLayout />}>
+                  <Route path="infos" element={<DraftSurveyInfos />} />
+                  <Route path="caracteristiques" element={<DraftSurveyCaracteristiques />} />
+                  
+                  {/* Initial Step */}
+                  <Route path="initial/readings" element={<DraftReadings step="initial" />} />
+                  <Route path="initial/calculations" element={<DraftCalculations step="initial" />} />
+                  <Route path="initial/displacement" element={<DraftHydrostatics step="initial" />} />
+                  <Route path="initial/deductibles" element={<DraftDeductibles step="initial" />} />
+
+                  {/* Final Step */}
+                  <Route path="final/readings" element={<DraftReadings step="final" />} />
+                  <Route path="final/calculations" element={<DraftCalculations step="final" />} />
+                  <Route path="final/displacement" element={<DraftHydrostatics step="final" />} />
+                  <Route path="final/deductibles" element={<DraftDeductibles step="final" />} />
+
+                  <Route path="report" element={<DraftSurveyReport />} />
+                </Route>
+              </Routes>
+            </DraftSurveyProvider>
+          } />
 
           <Route path="/users/:username/edit" element={<Edit />} />
           <Route path="/users/:username" element={<User />} />

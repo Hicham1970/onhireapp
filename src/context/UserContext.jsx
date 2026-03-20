@@ -14,7 +14,7 @@ const UserProvider = ({ children }) => {
       if (currentUser) {
         dispatchUser({ 
           type: "LOG_IN", 
-          payload: { ...currentUser, username: currentUser.displayName || currentUser.email } 
+          payload: { ...currentUser, username: currentUser?.displayName || currentUser?.email } 
         });
       } else {
         dispatchUser({ type: "LOG_OUT" });
