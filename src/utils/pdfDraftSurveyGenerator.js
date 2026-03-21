@@ -178,7 +178,12 @@ export const generateDraftSurveyPDF = async (survey) => {
   doc.setLineWidth(0.1);
   doc.line(margin, disclaimerY-2, pageWidth-margin, disclaimerY-2);
   doc.setFontSize(6);
-  doc.text("Toutes les mesures sont faites en présence d'un représentant du bord.", pageWidth/2, disclaimerY, { align: 'center' });
+  doc.setFontSize(6);
+  doc.setFont('helvetica', 'normal');
+  const disclaimerText = `This Draft Survey Report is issued based on measurements taken in the presence of vessel representatives. All calculations follow standard marine surveying practices. 
+GH Marine Surveying assumes no liability for discrepancies arising from vessel data inaccuracies, density variations, or external factors beyond our control. 
+This certificate does not constitute a warranty of quantity. Client accepts all measurements as-is and waives any legal claims against GH Marine Surveying.`;
+  doc.text(disclaimerText, margin, disclaimerY, { maxWidth: pageWidth - 2*margin });
 
   doc.save(`DS_${(informations.vesselName || 'Report').replace(/[^a-zA-Z0-9]/g, '')}_${new Date().toISOString().slice(0,10)}.pdf`);
 };
