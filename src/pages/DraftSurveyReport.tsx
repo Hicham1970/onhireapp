@@ -225,7 +225,7 @@ const DraftSurveyReportInner = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white bg-red-500 text-white p-4 rounded">DRAFT SURVEY REPORT - DEBUG VISIBLE</h1>
+<h1 className="text-3xl font-bold text-slate-900 dark:text-white bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4 rounded-xl shadow-2xl">DRAFT SURVEY REPORT</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-1 italic">
                         Format conforme aux standards d'expertise SGS.
                     </p>
@@ -239,9 +239,22 @@ const DraftSurveyReportInner = () => {
                         <Save className={`w-5 h-5 ${isSaving ? 'animate-spin' : ''}`} />
                         Terminer l'Expertise
                     </button>
-                    <button className="flex items-center gap-2 bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-6 py-3 rounded-2xl font-bold shadow-lg transition-all">
-                        <Download className="w-5 h-5" /> Exporter PDF
-                    </button>
+                    <button 
+
+                        onClick={async () => {
+                          try {
+                            const { generateDraftSurveyPDF } = await import('../utils/pdfDraftSurveyGenerator');
+                            await generateDraftSurveyPDF(survey);
+                          } catch(err) {
+                            console.error('PDF Error:', err);
+                            alert('Erreur PDF: ' + (err.message || 'Generation échouée'));
+                          }
+                        }}
+
+                        className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white px-6 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
+                      >
+                        <Download className="w-5 h-5" /> DS PDF
+                      </button>
                 </div>
             </div>
 

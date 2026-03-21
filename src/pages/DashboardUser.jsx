@@ -7,6 +7,7 @@ import Profile from "../components/Profile";
 import { Ship, ClipboardCheck, Gauge, Camera, FileText, BarChart3, ArrowRight, Loader2, Clock, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getSurveys, getFullReports, getVessels } from "../api/api";
+import { getDraftSurveys, deleteDraftSurvey } from "../services/draftSurveyServices";
 
 function DashboardUser() {
   const { user } = useUser() || {};
@@ -14,6 +15,7 @@ function DashboardUser() {
   const navigate = useNavigate();
 
   const [surveys, setSurveys] = useState([]);
+  const [draftSurveys, setDraftSurveys] = useState([]);
   const [reports, setReports] = useState([]);
   const [vessels, setVessels] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -39,13 +41,15 @@ function DashboardUser() {
       setError(null);
       
       try {
-        const [userSurveys, userReports, userVessels] = await Promise.all([
+        const [userSurveys, draftSurveys, userReports, userVessels] = await Promise.all([
           getSurveys(currentUser.uid),
+          getDraftSurveys(currentUser.uid),
           getFullReports(currentUser.uid),
           getVessels(currentUser.uid)
         ]);
         
         setSurveys(userSurveys || []);
+        setDraftSurveys(draftSurveys || []);
         setReports(userReports || []);
         setVessels(userVessels || []);
       } catch (err) {
@@ -114,15 +118,15 @@ function DashboardUser() {
                   </div>
                 </div>
                 <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
-                      <ClipboardCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-slate-900 dark:text-white">{surveys.length}</p>
-                      <p className="text-xs text-slate-500">Expertises</p>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                    <ClipboardCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{surveys.length + draftSurveys.length}</p>
+                    <p className="text-xs text-slate-500">Expertises</p>
+                  </div>
+                </div>
                 </div>
                 <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
                   <div className="flex items-center gap-3">
@@ -267,29 +271,50 @@ function DashboardUser() {
                   <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">Aucune donnée récente disponible</p>
                 ) : (
                   <div className="space-y-4 max-h-64 overflow-y-auto">
-                    {surveys.slice(0, 3).map((survey) => (
-                      <Link
-                        key={survey.id}
-                        to={`/onhire?tab=surveys&id=${survey.id}`}
-                        className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 rounded-lg group transition-all -mx-3 px-3"
-                      >
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full group-hover:scale-110 transition-transform"></div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 dark:text-white truncate group-hover:text-emerald-600">
-                            {survey.vesselName || survey.name || 'Nouvelle expertise'}
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Expertise créée
-                          </p>
+{draftSurveys.slice(0, 3).map((survey) => {
+                      const handleDelete = async () => {
+                        if (!window.confirm('Supprimer ce draft survey?')) return;
+                        try {
+                          await deleteDraftSurvey(currentUser.uid, survey.id);
+                          setDraftSurveys(prev => prev.filter(s => s.id !== survey.id));
+                        } catch (err) {
+                          alert('Erreur suppression: ' + err.message);
+                        }
+                      };
+                      return (
+                        <div key={survey.id} className="flex items-center justify-between gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 rounded-lg group transition-all -mx-3 px-3">
+                          <Link
+                            to={`/draft-survey/edit/${survey.id}`}
+                            className="flex items-center gap-3 flex-1"
+                          >
+                            <div className="w-2 h-2 bg-cyan-500 rounded-full group-hover:scale-110 transition-transform"></div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-slate-900 dark:text-white truncate group-hover:text-cyan-600">
+                                {survey.informations?.vesselName || 'Draft Survey'}
+                              </p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400">
+                                Draft Survey
+                              </p>
+                            </div>
+                            <div className="text-xs text-slate-400 flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {survey.updatedAt ? new Date(survey.updatedAt).toLocaleDateString('fr-FR', { 
+                                day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
+                              }) : 'Récemment'}
+                            </div>
+                          </Link>
+                          <button
+                            onClick={handleDelete}
+                            className="p-1.5 text-red-500 hover:bg-red-100 hover:text-red-700 rounded transition-all ml-2"
+                            title="Supprimer"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
                         </div>
-                        <div className="text-xs text-slate-400 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {survey.createdAt ? new Date(survey.createdAt).toLocaleDateString('fr-FR', { 
-                            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
-                          }) : 'Récemment'}
-                        </div>
-                      </Link>
-                    ))}
+                      );
+                    })}
                     
                     {reports.slice(0, 3).map((report) => (
                       <Link

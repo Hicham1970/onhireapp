@@ -23,6 +23,7 @@ const Notfound = lazy(() => import('./pages/Notfound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const DashboardAdmin = lazy(() => import('./pages/DashboardAdmin'));
 const EditReport = lazy(() => import('./pages/EditReport'));
+const EditDraftSurvey = lazy(() => import('./pages/EditDraftSurvey'));
 
 // Draft Survey Pages
 const DraftSurveyInfos = lazy(() => import('./pages/Infos'));
@@ -67,10 +68,11 @@ function App() {
           <Route path="/admin/edit-report/:userId/:reportId" element={<EditReport />} />
 
           {/* Draft Survey Routes */}
-          <Route path="/draft-survey/*" element={
+<Route path="/draft-survey/*" element={
             <DraftSurveyProvider>
               <Routes>
                 <Route element={<DraftSurveyLayout />}>
+                  <Route path="edit/:surveyId/*" element={<EditDraftSurvey />} />
                   <Route path="infos" element={<DraftSurveyInfos />} />
                   <Route path="caracteristiques" element={<DraftSurveyCaracteristiques />} />
                   

@@ -82,7 +82,9 @@ export const generateSurveyPDF = async (shipData, calculatorData) => {
     // --- FUEL SUMMARY (DECLARED VS CALCULATED) ---
     addSectionTitle("2.0 RECAPITULATION - BUNKERS ON BOARD");
     
-    const { summaryValues, calculatedTotals, entries } = calculatorData;
+    const summaryValues = calculatorData.summaryValues || {};
+    const calculatedTotals = calculatorData.calculatedTotals || {};
+    const entries = calculatorData.entries || [];
     
     const summaryData = ['VLSFO', 'HSFO', 'MDO', 'LSMGO'].map(fuel => {
         const declared = parseFloat(summaryValues[fuel]) || 0;

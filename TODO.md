@@ -1,11 +1,21 @@
-# TODO: Tarification Cards Update Plan - COMPLETED ✅
+# PDF Draft Survey - Layout Fixes Applied
 
-All steps done:
-1. ✅ src/data/pricing.js updated
-2. ✅ Verified
-3. ✅ No JSX changes needed
-4. ✅ Dev server running for testing
-5. ✅ Task completed
+## ✅ Fixes appliqués
+- [x] BL Weight ↓ 2mm (`y += 6`)
+- [x] Table ↓ 4mm (`y = 55 → 59`)
+- [x] Timestamps supprimés
+- [x] Port Discharge espace +10mm
 
-The tarification cards now feature Draft Survey as premier choix, Fuel Calculator free for all.
+## ⏳ Restant
+```
+- [ ] MID Port/Stbd dans table data
+- [ ] MID Correction dans table  
+- [ ] Table pleine largeur (col0: 35→28mm)
+```
+
+## Test
+```
+DS PDF → layout + espacement OK
+Prochain: Mid data + full width table
+```
 

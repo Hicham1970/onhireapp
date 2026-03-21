@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getSurveys, getVessels, getFullReports, getUsers } from '../api/api';
+import { getAllDraftSurveys } from '../services/adminServices';
 import Profile from '../components/Profile';
 import { Ship, ClipboardCheck, Shield, ChevronLeft, Loader2, Users, User, BarChart3 } from 'lucide-react';
 
@@ -14,6 +15,7 @@ const DashboardAdmin = () => {
   const [fullReports, setFullReports] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [vessels, setVessels] = useState([]);
+  const [allDraftSurveys, setAllDraftSurveys] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,12 +29,14 @@ const DashboardAdmin = () => {
       getSurveys(currentUser.uid),
       getFullReports(currentUser.uid),
       getUsers(),
-      getVessels(currentUser.uid)
-    ]).then(([userSurveys, reports, usersData, dbVessels]) => {
+      getVessels(currentUser.uid),
+      getAllDraftSurveys()
+    ]).then(([userSurveys, reports, usersData, dbVessels, allDraftSurveys]) => {
       setSurveys(userSurveys || []);
       setFullReports(reports || []);
       setAllUsers(Object.keys(usersData || {}).map(key => ({ id: key, ...usersData[key] })));
       setVessels(dbVessels || []);
+      setAllDraftSurveys(allDraftSurveys || []);
     }).finally(() => setIsLoading(false));
   }, [currentUser, loading, isAdmin, navigate]);
 
@@ -95,8 +99,8 @@ const DashboardAdmin = () => {
                 <ClipboardCheck className="w-7 h-7 text-emerald-600" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-slate-900 dark:text-white">{totalSurveys}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Surveys</p>
+                <p className="text-3xl font-bold text-slate-900 dark:text-white">{totalSurveys + allDraftSurveys.length}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Total Expertises</p>
               </div>
             </div>
           </div>
@@ -161,17 +165,19 @@ const DashboardAdmin = () => {
           <div className="bg-white dark:bg-slate-800 rounded-xl border p-6">
             <h3 className="text-xl font-bold mb-6">Activité Récente</h3>
             <div className="space-y-4">
-              {surveys.slice(0, 5).map(survey => (
-                <div key={survey.id} className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                  <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900 rounded-lg flex items-center justify-center">
-                    <Ship className="w-6 h-6 text-emerald-600" />
+              {[...allDraftSurveys.slice(0, 3), ...surveys.slice(0, 2)].map((item, index) => (
+                <div key={item.id || item.surveyId || index} className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
+                    {item.informations?.vesselName?.charAt(0) || 'DS'}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{survey.vesselName}</p>
-                    <p className="text-sm text-slate-500">{survey.date}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate">{item.informations?.vesselName || item.vesselName || 'Draft Survey'}</p>
+                    <p className="text-xs text-slate-500">{item.cargoWeight ? `Cargo: ${item.cargoWeight.toFixed(0)} MT` : item.date || 'Draft Survey'}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold">{survey.totalHFO} MT</p>
+                  <div className="text-xs text-slate-500">
+                    {new Date(item.updatedAt || item.createdAt).toLocaleDateString('fr-FR', {
+                      day: 'numeric', month: 'short'
+                    })}
                   </div>
                 </div>
               ))}
