@@ -5,7 +5,7 @@ import { FuelCalculator } from './FuelCalculator';
 import { INITIAL_VESSELS } from './constants';
 import { ChevronLeft } from 'lucide-react';
 import { saveSurvey } from '../api/api';
-import { generateSurveyPDF } from '../utils/pdfSurveyGenerator';
+import { generateSurveyPDF, generateCertificatePDF } from '../utils/pdfSurveyGenerator';
 
 const CreateSurvey = () => {
   const { currentUser } = useAuth();
@@ -125,6 +125,23 @@ const CreateSurvey = () => {
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
               >
                 📄 Télécharger PDF Rapport Survey
+              </button>
+              <button 
+                onClick={async () => {
+                  const calcData = calculatorRef.current?.getCurrentData();
+                  if (!calcData) {
+                    alert("Veuillez remplir le calculateur.");
+                    return;
+                  }
+                  try {
+                    await generateCertificatePDF(shipData, calcData);
+                  } catch (e) {
+                    alert("Erreur certificat PDF: " + e.message);
+                  }
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
+              >
+                📜 Certificate PDF
               </button>
               <button 
                 onClick={async () => {

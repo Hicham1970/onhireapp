@@ -132,7 +132,10 @@ const NewDraftSurveyAdmin = () => {
 
         {/* Step Content */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border shadow-sm p-8 mb-8 min-h-[500px]">
-          <stepComponent />
+{stepComponent ? <stepComponent /> : <div className="flex items-center justify-center h-64 text-slate-500">
+  Composant en cours de développement...
+</div>}
+
         </div>
 
         {/* Navigation & Save */}
