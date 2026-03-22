@@ -1,34 +1,22 @@
 import { DraftReadings, VesselParticulars, Deductibles, OperationType } from "../types/draftSurvey";
 
 /**
- * Calcul du LBM (Length Between Marks) avec gestion des signes
+ * Calculates LBM (Length Between Marks).
+ * Convention: Distances are from their respective perpendiculars (FP, AP).
+ * - fwdDist: Positive if the mark is FORWARD of the FP. Negative if AFT.
+ * - aftDist: Positive if the mark is FORWARD of the AP. Negative if AFT.
  */
 export const calculateLBM = (lbp: number, fwdDist: number, aftDist: number) => {
-    let lbm = lbp;
-    
-    if (fwdDist < 0 && aftDist > 0) {
-        lbm -= fwdDist - aftDist;
-    } else if (fwdDist > 0 && aftDist < 0) {
-        lbm += fwdDist + aftDist;
-    } else if (fwdDist < 0 && aftDist < 0) {
-        lbm += aftDist - fwdDist;
-    } else if (fwdDist > 0 && aftDist > 0) {
-        lbm += fwdDist + aftDist;
-    } else if (fwdDist === 0 && aftDist < 0) {
-        lbm = lbp + Math.abs(aftDist);
-    } else if (fwdDist === 0 && aftDist > 0) {
-        lbm = lbp - Math.abs(aftDist);
-    } else if (fwdDist > 0 && aftDist === 0) {
-        lbm = lbp - Math.abs(fwdDist);
-    } else if (fwdDist < 0 && aftDist === 0) {
-        lbm = lbp + Math.abs(fwdDist);
-    }
-    
-    return lbm;
+    // If fwd mark is forward, it extends the length. If aft mark is forward, it shortens it.
+    return lbp + fwdDist - aftDist;
 };
 
 /**
- * Calcul des corrections de tirant d'eau automatisées (SGS Logic)
+ * Calculates draft corrections based on trim.
+ * This uses a consistent convention for all distances:
+ * - Positive (>0): Mark is FORWARD of the reference point (FP, AP, Midship).
+ * - Negative (<0): Mark is AFT of the reference point.
+ * The calculated correction is algebraic and should always be ADDED to the mean draft.
  */
 export const calculateDraftCorrections = (
     apparentTrim: number,
@@ -37,32 +25,15 @@ export const calculateDraftCorrections = (
     aftDist: number,
     midDist: number
 ) => {
-    const lbm = calculateLBM(lbp, fwdDist, aftDist);
+    const lbm = calculateLBM(lbp, fwdDist, aftDist); // Must use the same convention
     if (lbm === 0) return { fwdCorr: 0, aftCorr: 0, midCorr: 0, lbm: lbp };
     
-    // Fore Correction
-    let fwdCorr = 0;
-    if (fwdDist < 0) {
-        fwdCorr = -((apparentTrim * fwdDist) / lbm);
-    } else if (fwdDist > 0) {
-        fwdCorr = ((apparentTrim * fwdDist) / lbm);
-    }
+    // If trim is by stern (positive) and mark is forward (positive), the reading is smaller, so correction is positive.
+    const fwdCorr = (apparentTrim * fwdDist) / lbm;
 
-    // Aft Correction
-    let aftCorr = 0;
-    if (aftDist < 0) {
-        aftCorr = -((apparentTrim * aftDist) / lbm);
-    } else if (aftDist > 0) {
-        aftCorr = ((apparentTrim * aftDist) / lbm);
-    }
+    const aftCorr = (apparentTrim * aftDist) / lbm;
 
-    // Mid Correction
-    let midCorr = 0;
-    if (midDist < 0) {
-        midCorr = -((apparentTrim * midDist) / lbm);
-    } else if (midDist > 0) {
-        midCorr = ((apparentTrim * midDist) / lbm);
-    }
+    const midCorr = (apparentTrim * midDist) / lbm;
 
     return { fwdCorr, aftCorr, midCorr, lbm };
 };

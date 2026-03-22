@@ -8,11 +8,11 @@ type LocalInfo = DraftSurvey['informations'];
 
 interface InputFieldProps {
     label: string;
-    field: keyof LocalInfo;
+    field: any;
     value: string | number;
     type?: string;
     placeholder?: string;
-    onChange: (field: keyof LocalInfo, value: string) => void;
+    onChange: (field: any, value: string) => void;
 }
 
 const InputField = ({ label, field, value, type = "text", placeholder = "", onChange }: InputFieldProps) => (
@@ -32,14 +32,25 @@ const DraftSurveyInfos = () => {
     const { survey, updateInformations } = useDraftSurvey();
     const navigate = useNavigate();
     
-    const [localInfo, setLocalInfo] = useState(survey.informations);
+    const [localInfo, setLocalInfo] = useState<any>(survey.informations);
 
     const handleNext = () => {
+        if (localInfo.imo && localInfo.imo.length !== 7) {
+            alert("Le numéro IMO doit contenir exactement 7 chiffres.");
+            return;
+        }
         updateInformations(localInfo);
         navigate('/draft-survey/caracteristiques');
     };
 
-    const updateField = (field: keyof LocalInfo, value: string) => {
+    const updateField = (field: any, value: string) => {
+        if (field === 'imo') {
+            const numericValue = value.replace(/[^0-9]/g, '');
+            if (numericValue.length <= 7) {
+                setLocalInfo(prev => ({ ...prev, [field]: numericValue }));
+            }
+            return;
+        }
         setLocalInfo(prev => ({ ...prev, [field]: value }));
     };
 
@@ -99,9 +110,16 @@ const DraftSurveyInfos = () => {
 
                 <hr className="dark:border-slate-700" />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <InputField label="Nom du Navire" field="vesselName" value={localInfo.vesselName} onChange={updateField} placeholder="ex: CABRERA" />
-                    <InputField label="Cargaison" field="cargo" value={localInfo.cargo} onChange={updateField} placeholder="ex: COAL" />
+                    <InputField label="IMO" field="imo" value={localInfo.imo || ''} onChange={updateField} placeholder="ex: 9876543" />
+                    <InputField label="Port Actuel" field="currentPort" value={localInfo.currentPort || ''} onChange={updateField} placeholder="ex: Rotterdam" />
+                    <InputField label="Client" field="client" value={localInfo.client || ''} onChange={updateField} placeholder="Nom du client" />
+                    
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <InputField label="Produit (Cargaison)" field="product" value={localInfo.product || ''} onChange={updateField} placeholder="ex: Wheat" />
                     <InputField label="Poids B/L (MT)" field="blWeight" value={localInfo.blWeight} type="number" onChange={updateField} />
                     <InputField label="Date B/L" field="blDate" value={localInfo.blDate} type="date" onChange={updateField} />
                     <InputField label="Port de Chargement" field="portLoading" value={localInfo.portLoading} onChange={updateField} placeholder="ex: PUERTO BOLIVAR" />

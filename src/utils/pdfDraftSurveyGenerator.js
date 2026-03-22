@@ -62,9 +62,13 @@ export const generateDraftSurveyPDF = async (survey) => {
   // HEADER
   doc.setFontSize(15);
   doc.setFont('helvetica', 'bold');
-  doc.text('DRAFT SURVEY REPORT', pageWidth/2, y+8, { align: 'center' });
-  doc.setFontSize(12);
-  doc.text(informations.vesselName || 'VESSEL', pageWidth/2, y+16, { align: 'center' });
+   doc.text('DRAFT SURVEY REPORT', pageWidth/2, 18, { align: 'center' });
+  
+  // Ligne de séparation horizontale sous l'en-tête
+  doc.setLineWidth(0.5);
+  doc.setDrawColor(0);
+  doc.line(margin, 25, pageWidth - margin, 25);
+  
   y = 40;
 
   // VESSEL INFO + PARTICULARS (2 colonnes, même ligne)
@@ -73,19 +77,42 @@ export const generateDraftSurveyPDF = async (survey) => {
   
   doc.setFont('helvetica', 'normal');
   // Col 1 - INFO
+  doc.text(`Vessel: ${informations.vesselName || ''}`, margin, y); y += 4;
+  doc.text(`Current Port: ${informations.currentPort || ''}`, margin, y); y += 4;
   doc.text(`Operation: ${informations.operationType}`, margin, y); y += 4;
   doc.text(`BL Weight: ${fmtNum3(safeNum(informations.blWeight))} MT`, margin, y); y += 4;
   doc.text(`Port Load: ${informations.portLoading}`, margin, y); y += 4;
   doc.text(`Port Discharge: ${informations.portDischarging}`, margin, y); y += 4;
-  doc.text(`Initial Draft: ${informations.initialStart || ''} - ${informations.initialEnd || ''}`, margin, y); y += 4;
-  doc.text(`Final Draft: ${informations.finalStart || ''} - ${informations.finalEnd || ''}`, margin, y); y += 22;
+  doc.text(`Arrived: ${informations.arrivedDate || ''} ${informations.arrivedTime || ''}`, margin, y); y += 4;
+  doc.text(`Berthed: ${informations.berthedDate || ''} ${informations.berthedTime || ''}`, margin, y); y += 4;
   
+  const getSurveyTime = (d) => {
+    if (d.commencedDate) {
+      const endPart = d.completedDate && d.completedDate !== d.commencedDate 
+        ? ` - ${d.completedDate} ${d.completedTime || ''}` 
+        : (d.completedTime ? ` - ${d.completedTime}` : '');
+      return `${d.commencedDate} ${d.commencedTime || ''}${endPart}`;
+    }
+    
+    let t = '';
+    if (d.timeStart) {
+      t = d.timeEnd ? `${d.timeStart} - ${d.timeEnd}` : d.timeStart;
+    } else {
+      t = d.time || '';
+    }
+    return `${d.date || ''} ${t}`;
+  };
+
   // Reset Y col 2
-  y = 43;
+  y = 40;
+  doc.text(`IMO: ${informations.imo || ''}`, pageWidth/2 + 8, y); y += 4;
+  doc.text(`Client: ${informations.client || ''}`, pageWidth/2 + 8, y); y += 4;
+  doc.text(`Product: ${informations.product || ''}`, pageWidth/2 + 8, y); y += 4;
   doc.text(`LBP: ${fmtNum3(safeNum(particulars.lbp))} m`, pageWidth/2 + 8, y); y += 4;
-  doc.text(`Density Initial: ${fmtNum3(safeNum(initial.density))}`, pageWidth/2 + 8, y); y += 4;
-  doc.text(`Density Final: ${fmtNum3(safeNum(final.density))}`, pageWidth/2 + 8, y); y += 6;
-  y = 65;
+  y += 4; // Espace vertical
+  doc.text(`Initial Survey: ${getSurveyTime(initial)}`, pageWidth/2 + 8, y); y += 4;
+  doc.text(`Final Survey:   ${getSurveyTime(final)}`, pageWidth/2 + 8, y); y += 6;
+  y = 95;
 
   // TOUTE LA TABLE CALCULS (compacte 7pt, 3 décimales)
   const fmtNum = fmtNum3;
@@ -126,7 +153,7 @@ export const generateDraftSurveyPDF = async (survey) => {
 
   autoTable(doc, {
     startY: y,
-    head: [['Description', 'Unit', 'INITIAL', 'FINAL']],
+    head: [['Description', '     Unit', '     INITIAL', '     FINAL']],
     body: tableData.map(row => [row[0], row[1], fmtNum(row[2]), fmtNum(row[3])]),
     theme: 'grid',
     styles: { fontSize: 7, cellPadding: 1.2 },
@@ -134,8 +161,8 @@ export const generateDraftSurveyPDF = async (survey) => {
     columnStyles: { 
       0: { cellWidth: 55, halign: 'left' }, 
       1: { cellWidth: 25, halign: 'center' },
-      2: { cellWidth: 45, halign: 'right' },
-      3: { cellWidth: 45, halign: 'right' }
+      2: { cellWidth: 45, halign: 'center' },
+      3: { cellWidth: 45, halign: 'center' }
     },
     margin: { left: margin, right: margin }
   });

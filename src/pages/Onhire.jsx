@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getSurveys, deleteSurvey, getFullReports, deleteFullReport, getAllReports } from '../api/api';
+import { getSurveys, getAllSurveys, deleteSurvey, getFullReports, deleteFullReport, getAllReports } from '../api/api';
 import { ChevronRight, Edit3, Trash2, Plus, Ship, FileText, Loader2, Camera } from 'lucide-react';
 import FullReport from '../components/reports/FullReport';
 import { useSearchParams } from 'react-router-dom';

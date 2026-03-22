@@ -24,6 +24,7 @@ const Reports = lazy(() => import('./pages/Reports'));
 const DashboardAdmin = lazy(() => import('./pages/DashboardAdmin'));
 const EditReport = lazy(() => import('./pages/EditReport'));
 const EditDraftSurvey = lazy(() => import('./pages/EditDraftSurvey'));
+const NewDraftSurveyAdmin = lazy(() => import('./pages/NewDraftSurveyAdmin'));
 
 // Draft Survey Pages
 const DraftSurveyInfos = lazy(() => import('./pages/Infos'));
@@ -58,9 +59,14 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<DashboardUser />} />
           <Route path="/create-survey" element={<CreateSurvey />} />
-          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-          <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-          <Route path="/admin/*" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin" element={<AdminRoute><DashboardAdmin /></AdminRoute>} />
+          <Route path="/admin/dashboard" element={<AdminRoute><DashboardAdmin /></AdminRoute>} />
+          <Route path="/admin/*" element={<AdminRoute><DashboardAdmin /></AdminRoute>} />
+          <Route path="/admin/new-draft-survey" element={
+            <DraftSurveyProvider>
+              <NewDraftSurveyAdmin />
+            </DraftSurveyProvider>
+          } />
           <Route path="/onhire" element={<Onhire />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/edit-survey/:surveyId" element={<EditSurvey />} />
@@ -72,6 +78,7 @@ function App() {
             <DraftSurveyProvider>
               <Routes>
                 <Route element={<DraftSurveyLayout />}>
+                  <Route index element={<Navigate to="infos" replace />} />
                   <Route path="edit/:surveyId/*" element={<EditDraftSurvey />} />
                   <Route path="infos" element={<DraftSurveyInfos />} />
                   <Route path="caracteristiques" element={<DraftSurveyCaracteristiques />} />

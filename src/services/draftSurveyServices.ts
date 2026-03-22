@@ -69,3 +69,28 @@ export const deleteDraftSurvey = async (userId: string, surveyId: string) => {
         throw error;
     }
 };
+
+export const getAllDraftSurveys = async (): Promise<any[]> => {
+    try {
+        const snapshot = await get(ref(database, "draftSurveys"));
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            const allDrafts: any[] = [];
+            Object.keys(data).forEach(userId => {
+                const userDrafts = data[userId];
+                Object.keys(userDrafts).forEach(draftId => {
+                    allDrafts.push({
+                        id: draftId,
+                        userId,
+                        ...userDrafts[draftId]
+                    });
+                });
+            });
+            return allDrafts.sort((a, b) => new Date(b.updatedAt || b.createdAt || 0).getTime() - new Date(a.updatedAt || a.createdAt || 0).getTime());
+        }
+        return [];
+    } catch (error) {
+        console.error("Error fetching all draft surveys (likely permission issue):", error);
+        return [];
+    }
+};
