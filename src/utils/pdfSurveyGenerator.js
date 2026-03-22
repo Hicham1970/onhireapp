@@ -60,7 +60,7 @@ export const generateSurveyPDF = async (shipData, calculatorData) => {
         doc.setFont("helvetica", "normal");
     };
 
-    // --- VESSEL PARTICULARS ---
+// --- VESSEL PARTICULARS ---
     addSectionTitle("1.0 VESSEL PARTICULARS");
     autoTable(doc, {
         startY: yPos,
@@ -78,6 +78,27 @@ export const generateSurveyPDF = async (shipData, calculatorData) => {
         columnStyles: { 0: { fontStyle: 'bold', cellWidth: 40 }, 2: { fontStyle: 'bold', cellWidth: 40 } }
     });
     yPos = doc.lastAutoTable.finalY + 12;
+
+    // --- FUEL TIMELINE ---
+    addSectionTitle("1.1 FUEL TIMELINE");
+    const fuelTimelineData = [
+        ['E.O.S.P.', shipData.eosPDate || '', shipData.eosPTime || '', shipData.eosPHsfo || '', shipData.eosPLsfo || '', shipData.eosPHmdo || '', shipData.eosPLsmgo || ''],
+        ['P.O.B.', shipData.pobDate || '', shipData.pobTime || '', shipData.pobHsfo || '', shipData.pobLsfo || '', shipData.pobHmdo || '', shipData.pobLsmgo || ''],
+        ['F.W.E.', shipData.fweDate || '', shipData.fweTime || '', shipData.fweHsfo || '', shipData.fweLsfo || '', shipData.fweHmdo || '', shipData.fweLsmgo || ''],
+        ['Time of Survey', shipData.surveyTimeDate || '', shipData.surveyTimeTime || '', shipData.surveyTimeHsfo || '', shipData.surveyTimeLsfo || '', shipData.surveyTimeHmdo || '', shipData.surveyTimeLsmgo || ''],
+        ['Date of Completion', shipData.completionDate || '', '', '', '', '', '']
+    ];
+    autoTable(doc, {
+        startY: yPos,
+        head: [['Event', 'DATE', 'TIME', 'H.S.F.O.', 'L.S.F.O.', 'H.M.D.O.', 'L.S.M.G.O.']],
+        body: fuelTimelineData,
+        theme: 'grid',
+        styles: { fontSize: 7, font: brand.fonts.main, halign: 'center' },
+        headStyles: { fillColor: brand.colors.primary, fontSize: 8, textColor: 255 },
+        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 25, halign: 'left' } }
+    });
+    yPos = doc.lastAutoTable.finalY + 12;
+
 
     // --- FUEL SUMMARY (DECLARED VS CALCULATED) ---
     addSectionTitle("2.0 RECAPITULATION - BUNKERS ON BOARD");

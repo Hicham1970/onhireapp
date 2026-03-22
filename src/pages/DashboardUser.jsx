@@ -21,6 +21,36 @@ function DashboardUser() {
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchData = async () => {
+    if (!currentUser?.uid) return;
+    
+    setLoadingData(true);
+    setError(null);
+    
+    try {
+      const [userSurveys, draftSurveys, userReports, userVessels] = await Promise.all([
+        getSurveys(currentUser.uid),
+        getDraftSurveys(currentUser.uid),
+        getFullReports(currentUser.uid),
+        getVessels(currentUser.uid)
+      ]);
+      
+      setSurveys(userSurveys || []);
+      setDraftSurveys(draftSurveys || []);
+      setReports(userReports || []);
+      setVessels(userVessels || []);
+    } catch (err) {
+      console.error("Dashboard data fetch error:", err);
+      setError("Erreur de chargement des données");
+      setSurveys([]);
+      setReports([]);
+      setVessels([]);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+
   useEffect(() => {
     if (loading) return;
     if (!currentUser) {
@@ -247,12 +277,14 @@ function DashboardUser() {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-slate-900 dark:text-white text-lg">Activité récente</h3>
                   <button
-                    onClick={() => window.location.reload()}
-                    className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors p-1 -m-1 rounded"
+                    onClick={fetchData}
+                    disabled={loadingData}
+                    className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors p-1 -m-1 rounded"
                   >
-                    <RefreshCw className="w-3 h-3" />
+                    <RefreshCw className={`w-3 h-3 ${loadingData ? 'animate-spin' : ''}`} />
                     Actualiser
                   </button>
+
                 </div>
                 
                 {loadingData ? (
@@ -270,77 +302,56 @@ function DashboardUser() {
                 ) : error ? (
                   <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">Aucune donnée récente disponible</p>
                 ) : (
-                  <div className="space-y-4 max-h-64 overflow-y-auto">
-{draftSurveys.slice(0, 3).map((survey) => {
-                      const handleDelete = async () => {
-                        if (!window.confirm('Supprimer ce draft survey?')) return;
+                <div className="space-y-4 max-h-80 overflow-y-auto">
+                    {[...draftSurveys, ...surveys, ...reports].slice(0, 8).map((item) => {
+                      const handleDelete = item.id && item.__typename !== 'Report' ? async () => {
+                        if (!window.confirm('Supprimer cet élément?')) return;
                         try {
-                          await deleteDraftSurvey(currentUser.uid, survey.id);
-                          setDraftSurveys(prev => prev.filter(s => s.id !== survey.id));
+                          if (item.informations) {
+                            await deleteDraftSurvey(currentUser.uid, item.id);
+                            setDraftSurveys(prev => prev.filter(s => s.id !== item.id));
+                          }
                         } catch (err) {
                           alert('Erreur suppression: ' + err.message);
                         }
-                      };
+                      } : null;
                       return (
-                        <div key={survey.id} className="flex items-center justify-between gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 rounded-lg group transition-all -mx-3 px-3">
+                        <div key={item.id} className="flex items-center justify-between gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 rounded-lg group transition-all -mx-3 px-3">
                           <Link
-                            to={`/draft-survey/edit/${survey.id}`}
+                            to={item.informations ? `/draft-survey/edit/${item.id}` : `/reports?id=${item.id}`}
                             className="flex items-center gap-3 flex-1"
                           >
-                            <div className="w-2 h-2 bg-cyan-500 rounded-full group-hover:scale-110 transition-transform"></div>
+                            <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full group-hover:scale-110 transition-transform"></div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-slate-900 dark:text-white truncate group-hover:text-cyan-600">
-                                {survey.informations?.vesselName || 'Draft Survey'}
+                              <p className="text-sm font-medium text-slate-900 dark:text-white truncate group-hover:text-blue-600">
+                                {item.vesselName || item.informations?.vesselName || item.shipName || 'Activité'}
                               </p>
                               <p className="text-xs text-slate-500 dark:text-slate-400">
-                                Draft Survey
+                                {item.informations ? 'Draft Survey' : item.vesselName ? 'Rapport' : 'Survey'}
                               </p>
                             </div>
                             <div className="text-xs text-slate-400 flex items-center gap-1">
                               <Clock className="w-3 h-3" />
-                              {survey.updatedAt ? new Date(survey.updatedAt).toLocaleDateString('fr-FR', { 
+                              {item.updatedAt || item.createdAt ? new Date(item.updatedAt || item.createdAt).toLocaleDateString('fr-FR', { 
                                 day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
                               }) : 'Récemment'}
                             </div>
                           </Link>
-                          <button
-                            onClick={handleDelete}
-                            className="p-1.5 text-red-500 hover:bg-red-100 hover:text-red-700 rounded transition-all ml-2"
-                            title="Supprimer"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                          {handleDelete && (
+                            <button
+                              onClick={handleDelete}
+                              className="p-1.5 text-red-500 hover:bg-red-100 hover:text-red-700 rounded transition-all ml-2"
+                              title="Supprimer"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          )}
                         </div>
                       );
                     })}
-                    
-                    {reports.slice(0, 3).map((report) => (
-                      <Link
-                        key={report.id}
-                        to={`/reports?id=${report.id}`}
-                        className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 rounded-lg group transition-all -mx-3 px-3"
-                      >
-                        <div className="w-2 h-2 bg-blue-500 rounded-full group-hover:scale-110 transition-transform"></div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 dark:text-white truncate group-hover:text-blue-600">
-                            {report.vesselName || report.shipName || 'Rapport généré'}
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Rapport d'inspection
-                          </p>
-                        </div>
-                        <div className="text-xs text-slate-400 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {report.createdAt ? new Date(report.createdAt).toLocaleDateString('fr-FR', { 
-                            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
-                          }) : 'Récemment'}
-                        </div>
-                      </Link>
-                    ))}
-                    
-                    {surveys.length === 0 && reports.length === 0 && (
+                    {[...draftSurveys, ...surveys, ...reports].length === 0 && (
                       <div className="text-center py-8 text-sm text-slate-500 dark:text-slate-400">
                         Aucune activité récente. 
                         <Link to="/create-survey" className="font-medium hover:text-blue-600 dark:hover:text-blue-400 ml-1">
@@ -349,6 +360,7 @@ function DashboardUser() {
                       </div>
                     )}
                   </div>
+
                 )}
               </div>
             </div>

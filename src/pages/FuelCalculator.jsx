@@ -217,10 +217,10 @@ export const FuelCalculator = forwardRef(({ tanks, onSave, initialData, shipData
     const styles = getColorStyles(group.color);
 
     return (
-      <div key={group.name} className="mb-8 overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-        <div className={`px-4 py-2 ${styles.bg} border-b border-slate-200 text-center font-bold text-slate-700 text-sm uppercase tracking-widest`}>
-          {group.name}
-        </div>
+        <div key={group.name} className="mb-8 overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <div className={`px-4 py-2 ${styles.bg} border-b border-slate-200 text-center font-bold text-slate-700 dark:text-white text-sm uppercase tracking-widest`}>
+            {group.name}
+          </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[11px] text-center border-collapse">
             <thead className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
@@ -347,14 +347,8 @@ export const FuelCalculator = forwardRef(({ tanks, onSave, initialData, shipData
           <FileText className="w-6 h-6 text-blue-600" />
           Tank Sounding Details
         </h2>
-        <button 
-          onClick={handleSave}
-          className="bg-slate-900 hover:bg-black text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg active:scale-95"
-        >
-          <Save className="w-4 h-4" />
-          Finalize Computation
-        </button>
       </div>
+
 
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm mb-6">
         <h3 className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-4 text-sm">

@@ -33,6 +33,32 @@ const CreateSurvey = () => {
     list: '0',
     erTemp: '31',
     thermometer: 'CIAS',
+    // Fuel Timeline
+    eosPDate: '2023-04-08',
+    eosPTime: '19:00',
+    eosPHsfo: '0.000',
+    eosPLsfo: '917.806',
+    eosPHmdo: '0.000',
+    eosPLsmgo: '346.751',
+    pobDate: '2023-04-08',
+    pobTime: '13:18',
+    pobHsfo: '0.000',
+    pobLsfo: '905.787',
+    pobHmdo: '0.000',
+    pobLsmgo: '346.751',
+    fweDate: '2023-04-08',
+    fweTime: '14:30',
+    fweHsfo: '0.000',
+    fweLsfo: '905.000',
+    fweHmdo: '0.000',
+    fweLsmgo: '346.751',
+    surveyTimeDate: '2023-04-08',
+    surveyTimeTime: '17:00',
+    surveyTimeHsfo: '0.000',
+    surveyTimeLsfo: '900.720',
+    surveyTimeHmdo: '0.000',
+    surveyTimeLsmgo: '346.751',
+    completionDate: '2023-04-08',
     // Certificates
     portOfRegistry: 'MAJURO',
     grossTons: '24,087',
@@ -82,24 +108,41 @@ const CreateSurvey = () => {
           {/* Download PDF Button */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Télécharger Rapport PDF</h3>
-            <button 
-              onClick={async () => {
-                const calcData = calculatorRef.current?.getCurrentData();
-                if (!calcData) {
-                   alert("Veuillez d'abord initialiser le calculateur.");
-                   return;
-                }
-                try {
-                  await generateSurveyPDF(shipData, calcData);
-                } catch (e) {
-                  alert("Erreur lors de la génération du PDF: " + e.message);
-                }
-              }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
-            >
-              📄 Télécharger PDF Rapport Survey
-            </button>
+            <div className="flex gap-4">
+              <button 
+                onClick={async () => {
+                  const calcData = calculatorRef.current?.getCurrentData();
+                  if (!calcData) {
+                     alert("Veuillez d'abord initialiser le calculateur.");
+                     return;
+                  }
+                  try {
+                    await generateSurveyPDF(shipData, calcData);
+                  } catch (e) {
+                    alert("Erreur lors de la génération du PDF: " + e.message);
+                  }
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
+              >
+                📄 Télécharger PDF Rapport Survey
+              </button>
+              <button 
+                onClick={async () => {
+                  const calcData = calculatorRef.current?.getCurrentData();
+                  if (!calcData) {
+                    alert("Veuillez remplir le calculateur avant de sauvegarder.");
+                    return;
+                  }
+                  await handleSave(calcData.entries, calcData.hfoTotal, calcData.mgoTotal);
+                }}
+                className="bg-slate-900 hover:bg-black text-white px-8 py-3 rounded-xl flex items-center gap-2 font-bold shadow-lg hover:shadow-xl transition-all"
+              >
+                💾 Finalize & Save Computation
+              </button>
+
+            </div>
           </div>
+
 
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -304,6 +347,90 @@ const CreateSurvey = () => {
           </div>
         </div>
 
+        {/* Fuel Timeline Table */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 shadow-xl mb-8">
+          <h2 className="text-2xl font-bold mb-8 flex items-center gap-3 text-slate-900 dark:text-white">
+            <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center text-white font-bold">F</div>
+            Fuel Timeline
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
+                <tr>
+                  <th className="p-4 text-left w-48">Event</th>
+                  <th className="p-4 text-left">DATE</th>
+                  <th className="p-4 text-left">TIME</th>
+                  <th className="p-4 text-right">H.S.F.O.</th>
+                  <th className="p-4 text-right">L.S.F.O.</th>
+                  <th className="p-4 text-right">H.M.D.O.</th>
+                  <th className="p-4 text-right">L.S.M.G.O.</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                <tr>
+                  <td className="p-4 font-semibold text-slate-900 dark:text-slate-100">E.O.S.P.</td>
+                  <td className="p-4">
+                    <input type="date" value={shipData.eosPDate} onChange={(e) => updateShipData('eosPDate', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4">
+                    <input type="time" value={shipData.eosPTime} onChange={(e) => updateShipData('eosPTime', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.eosPHsfo} onChange={(e) => updateShipData('eosPHsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.eosPLsfo} onChange={(e) => updateShipData('eosPLsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.eosPHmdo} onChange={(e) => updateShipData('eosPHmdo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.eosPLsmgo} onChange={(e) => updateShipData('eosPLsmgo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                </tr>
+                <tr>
+                  <td className="p-4 font-semibold text-slate-900 dark:text-slate-100">P.O.B.</td>
+                  <td className="p-4">
+                    <input type="date" value={shipData.pobDate} onChange={(e) => updateShipData('pobDate', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4">
+                    <input type="time" value={shipData.pobTime} onChange={(e) => updateShipData('pobTime', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.pobHsfo} onChange={(e) => updateShipData('pobHsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.pobLsfo} onChange={(e) => updateShipData('pobLsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.pobHmdo} onChange={(e) => updateShipData('pobHmdo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.pobLsmgo} onChange={(e) => updateShipData('pobLsmgo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                </tr>
+                <tr>
+                  <td className="p-4 font-semibold text-slate-900 dark:text-slate-100">F.W.E.</td>
+                  <td className="p-4">
+                    <input type="date" value={shipData.fweDate} onChange={(e) => updateShipData('fweDate', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4">
+                    <input type="time" value={shipData.fweTime} onChange={(e) => updateShipData('fweTime', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.fweHsfo} onChange={(e) => updateShipData('fweHsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.fweLsfo} onChange={(e) => updateShipData('fweLsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.fweHmdo} onChange={(e) => updateShipData('fweHmdo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.fweLsmgo} onChange={(e) => updateShipData('fweLsmgo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                </tr>
+                <tr>
+                  <td className="p-4 font-semibold text-slate-900 dark:text-slate-100">Time of Survey</td>
+                  <td className="p-4">
+                    <input type="date" value={shipData.surveyTimeDate} onChange={(e) => updateShipData('surveyTimeDate', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4">
+                    <input type="time" value={shipData.surveyTimeTime} onChange={(e) => updateShipData('surveyTimeTime', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.surveyTimeHsfo} onChange={(e) => updateShipData('surveyTimeHsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.surveyTimeLsfo} onChange={(e) => updateShipData('surveyTimeLsfo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.surveyTimeHmdo} onChange={(e) => updateShipData('surveyTimeHmdo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                  <td className="p-4"><input type="number" step="0.001" value={shipData.surveyTimeLsmgo} onChange={(e) => updateShipData('surveyTimeLsmgo', e.target.value)} className="w-20 text-right px-2 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 font-mono" /></td>
+                </tr>
+                <tr className="bg-slate-50 dark:bg-slate-900/50">
+                  <td className="p-4 font-semibold text-slate-900 dark:text-slate-100">Date of Completion of Survey</td>
+                  <td className="p-4">
+                    <input type="date" value={shipData.completionDate} onChange={(e) => updateShipData('completionDate', e.target.value)} className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono" />
+                  </td>
+                  <td colSpan="5" className="p-4 text-slate-400 dark:text-slate-500 text-sm italic">No time/fuel data required</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         {/* Fuel Calculator */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-1">
           <FuelCalculator 
@@ -320,4 +447,5 @@ const CreateSurvey = () => {
 };
 
 export default CreateSurvey;
+
 
