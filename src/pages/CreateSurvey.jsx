@@ -310,53 +310,51 @@ const CreateSurvey = () => {
           {/* Certificates Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-bold mb-4 text-slate-900 dark:text-white border-b border-slate-200 pb-2">
-                Vessel Certificates (Marshall Islands)
-              </h3>
+              
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Port of Registry</span>
+                  <span className="dark:text-slate-200">Port of Registry</span>
                   <input 
                     type="text" 
                     value={shipData.portOfRegistry}
                     onChange={(e) => updateShipData('portOfRegistry', e.target.value)}
-                    className="w-48 px-3 py-2 border rounded-lg focus:ring-1 focus:ring-blue-500 font-mono bg-slate-50 dark:bg-slate-700"
+                    className="w-48 px-3 py-2 border rounded-lg focus:ring-1 focus:ring-blue-500 font-mono bg-slate-50 dark:bg-slate-700 dark:text-white"
                   />
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Gross/Net Tons</span>
+                  <span className=" dark:text-slate-200">Gross/Net Tons</span>
                   <div className="flex gap-2">
                     <input 
                       type="text" 
                       value={shipData.grossTons}
                       onChange={(e) => updateShipData('grossTons', e.target.value)}
-                      className="w-20 px-2 py-2 border rounded-lg font-mono bg-slate-50 dark:bg-slate-700"
+                      className="w-20 px-2 py-2 border rounded-lg font-mono bg-slate-50 dark:text-white dark:bg-slate-700"
                     />
                     <span>/</span>
                     <input 
                       type="text" 
                       value={shipData.netTons}
                       onChange={(e) => updateShipData('netTons', e.target.value)}
-                      className="w-20 px-2 py-2 border rounded-lg font-mono bg-slate-50 dark:bg-slate-700"
+                      className="w-20 px-2 py-2 border rounded-lg font-mono bg-slate-50 dark:text-white dark:bg-slate-700"
                     />
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Place of Redelivery</span>
+                  <span className="dark:text-slate-200">Place of Redelivery</span>
                   <input 
                     type="text" 
                     value={shipData.placeOfRedelivery}
                     onChange={(e) => updateShipData('placeOfRedelivery', e.target.value)}
-                    className="w-48 px-3 py-2 border rounded-lg bg-slate-50 dark:bg-slate-700"
+                    className="w-48 px-3 py-2 dark:text-white border rounded-lg bg-slate-50 dark:bg-slate-700"
                   />
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Redelivery Date/Time</span>
+                  <span className="text- dark:text-slate-200">Redelivery Date/Time</span>
                   <input 
                     type="text" 
                     value={shipData.redeliveryDate}
                     onChange={(e) => updateShipData('redeliveryDate', e.target.value)}
-                    className="w-48 px-3 py-2 border rounded-lg bg-slate-50 dark:bg-slate-700 font-mono"
+                    className="w-48 px-3 py-2 dark:text-white border rounded-lg bg-slate-50 dark:bg-slate-700 font-mono"
                   />
                 </div>
               </div>
@@ -375,12 +373,12 @@ const CreateSurvey = () => {
               <thead className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
                 <tr>
                   <th className="p-4 text-left w-48">Event</th>
-                  <th className="p-4 text-left">DATE</th>
+                  <th className="p-4 text-center">DATE</th>
                   <th className="p-4 text-left">TIME</th>
-                  <th className="p-4 text-right">H.S.F.O.</th>
-                  <th className="p-4 text-right">L.S.F.O.</th>
-                  <th className="p-4 text-right">H.M.D.O.</th>
-                  <th className="p-4 text-right">L.S.M.G.O.</th>
+                  <th className="p-4 text-left">H.S.F.O.</th>
+                  <th className="p-4 text-left">L.S.F.O.</th>
+                  <th className="p-4 text-left">H.M.D.O.</th>
+                  <th className="p-4 text-left">L.S.M.G.O.</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-700">

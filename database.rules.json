@@ -1,1 +1,51 @@
-{"rules":{"users":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$uid":{".read":"auth != null && auth.uid === $uid",".write":"auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')"}},"draftSurveys":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$uid":{".read":"auth != null && auth.uid === $uid",".write":"auth != null && auth.uid === $uid"}},"surveys":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$uid":{".read":"auth != null && auth.uid === $uid",".write":"auth != null && auth.uid === $uid",".indexOn":["date"]}},"reports":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$uid":{".read":"auth != null && auth.uid === $uid",".write":"auth != null && auth.uid === $uid"}},"pesageData":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$uid":{".read":"auth != null && auth.uid === $uid",".write":"auth != null && auth.uid === $uid"}},"vessels":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$uid":{".read":"auth != null && auth.uid === $uid",".write":"auth != null && auth.uid === $uid"}},"photoReports":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$uid":{".read":"auth != null && auth.uid === $uid",".write":"auth != null && auth.uid === $uid"}},"messages":{".read":"auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'","$messageId":{".write":"!data.exists() || (auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin')"}}}}
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "draftSurveys": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null"
+      }
+    },
+    "surveys": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null",
+        ".indexOn": ["date"]
+      }
+    },
+    "reports": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null"
+      }
+    },
+    "pesageData": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null"
+      }
+    },
+    "vessels": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null"
+      }
+    },
+    "photoReports": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null"
+      }
+    },
+    "messages": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}

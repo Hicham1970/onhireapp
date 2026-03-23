@@ -2,12 +2,12 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getSurveys, getVessels, getFullReports, getUsers, deleteSurvey, deleteFullReport } from '../api/api';
+import { getSurveys, getVessels, getFullReports, getUsers, deleteSurvey, deleteFullReport, getContactMessages, deleteContactMessage } from '../api/api';
 import { deleteDraftSurvey, getAllDraftSurveys } from '../services/draftSurveyServices.ts';
 import { generateDraftSurveyPDF } from '../utils/pdfDraftSurveyGenerator.js';
 import { Trash2, FileText, Edit3, Download, Search, User, Calendar, Package, BadgeCheck, Plus, Eye, Camera } from 'lucide-react';
 import Profile from '../components/Profile';
-import { Ship, ClipboardCheck, Shield, ChevronLeft, Loader2, Users, BarChart3 } from 'lucide-react';
+import { Mail, ClipboardCheck, Shield, ChevronLeft, Loader2, Users, BarChart3 } from 'lucide-react';
 
 const DashboardAdmin = () => {
   const { currentUser, loading, isAdmin, userData } = useAuth();
@@ -17,11 +17,13 @@ const DashboardAdmin = () => {
   const [surveys, setSurveys] = useState([]);
   const [fullReports, setFullReports] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const [vessels, setVessels] = useState([]);
   const [allDraftSurveys, setAllDraftSurveys] = useState([]);
+
+  const [contactMessages, setContactMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [messageToDelete, setMessageToDelete] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
@@ -35,14 +37,15 @@ const DashboardAdmin = () => {
     Promise.all([
       getSurveys(currentUser.uid),
       getFullReports(currentUser.uid),
-      getUsers(),
-      getVessels(currentUser.uid),
-      getAllDraftSurveys()
-    ]).then(([userSurveys, reports, usersData, dbVessels, allDraftSurveysData]) => {
+getUsers(),
+      // getVessels(currentUser.uid), removed unused
+getAllDraftSurveys(),
+      getContactMessages()
+    ]).then(([userSurveys, reports, usersData, dbVessels, allDraftSurveysData, contactMessagesData]) => {
+      setContactMessages(contactMessagesData || []);
       setSurveys(userSurveys || []);
       setFullReports(reports || []);
       setAllUsers(Object.keys(usersData || {}).map(key => ({ id: key, ...usersData[key] })));
-      setVessels(dbVessels || []);
       setAllDraftSurveys(allDraftSurveysData || []);
     })
     .catch(err => console.error("Dashboard Admin load error:", err))
@@ -65,6 +68,16 @@ const DashboardAdmin = () => {
     }
   }, [currentUser]);
 
+  const refetchContactMessages = useCallback(async () => {
+    try {
+      const data = await getContactMessages();
+      setContactMessages(data || []);
+    } catch (error) {
+      console.error("Error refetching messages:", error);
+    }
+  }, []);  
+
+
   const handleDeleteItem = async () => {
     if (!itemToDelete) return;
     try {
@@ -86,11 +99,26 @@ const DashboardAdmin = () => {
     }
   };
 
+  const handleDeleteMessage = async () => {
+    if (!messageToDelete) return;
+    try {
+      await deleteContactMessage(messageToDelete.id);
+      await refetchContactMessages();
+      setShowDeleteConfirm(false);
+      setMessageToDelete(null);
+    } catch (error) {
+      console.error('Delete message failed:', error);
+      alert("Erreur lors de la suppression du message: " + error.message);
+    }
+  };
+
+
 const totalUsers = allUsers.length;
   const totalSurveys = surveys.length;
   const totalReports = fullReports.length;
-  const totalVessels = vessels.length;
-  const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
+// const totalVessels = vessels.length; removed unused
+const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
+  const totalMessages = contactMessages.length;
 
   // Combine all items for the unified table
   const allItems = useMemo(() => {
@@ -148,11 +176,12 @@ const totalUsers = allUsers.length;
           <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-                <Ship className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+<Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalVessels}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Navires</p>
+
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalMessages}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Messages</p>
               </div>
             </div>
           </div>
@@ -210,8 +239,8 @@ const totalUsers = allUsers.length;
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Users Management */}
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <User className="w-6 h-6 text-indigo-600" />
+<h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+              <User className="w-6 h-6 " />
               Gestion Utilisateurs
             </h3>
             <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
@@ -235,6 +264,50 @@ const totalUsers = allUsers.length;
                 </div>
               ))}
             </div>
+
+            {/* Messages Section */}
+            <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+              <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <Mail className="w-5 h-5 text-blue-600" />
+                Messages Récente ( {contactMessages.length} )
+              </h4>
+              <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+                {contactMessages.slice(0, 5).map((msg) => (
+                  <div key={msg.id} className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-100 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
+                    <div className="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-sm font-bold text-blue-600 dark:text-blue-400">
+                      {msg.name?.charAt(0).toUpperCase() || 'M'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-medium text-slate-900 dark:text-white truncate">{msg.name || 'N/A'}</p>
+                        <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full dark:bg-emerald-900/50 dark:text-emerald-300">
+                          {msg.status || 'unread'}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 truncate max-h-12 overflow-hidden mb-1">{msg.email}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">{msg.message}</p>
+                      <p className="text-xs text-slate-400 mt-1">
+                        {new Date(msg.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setMessageToDelete(msg);
+                        setShowDeleteConfirm(true);
+                      }}
+                      className="p-1.5 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors ml-auto"
+                      title="Supprimer message"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                {contactMessages.length === 0 && (
+                  <p className="text-slate-500 dark:text-slate-400 text-center py-4">Aucun message</p>
+                )}
+              </div>
+            </div>
+
           </div>
 
           {/* Recent Activity */}
@@ -242,6 +315,7 @@ const totalUsers = allUsers.length;
             <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white">Activité Récente</h3>
             <div className="space-y-4">
               {allItems.slice(0, 5).map((item, index) => (
+
                 <div key={item.id || item.surveyId || index} className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-100 dark:border-slate-600">
                   <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
                     {item.vesselName?.charAt(0) || 'R'}
@@ -423,8 +497,8 @@ const totalUsers = allUsers.length;
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           <button onClick={() => navigate('/create-survey')} className="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
-            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Ship className="w-8 h-8" />
+<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <FileText className="w-8 h-8" />
             </div>
             <h4 className="text-xl font-bold mb-2">Nouveau Survey</h4>
             <p className="opacity-90">OnHire</p>
@@ -447,7 +521,7 @@ const totalUsers = allUsers.length;
           </button>
           <button onClick={() => navigate('/onhire?tab=ai')} className="group p-6 bg-gradient-to-br from-slate-500 to-slate-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-<BarChart3 className="w-8 h-8" />
+              <BarChart3 className="w-8 h-8" />
             </div>
             <h4 className="text-xl font-bold mb-2">Analytics</h4>
             <p className="opacity-90">Statistiques globales</p>

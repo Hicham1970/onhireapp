@@ -25,25 +25,25 @@ export const testimonials = [
   },
   {
     id: 3,
-    name: "Jean-Pierre Moreau",
-    role: "Chartering Manager",
-    company: "CMA CGM",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    name: "Captain John Smith",
+    role: "Draft Surveyor",
+    company: "Interoceanic Surveys",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
     image: "https://images.unsplash.com/photo-1559825481-12a05cc00344?w=400&h=250&fit=crop",
     rating: 5,
-    text: "En tant que gestionnaire d'affrètement, j'ai besoin de données précises sur le carburant. OnHire me permet de suivre les expertises de tous nos navires en temps réel. Un outil indispensable pour notre activité.",
-    highlight: "Suivi en temps réel"
+    text: "Le module Draft Survey est parfait. Les calculs de déplacement et de cargaison sont précis, avec des tableaux ASTM conformes. Économisé des heures sur chaque survey.",
+    highlight: "Calculs précis Draft Survey"
   },
   {
     id: 4,
-    name: "Andreas Schmidt",
-    role: "Technical Superintendent",
-    company: "Hapag-Lloyd",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face",
+    name: "Anna Lee",
+    role: "Marine Engineer",
+    company: "Pacific Cargo Lines",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
     image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=250&fit=crop",
     rating: 5,
-    text: "La flexibilité du système nous permet de l'adapter à notre flotte diversifiée. Le support client est réactif et les mises à jour régulières apportent toujours de nouvelles fonctionnalités utiles.",
-    highlight: "Support réactif"
+    text: "L'application Draft Survey simplifie les calculs de ballast et de fuel. Les tables de correction VCF sont à jour et les exports PDF sont professionnels. Indispensable pour nos opérations.",
+    highlight: "Draft Survey indispensable"
   }
 ];
 

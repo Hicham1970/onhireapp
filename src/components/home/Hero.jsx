@@ -63,8 +63,8 @@ const Hero = () => {
             <p className={`text-lg sm:text-xl max-w-3xl mx-auto lg:mx-0 mb-10 leading-relaxed ${
               isDark ? 'text-blue-100/80' : 'text-slate-600'
             }`}>
-              Gérez vos expertises OnHire, OffHire et Bunker, créez des rapports d'inspection 
-              professionnels et calculez vos besoins en carburant avec précision. Tout ce dont 
+              Gérez vos expertises OnHire, OffHire, Draft Surveys et Bunker Survey, créez des rapports d'inspection 
+              professionnels et calculez vos quantitées de carburant avec précision. Tout ce dont 
               vous avez besoin en un seul endroit.
             </p>
 
