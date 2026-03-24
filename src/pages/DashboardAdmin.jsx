@@ -34,15 +34,19 @@ const DashboardAdmin = () => {
     }
 
     // Load admin data
-    Promise.all([
+Promise.all([
       getSurveys(currentUser.uid),
       getFullReports(currentUser.uid),
-getUsers(),
-      // getVessels(currentUser.uid), removed unused
-getAllDraftSurveys(),
+      getUsers(),
+      getAllDraftSurveys(),
       getContactMessages()
-    ]).then(([userSurveys, reports, usersData, dbVessels, allDraftSurveysData, contactMessagesData]) => {
+    ]).then(([userSurveys, reports, usersData, allDraftSurveysData, contactMessagesData]) => {
+      console.log('ContactMessages loaded:', contactMessagesData?.length, contactMessagesData);
+      console.log('Users loaded:', Object.keys(usersData || {}).length);
+      console.log('DraftSurveys loaded:', allDraftSurveysData?.length);
       setContactMessages(contactMessagesData || []);
+
+
       setSurveys(userSurveys || []);
       setFullReports(reports || []);
       setAllUsers(Object.keys(usersData || {}).map(key => ({ id: key, ...usersData[key] })));
@@ -122,24 +126,30 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
 
   // Combine all items for the unified table
   const allItems = useMemo(() => {
-    const drafts = allDraftSurveys.map(d => ({
+const drafts = allDraftSurveys.map(d => ({
       ...d,
       type: 'Draft',
+      surveyId: d.id,
+      userId: d.userId || 'unknown', 
       date: d.updatedAt || d.createdAt,
-      vesselName: d.informations?.vesselName || 'N/A'
+      vesselName: d.vesselName || d.informations?.vesselName || 'N/A'
     }));
+
+
     const onhires = surveys.map(s => ({
       ...s,
       type: 'OnHire',
       date: s.date || s.createdAt,
       vesselName: s.name || s.vesselName || 'N/A'
     }));
-    const inspections = fullReports.map(r => ({
+const inspections = fullReports.map(r => ({
       ...r,
       type: 'Inspection',
+      userId: r.userId,
       date: r.createdAt,
       vesselName: r.vesselName || 'N/A'
     }));
+
     
     return [...drafts, ...onhires, ...inspections].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
   }, [allDraftSurveys, surveys, fullReports]);
@@ -427,11 +437,9 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
                             >
                               <Edit3 className="w-4 h-4" />
                             </button>
-                            {item.type === 'Draft' && (
+{item.type === 'Draft' && item.informations && (
                             <button
-                              onClick={() => {
-                                generateDraftSurveyPDF(item);
-                              }}
+                              onClick={() => generateDraftSurveyPDF(item)}
                               className="p-2 text-purple-600 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-lg transition-colors"
                               title="Télécharger PDF"
                             >
