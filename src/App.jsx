@@ -69,7 +69,10 @@ function App() {
           } />
           <Route path="/onhire" element={<Onhire />} />
           <Route path="/reports" element={<Reports />} />
-          <Route path="/edit-survey/:surveyId" element={<EditSurvey />} />
+          <Route path="/admin/edit-draft-survey/:userId/:surveyId" element={<AdminRoute><DraftSurveyProvider><EditDraftSurvey /></DraftSurveyProvider></AdminRoute>} />
+          <Route path="/admin/edit-report/:userId/:reportId" element={<AdminRoute><EditReport /></AdminRoute>} />
+          <Route path="/admin/edit-survey/:userId/:surveyId" element={<AdminRoute><EditSurvey /></AdminRoute>} />
+          <Route path="/admin/new-survey" element={<AdminRoute><CreateSurvey /></AdminRoute>} />
           <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
           <Route path="/admin/edit-report/:userId/:reportId" element={<EditReport />} />
 

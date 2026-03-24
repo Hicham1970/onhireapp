@@ -8,7 +8,7 @@ import { getDraftSurveyById as getDraftSurvey } from '../services/draftSurveySer
 import { Helmet } from 'react-helmet-async';
 
 const EditDraftSurvey = () => {
-  const { surveyId } = useParams();
+  const { userId, surveyId } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { 
@@ -37,7 +37,8 @@ const EditDraftSurvey = () => {
       }
 
       try {
-        const surveyData = await getDraftSurvey(currentUser.uid, surveyId);
+        const targetUserId = userId || currentUser.uid;
+        const surveyData = await getDraftSurvey(targetUserId, surveyId);
         if (surveyData) {
           updateInformations(surveyData.informations || {});
           updateParticulars(surveyData.particulars || {});
@@ -46,7 +47,7 @@ const EditDraftSurvey = () => {
           Object.assign(survey, surveyData);
         } else {
           setError('Survey non trouvé');
-          navigate('/dashboard');
+          navigate(userId ? '/admin/dashboard' : '/dashboard');
         }
       } catch (err) {
         console.error('Load survey error:', err);
@@ -67,7 +68,7 @@ const EditDraftSurvey = () => {
         <div className="text-center p-8">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{error}</h2>
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate(userId ? '/admin/dashboard' : '/dashboard')}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Retour Dashboard
@@ -110,7 +111,7 @@ const EditDraftSurvey = () => {
               </button>
               <button 
                 className="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100 py-3 px-6 rounded-xl font-semibold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate(userId ? '/admin/dashboard' : '/dashboard')}
               >
                 Dashboard
               </button>
