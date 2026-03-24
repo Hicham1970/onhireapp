@@ -13,5 +13,8 @@
       ],
       "predeploy": []
     }
-  ]
+  ],
+  "database": {
+    "rules": "y"
+  }
 }

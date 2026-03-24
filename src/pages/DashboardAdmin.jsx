@@ -2,8 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getSurveys, getVessels, getFullReports, getUsers, deleteSurvey, deleteFullReport, getContactMessages, deleteContactMessage } from '../api/api';
-import { deleteDraftSurvey, getAllDraftSurveys } from '../services/draftSurveyServices.ts';
+import { getAllSurveys, getAllReports, getVessels, getUsers, deleteSurvey, deleteFullReport, getContactMessages, deleteContactMessage } from '../api/api';
+import { deleteDraftSurvey, getAllDraftSurveys } from '../services/draftSurveyServices';
 import { generateDraftSurveyPDF } from '../utils/pdfDraftSurveyGenerator.js';
 import { Trash2, FileText, Edit3, Download, Search, User, Calendar, Package, BadgeCheck, Plus, Eye, Camera } from 'lucide-react';
 import Profile from '../components/Profile';
@@ -34,21 +34,20 @@ const DashboardAdmin = () => {
     }
 
     // Load admin data
-Promise.all([
-      getSurveys(currentUser.uid),
-      getFullReports(currentUser.uid),
+    Promise.all([
+      getAllSurveys(),
+      getAllReports(),
       getUsers(),
       getAllDraftSurveys(),
       getContactMessages()
-    ]).then(([userSurveys, reports, usersData, allDraftSurveysData, contactMessagesData]) => {
+    ]).then(([allSurveysData, allReportsData, usersData, allDraftSurveysData, contactMessagesData]) => {
       console.log('ContactMessages loaded:', contactMessagesData?.length, contactMessagesData);
       console.log('Users loaded:', Object.keys(usersData || {}).length);
       console.log('DraftSurveys loaded:', allDraftSurveysData?.length);
       setContactMessages(contactMessagesData || []);
 
-
-      setSurveys(userSurveys || []);
-      setFullReports(reports || []);
+      setSurveys(allSurveysData || []);
+      setFullReports(allReportsData || []);
       setAllUsers(Object.keys(usersData || {}).map(key => ({ id: key, ...usersData[key] })));
       setAllDraftSurveys(allDraftSurveysData || []);
     })
@@ -59,18 +58,22 @@ Promise.all([
   const refetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [, , , , allDraftSurveysData] = await Promise.all([
-        getSurveys(currentUser.uid),
-        getFullReports(currentUser.uid),
+      const [allSurveysData, allReportsData, usersData, allDraftSurveysData, contactMessagesData] = await Promise.all([
+        getAllSurveys(),
+        getAllReports(),
         getUsers(),
-        getVessels(currentUser.uid),
-        getAllDraftSurveys()
+        getAllDraftSurveys(),
+        getContactMessages()
       ]);
+      setSurveys(allSurveysData || []);
+      setFullReports(allReportsData || []);
+      setAllUsers(Object.keys(usersData || {}).map(key => ({ id: key, ...usersData[key] })));
       setAllDraftSurveys(allDraftSurveysData || []);
+      setContactMessages(contactMessagesData || []);
     } finally {
       setIsLoading(false);
     }
-  }, [currentUser]);
+  }, []);
 
   const refetchContactMessages = useCallback(async () => {
     try {
@@ -80,7 +83,6 @@ Promise.all([
       console.error("Error refetching messages:", error);
     }
   }, []);  
-
 
   const handleDeleteItem = async () => {
     if (!itemToDelete) return;
@@ -116,17 +118,16 @@ Promise.all([
     }
   };
 
-
 const totalUsers = allUsers.length;
   const totalSurveys = surveys.length;
   const totalReports = fullReports.length;
-// const totalVessels = vessels.length; removed unused
+  // const totalVessels = vessels.length; removed unused
 const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
   const totalMessages = contactMessages.length;
 
   // Combine all items for the unified table
   const allItems = useMemo(() => {
-const drafts = allDraftSurveys.map(d => ({
+    const drafts = allDraftSurveys.map(d => ({
       ...d,
       type: 'Draft',
       surveyId: d.id,
@@ -135,22 +136,19 @@ const drafts = allDraftSurveys.map(d => ({
       vesselName: d.vesselName || d.informations?.vesselName || 'N/A'
     }));
 
-
     const onhires = surveys.map(s => ({
       ...s,
       type: 'OnHire',
       date: s.date || s.createdAt,
       vesselName: s.name || s.vesselName || 'N/A'
     }));
-const inspections = fullReports.map(r => ({
+    const inspections = fullReports.map(r => ({
       ...r,
       type: 'Inspection',
-      userId: r.userId,
       date: r.createdAt,
       vesselName: r.vesselName || 'N/A'
     }));
 
-    
     return [...drafts, ...onhires, ...inspections].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
   }, [allDraftSurveys, surveys, fullReports]);
 
@@ -186,10 +184,9 @@ const inspections = fullReports.map(r => ({
           <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-<Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-
                 <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalMessages}</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Messages</p>
               </div>
@@ -249,7 +246,7 @@ const inspections = fullReports.map(r => ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Users Management */}
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-<h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
               <User className="w-6 h-6 " />
               Gestion Utilisateurs
             </h3>
@@ -268,7 +265,7 @@ const inspections = fullReports.map(r => ({
                   <div className="flex gap-2">
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">USER</span>
                     <button className="p-1 text-red-500 hover:bg-red-100 rounded transition-colors" title="Supprimer">
-<Shield className="w-4 h-4" />
+                      <Shield className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -325,7 +322,6 @@ const inspections = fullReports.map(r => ({
             <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white">Activité Récente</h3>
             <div className="space-y-4">
               {allItems.slice(0, 5).map((item, index) => (
-
                 <div key={item.id || item.surveyId || index} className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-100 dark:border-slate-600">
                   <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
                     {item.vesselName?.charAt(0) || 'R'}
@@ -437,7 +433,7 @@ const inspections = fullReports.map(r => ({
                             >
                               <Edit3 className="w-4 h-4" />
                             </button>
-{item.type === 'Draft' && item.informations && (
+                            {item.type === 'Draft' && item.informations && (
                             <button
                               onClick={() => generateDraftSurveyPDF(item)}
                               className="p-2 text-purple-600 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-lg transition-colors"
@@ -505,7 +501,7 @@ const inspections = fullReports.map(r => ({
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           <button onClick={() => navigate('/create-survey')} className="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
-<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <FileText className="w-8 h-8" />
             </div>
             <h4 className="text-xl font-bold mb-2">Nouveau Survey</h4>
@@ -513,7 +509,6 @@ const inspections = fullReports.map(r => ({
             <p className="opacity-90">Créer expertise</p>
           </button>
           <button onClick={() => navigate('/onhire?tab=pictures')} className="group p-6 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
-
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <ClipboardCheck className="w-8 h-8" />
             </div>
