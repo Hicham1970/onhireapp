@@ -73,10 +73,13 @@ function App() {
           <Route path="/admin/edit-report/:userId/:reportId" element={<AdminRoute><EditReport /></AdminRoute>} />
           <Route path="/admin/edit-survey/:userId/:surveyId" element={<AdminRoute><EditSurvey /></AdminRoute>} />
           <Route path="/admin/new-survey" element={<AdminRoute><CreateSurvey /></AdminRoute>} />
+
           <Route path="/admin/edit-survey/:userId/:surveyId" element={<EditSurvey />} />
-          <Route path="/admin/edit-report/:userId/:reportId" element={<EditReport />} />
+          <Route path="/edit-report/:reportId" element={<EditReport />} />
+          <Route path="/admin/edit-report/:userId/:reportId" element={<AdminRoute><EditReport /></AdminRoute>} />
 
           {/* Draft Survey Routes */}
+
 <Route path="/draft-survey/*" element={
             <DraftSurveyProvider>
               <Routes>

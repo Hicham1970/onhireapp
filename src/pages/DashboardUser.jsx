@@ -136,17 +136,19 @@ function DashboardUser() {
               </div>
             ) : (
               <>
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
+
+<div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
                       <Ship className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-slate-900 dark:text-white">{vessels.length}</p>
-                      <p className="text-xs text-slate-500">Navires</p>
+                      <p className="text-2xl font-bold text-slate-900 dark:text-white">{draftSurveys.length}</p>
+                      <p className="text-xs text-slate-500">Draft Surveys</p>
                     </div>
                   </div>
                 </div>
+
                 <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
