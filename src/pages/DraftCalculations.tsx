@@ -46,7 +46,7 @@ const DraftCalculations = ({ step }: Props) => {
 
     const means = useMemo(() => {
         console.log(`[CALC ${step}] SGS Middle Means input:`, { fwd: corrected.fwd.corrected, mid: corrected.mid.corrected, aft: corrected.aft.corrected });
-        const result = calculateSGSMiddleMeans(corrected.fwd.corrected, corrected.mid.corrected, corrected.aft.corrected);
+        const result = calculateSGSMiddleMeans(corrected.fwd.corrected, corrected.mid.corrected, corrected.aft.corrected, survey.particulars.keelThickness || 0);
         console.log(`[CALC ${step}] Middle Means result:`, result);
         return result;
     }, [corrected, step]);
@@ -81,10 +81,11 @@ const DraftCalculations = ({ step }: Props) => {
                 <p className="text-slate-500 dark:text-slate-400 mt-1 italic">Validation des corrections de stern (LBM: {corrected.lbm.toFixed(2)}m) et du Quarter Mean.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatusCard label="Quarter Mean" value={means.quarterMean} unit="m" color="border-blue-200 dark:border-blue-800 text-blue-600" />
+                <StatusCard label="LBM" value={corrected.lbm} unit="m" color="border-emerald-200 dark:border-emerald-800 text-emerald-600" />
                 <StatusCard label="Trim Apparent" value={corrected.apparentTrim} unit="m" color="border-slate-200 dark:border-slate-800 text-slate-400" />
-                <StatusCard label="True Trim (Corrigé)" value={trim} unit="m" color="border-amber-200 dark:border-amber-800 text-amber-600" />
+                <StatusCard label="True Trim" value={trim} unit="m" color="border-amber-200 dark:border-amber-800 text-amber-600" />
             </div>
 
             <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-8 shadow-xl">

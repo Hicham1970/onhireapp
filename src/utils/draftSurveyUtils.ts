@@ -8,7 +8,33 @@ import { DraftReadings, VesselParticulars, Deductibles, OperationType } from "..
  */
 export const calculateLBM = (lbp: number, fwdDist: number, aftDist: number) => {
     // If fwd mark is forward, it extends the length. If aft mark is forward, it shortens it.
-    return lbp + fwdDist - aftDist;
+    // Calcul du lbm: lenght between perpendiculars
+    if(fwdDist > 0 && aftDist > 0){
+        return lbp + fwdDist - aftDist;
+    }
+    if (fwdDist < 0 && aftDist < 0) {
+        return lbp - fwdDist + aftDist;
+    }
+    if (fwdDist > 0 && aftDist < 0) {
+        return lbp + fwdDist + aftDist;
+    }
+    if (fwdDist < 0 && aftDist > 0) {
+        return lbp - aftDist - fwdDist;
+    }
+    if (fwdDist === 0 && aftDist > 0) {
+        return lbp - aftDist;
+    }
+    if (fwdDist === 0 && aftDist < 0) {
+        return lbp + aftDist;
+    }
+    if (fwdDist > 0 && aftDist === 0) {
+        return lbp + fwdDist;
+    }
+    if (fwdDist < 0 && aftDist === 0) {
+        return lbp - fwdDist;
+    }
+    return  lbp;
+    
 };
 
 /**
@@ -16,7 +42,6 @@ export const calculateLBM = (lbp: number, fwdDist: number, aftDist: number) => {
  * This uses a consistent convention for all distances:
  * - Positive (>0): Mark is FORWARD of the reference point (FP, AP, Midship).
  * - Negative (<0): Mark is AFT of the reference point.
- * The calculated correction is algebraic and should always be ADDED to the mean draft.
  */
 export const calculateDraftCorrections = (
     apparentTrim: number,
@@ -49,15 +74,20 @@ export const calculateSGSCorrectedDrafts = (drafts: DraftReadings, particulars: 
     const midMean = (midPort + midStbd) / 2;
     const aftMean = (aftPort + aftStbd) / 2;
 
-    const apparentTrim = aftMean - fwdMean;
+    const apparentTrim = aftMean  - fwdMean;
     const { fwdCorr, aftCorr, midCorr, lbm } = calculateDraftCorrections(
         apparentTrim, lbp, fwdDraftMarkDist, aftDraftMarkDist, midDraftMarkDist
     );
-
+    
+    // Draft Corrigés:
+    
+    // Trim corrections always added (algebraic sign from calculateDraftCorrections)
     const correctedFwd = fwdMean + fwdCorr;
     const correctedMid = midMean + midCorr;
     const correctedAft = aftMean + aftCorr;
 
+
+    
     return {
         fwd: { mean: fwdMean, corrected: correctedFwd, autoCorr: fwdCorr },
         mid: { mean: midMean, corrected: correctedMid, autoCorr: midCorr },
@@ -70,17 +100,24 @@ export const calculateSGSCorrectedDrafts = (drafts: DraftReadings, particulars: 
 /**
  * Calcul des moyennes intermédiaires (SGS Style)
  */
-export const calculateSGSMiddleMeans = (fwdCorr: number, midCorr: number, aftCorr: number) => {
+/**
+ * SGS Middle Means with keel thickness correction (mm → m)
+ */
+export const calculateSGSMiddleMeans = (fwdCorr: number, midCorr: number, aftCorr: number, keelThickness: number = 0) => {
     const meanForeAft = (fwdCorr + aftCorr) / 2;
     const meanOfMean = (meanForeAft + midCorr) / 2;
-    const quarterMean = (fwdCorr + 6 * midCorr + aftCorr) / 8;
+    const rawQuarterMean = (fwdCorr + 6 * midCorr + aftCorr) / 8;
+    const quarterMean = rawQuarterMean - (keelThickness / 1000);
 
     return {
         meanForeAft,
         meanOfMean,
-        quarterMean
+        quarterMean,
+        keelCorrection: -(keelThickness / 1000)
     };
 };
+
+// introduit ici lakeel thickness correction 
 
 /**
  * Calcul du Trim (Différence AR - AV)

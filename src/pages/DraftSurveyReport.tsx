@@ -129,7 +129,8 @@ const DraftSurveyReportInner = () => {
             const corr = calculateSGSCorrectedDrafts(stepData.drafts, particulars);
             console.log(`Corrections SGS:`, corr);
             const { quarterMean } = calculateSGSMiddleMeans(
-                corr.fwd.corrected, corr.mid.corrected, corr.aft.corrected
+                corr.fwd.corrected, corr.mid.corrected, corr.aft.corrected,
+                particulars.keelThickness || 0
             );
             const h = stepData.hydrostatics;
             const lbp = safeNum(particulars.lbp) || 1;
