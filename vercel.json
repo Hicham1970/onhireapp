@@ -1,18 +1,8 @@
-"headers": [
-    {
-      "source": "**/*.@(js|jsx|ts|tsx|mjs)",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        }
-      ]
-    }
-  ],
+{
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]}
-
+  ]
+}
