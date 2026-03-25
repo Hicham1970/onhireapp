@@ -115,7 +115,7 @@ export const processSteps = [
   {
     step: 2,
     title: "Setup",
-    description: "Add your vessels and parameters"
+    description: "Draft Survey or Bunker survey?"
   },
   {
     step: 3,

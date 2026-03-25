@@ -1,12 +1,31 @@
-# Fix AdminDashboard Build Error ✅
+# Firebase Auth + Vercel Deployment Fix Progress
 
-**Status: COMPLETED**
+## ✅ Completed
+- [x] Created `vercel.json` with MIME type headers for JS/JSX files
 
-## Steps:
-- [x] Read AdminDashboard.jsx - File syntax clean
-- [x] Clear Vite cache (rmdir /s node_modules\.vite)
-- [x] Force restart dev server (npm run dev -- --force)
-- [x] Verify build succeeds (dev server running, no error reported)
-- [x] attempt_completion
+## 🔄 Next Steps (Manual)
+1. **Deploy to Vercel**: 
+   ```
+   npm run build
+   vercel --prod
+   ```
+   
+2. **Add Vercel Domain to Firebase** (Critical for Google OAuth):
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Select your project
+   - Authentication → Settings → Authorized domains
+   - Add your Vercel domains:
+     ```
+     your-app.vercel.app
+     *.vercel.app (for preview branches)
+     ```
+   
+3. **Test**:
+   - Visit deployed URL
+   - Try Google Sign In/Register
+   - Email login should also work
 
-**Resolution**: Build error was Vite cache issue. Cleared cache and restarted with --force. AdminDashboard.jsx syntax confirmed correct.
+## Expected Results
+- ❌ No more `text/jsx` MIME errors
+- ❌ No more `auth/unauthorized-domain` errors
+- ✅ Google OAuth works on Vercel
