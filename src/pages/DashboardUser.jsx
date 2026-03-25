@@ -21,6 +21,8 @@ function DashboardUser() {
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState(null);
 
+
+
   const fetchData = async () => {
     if (!currentUser?.uid) return;
     
@@ -118,8 +120,9 @@ function DashboardUser() {
               Bienvenue, {user?.username || (currentUser ? currentUser.displayName : "") || "Utilisateur"}
             </h1>
             <p className="text-slate-500 dark:text-slate-400">
-              Gérez vos expertises maritimes et accédez à tous vos outils
+              Manage your maritime surveys and access all your tools
             </p>
+
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -178,7 +181,7 @@ function DashboardUser() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-slate-900 dark:text-white">{reports.length}</p>
-                      <p className="text-xs text-slate-500">Rapports</p>
+                      <p className="text-xs text-slate-500">Reports</p>
                     </div>
                   </div>
                 </div>
@@ -195,7 +198,7 @@ function DashboardUser() {
             </div>
 
             <div className="lg:col-span-2 space-y-6">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Actions rapides</h2>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Quick Actions</h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Link
@@ -207,9 +210,9 @@ function DashboardUser() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
-                      OnHire App
+                      On/OffHire App
                     </h3>
-                    <p className="text-sm text-slate-500">Créer une expertise</p>
+                    <p className="text-sm text-slate-500">Create Bunker Survey</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
                 </Link>
@@ -224,7 +227,7 @@ function DashboardUser() {
                     <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors">
                       Inspection Report
                     </h3>
-                    <p className="text-sm text-slate-500">Créer un rapport</p>
+                    <p className="text-sm text-slate-500">Create a Photo report</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
                 </Link>
@@ -239,7 +242,7 @@ function DashboardUser() {
                     <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors">
                       Draft Survey
                     </h3>
-                    <p className="text-sm text-slate-500">Nouvelle expertise</p>
+                    <p className="text-sm text-slate-500">New Operation</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
                 </Link>
@@ -254,7 +257,7 @@ function DashboardUser() {
                     <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
                       Fuel Calculator
                     </h3>
-                    <p className="text-sm text-slate-500">Calculer le carburant</p>
+                    <p className="text-sm text-slate-500">Calculator Maritime</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
                 </Link>
@@ -267,9 +270,9 @@ function DashboardUser() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-purple-600 transition-colors">
-                      Analytique
+                      Analytics
                     </h3>
-                    <p className="text-sm text-slate-500">Voir les statistiques</p>
+                    <p className="text-sm text-slate-500">All Statistics</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-purple-500 group-hover:translate-x-1 transition-all" />
                 </Link>
@@ -277,7 +280,7 @@ function DashboardUser() {
 
               <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-slate-900 dark:text-white text-lg">Activité récente</h3>
+                  <h3 className="font-semibold text-slate-900 dark:text-white text-lg">Recent Activity</h3>
                   <button
                     onClick={fetchData}
                     disabled={loadingData}
@@ -355,9 +358,9 @@ function DashboardUser() {
                     })}
                     {[...draftSurveys, ...surveys, ...reports].length === 0 && (
                       <div className="text-center py-8 text-sm text-slate-500 dark:text-slate-400">
-                        Aucune activité récente. 
+                        No recente activity. 
                         <Link to="/create-survey" className="font-medium hover:text-blue-600 dark:hover:text-blue-400 ml-1">
-                          Créer votre première expertise
+                          Create a new inspection
                         </Link>
                       </div>
                     )}
