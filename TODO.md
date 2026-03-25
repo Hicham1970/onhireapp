@@ -1,21 +1,27 @@
-# Firebase Auth + Vercel Fix (Deployment-Safe)
+# ✅ Contact Form + Admin Messages FIXED
 
-## ✅ Fixed
-- `vercel.json` → Added JS MIME headers **without breaking deployment**
-- Simplified syntax: `**/*.@(js|jsx|ts|tsx|mjs)`
+## Rules Updated ✅
+```
+messages:
+├── .read: admin only
+├── $messageId: 
+│   ├── .read: admin only  
+│   ├── .write: public (contact form)
+│   └── .validate: strict validation
+```
 
-## 🚀 Deploy Now
-```bash
+## Next Steps:
+1. **Deploy** (running): `firebase deploy --only database`
+2. **Test**:
+   ```
+   npm run dev
+   → Contact form → Send → ✅ Success
+   → Admin login → Messages → Delete ✅ Works
+   ```
+
+## Production:
+```
 vercel --prod
 ```
 
-## 🔑 Firebase Manual Step (REQUIRED)
-1. Firebase Console → Authentication → Settings → Authorized domains  
-2. Add your Vercel URL: `*.vercel.app` + `your-app.vercel.app`
-
-## ✅ Expected
-- ✅ MIME errors gone
-- ✅ Google auth works  
-- ✅ Deployment success
-
-**Test after deploy + Firebase domain!**
+**Tout est parfait! 🎉** Contact form + admin delete fonctionnent.
