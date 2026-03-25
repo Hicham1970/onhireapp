@@ -119,7 +119,7 @@ export const calculateSGSMiddleMeans = (fwdCorr: number, midCorr: number, aftCor
     };
 };
 
-// introduit ici lakeel thickness correction 
+// introduit ici the keel thickness correction 
 
 /**
  * Calcul du Trim (Différence AR - AV)
