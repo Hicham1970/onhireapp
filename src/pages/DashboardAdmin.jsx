@@ -157,7 +157,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <p className="text-slate-500">Chargement Admin...</p>
+          <p className="text-slate-500">Loading Admin...</p>
         </div>
       </div>
     );
@@ -173,7 +173,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
               <Shield className="w-6 h-6 text-emerald-600" />
               <div>
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
-                <p className="text-sm text-slate-500">Gestion complète</p>
+                <p className="text-sm text-slate-500">Full Management</p>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
               </div>
               <div>
                 <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalMessages}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Messages</p>
+<p className="text-sm text-slate-500 dark:text-slate-400">Messages</p>
               </div>
             </div>
           </div>
@@ -200,8 +200,8 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
               </div>
               <div>
                 <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalSurveys}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Surveys Onhire</p>
-              </div>
+<p className="text-sm text-slate-500 dark:text-slate-400">OnHire Surveys</p>
+                </div>
             </div>
           </div>
 
@@ -224,7 +224,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
               </div>
               <div>
                 <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalReports}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Rapports</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Reports</p>
               </div>
             </div>
           </div>
@@ -236,7 +236,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
               </div>
               <div>
                 <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalUsers}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Utilisateurs</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Users</p>
               </div>
             </div>
           </div>
@@ -248,7 +248,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
               <User className="w-6 h-6 " />
-              Gestion Utilisateurs
+              User Management
             </h3>
             <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
               {allUsers.slice(0, 5).map(user => (
@@ -276,7 +276,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
             <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
               <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <Mail className="w-5 h-5 text-blue-600" />
-                Messages Récente ( {contactMessages.length} )
+                Recent Messages ( {contactMessages.length} )
               </h4>
               <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
                 {contactMessages.slice(0, 5).map((msg) => (
@@ -303,14 +303,14 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
                         setShowDeleteConfirm(true);
                       }}
                       className="p-1.5 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors ml-auto"
-                      title="Supprimer message"
+                      title="Delete message"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
                 {contactMessages.length === 0 && (
-                  <p className="text-slate-500 dark:text-slate-400 text-center py-4">Aucun message</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-center py-4">No messages</p>
                 )}
               </div>
             </div>
@@ -319,7 +319,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
 
           {/* Recent Activity */}
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-            <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white">Activité Récente</h3>
+            <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white">Recent Activity</h3>
             <div className="space-y-4">
               {allItems.slice(0, 5).map((item, index) => (
                 <div key={item.id || item.surveyId || index} className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-100 dark:border-slate-600">
@@ -352,14 +352,14 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <FileText className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Gestion Tous les Rapports</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Manage All Reports</h3>
             </div>
             <div className="flex gap-2">
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Rechercher navire ou utilisateur..."
+                  placeholder="Search ship or user..."
                   className="pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 w-64 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -371,19 +371,19 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin mr-3 text-blue-600" />
-              <span className="text-slate-500">Chargement des données...</span>
+              <span className="text-slate-500">Loading data...</span>
             </div>
           ) : allItems.length === 0 ? (
             <div className="text-center py-12 text-slate-500 dark:text-slate-400">
               <ClipboardCheck className="w-16 h-16 mx-auto mb-4 opacity-40" />
-              <p>Aucun rapport trouvé</p>
+              <p>No reports found</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full table-auto">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-700">
-                    <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white text-sm">Navire</th>
+                    <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white text-sm">Ship</th>
                     <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white text-sm">Type</th>
                     <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white text-sm">Utilisateur</th>
                     <th className="text-left py-4 px-4 font-semibold text-slate-900 dark:text-white text-sm min-w-[100px]">Date</th>
@@ -504,37 +504,37 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <FileText className="w-8 h-8" />
             </div>
-            <h4 className="text-xl font-bold mb-2">Nouveau Survey</h4>
-            <p className="opacity-90">OnHire</p>
-            <p className="opacity-90">Créer expertise</p>
+            <h4 className="text-xl font-bold mb-2">Bunker Survey</h4>
+            <p className="opacity-90">On/Off Hire</p>
+            <p className="opacity-90">Create inspection</p>
           </button>
           <button onClick={() => navigate('/onhire?tab=pictures')} className="group p-6 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <ClipboardCheck className="w-8 h-8" />
             </div>
-            <h4 className="text-xl font-bold mb-2">Rapports Photos</h4>
-            <p className="opacity-90">Inspection complète</p>
+            <h4 className="text-xl font-bold mb-2">Pictures Reports</h4>
+            <p className="opacity-90">Inspection report</p>
           </button>
           <button onClick={() => navigate('/users')} className="group p-6 bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <User className="w-8 h-8" />
             </div>
-            <h4 className="text-xl font-bold mb-2">Gestion Users</h4>
-            <p className="opacity-90">Tous les comptes</p>
+            <h4 className="text-xl font-bold mb-2">Users </h4>
+            <p className="opacity-90">All Clients</p>
           </button>
           <button onClick={() => navigate('/onhire?tab=ai')} className="group p-6 bg-gradient-to-br from-slate-500 to-slate-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <BarChart3 className="w-8 h-8" />
             </div>
             <h4 className="text-xl font-bold mb-2">Analytics</h4>
-            <p className="opacity-90">Statistiques globales</p>
+            <p className="opacity-90">Global Statistics</p>
           </button>
           <button onClick={() => navigate('/draft-survey/infos')} className="group p-6 bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <BadgeCheck className="w-8 h-8" />
             </div>
             <h4 className="text-xl font-bold mb-2">Draft Surveys</h4>
-            <p className="opacity-90">Gestion complète</p>
+            <p className="opacity-90">Complete Survey</p>
           </button>
         </div>
       </div>

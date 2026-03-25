@@ -32,20 +32,20 @@ function Navbar() {
       dispatchUser({ type: "LOG_OUT" });
       dispatchAlert({
         type: "SHOW",
-        payload: "Déconnexion réussie",
+        payload: "Logged out successfully",
         variant: "Success",
       });
       window.location.href = "/";
     } catch (error) {
-      console.error("Erreur de déconnexion:", error);
+  console.error("Logout error:", error);
     }
   };
 
   // Navigation links for home page
   const navLinks = [
-    { label: "Fonctionnalités", href: "#features" },
-    { label: "Tarifs", href: "#pricing" },
-    { label: "Témoignages", href: "#testimonials" },
+    { label: "Features", href: "#features" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "Testimonials", href: "#testimonials" },
     { label: "Contact", href: "#contact" }
   ];
 
@@ -92,13 +92,13 @@ function Navbar() {
                   to="/login"
                   className="hidden md:flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-sm px-5 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  Connexion
+                  Login
                 </Link>
                 <Link
                   to="/register"
                   className="flex items-center justify-center bg-blue-600 text-white font-medium text-sm px-5 py-2 rounded-full hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md"
                 >
-                  Essai gratuit
+                  Free Trial
                 </Link>
               </>
             ) : (
@@ -107,7 +107,7 @@ function Navbar() {
                 <Link
                   to="/dashboard"
                   className="flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-sm px-4 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                  title="Tableau de bord"
+                  title="Dashboard"
                 >
                   <Home className="w-5 h-5" />
                 </Link>
@@ -124,7 +124,7 @@ function Navbar() {
                 <Link
                   to="/users"
                   className="flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-sm px-4 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                  title="Profil"
+                  title="Profile"
                 >
                   <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                     {userName.charAt(0).toUpperCase()}
@@ -135,9 +135,9 @@ function Navbar() {
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 text-white font-medium text-sm px-4 py-2 rounded-full hover:bg-red-700 transition-colors shadow-sm"
-                  title="Déconnexion"
+                  title="Logout"
                 >
-                  <span className="hidden md:inline">Déconnexion</span>
+                  <span className="hidden md:inline">Logout</span>
                   <span className="md:hidden">Exit</span>
                 </button>
               </>

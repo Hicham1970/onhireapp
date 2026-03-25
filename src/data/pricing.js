@@ -6,7 +6,7 @@ export const pricingPlans = {
       id: "draft-monthly",
       name: "Draft Survey",
       description: "Calculs de jaugeage professionnels",
-      price: 39,
+      price: 9,
       period: "mois",
       features: [
         "Draft readings illimitées",
@@ -30,7 +30,7 @@ export const pricingPlans = {
       id: "onhire-monthly",
       name: "OnHire App",
       description: "Gestion des expertises maritimes",
-      price: 49,
+      price: 7,
       period: "mois",
       features: [
         "Expertises OnHire/OffHire illimitées",
@@ -53,7 +53,7 @@ export const pricingPlans = {
       id: "inspection-monthly",
       name: "Inspection Report",
       description: "Rapports d'inspection photos",
-      price: 39,
+      price: 9,
       period: "mois",
       features: [
         "Rapports photo illimités",
@@ -76,7 +76,7 @@ export const pricingPlans = {
       id: "pack-monthly",
       name: "Pack Complet",
       description: "Tous les modules + Draft Survey",
-      price: 119,
+      price: 30,
       period: "mois",
       features: [
         "Draft Survey Pro",
@@ -100,9 +100,9 @@ export const pricingPlans = {
       id: "draft-annual",
       name: "Draft Survey",
       description: "Calculs de jaugeage professionnels",
-      price: 370,
+      price: 70,
       period: "an",
-      savings: 98,
+      savings: 28,
       features: [
         "Draft readings illimitées",
         "Calculs hydrostatics précis",
@@ -125,9 +125,9 @@ export const pricingPlans = {
       id: "onhire-annual",
       name: "OnHire App",
       description: "Gestion des expertises maritimes",
-      price: 470,
+      price: 90,
       period: "an",
-      savings: 118,
+      savings: 18,
       features: [
         "Expertises OnHire/OffHire illimitées",
         "Gestion des réservoirs",
@@ -149,9 +149,9 @@ export const pricingPlans = {
       id: "inspection-annual",
       name: "Inspection Report",
       description: "Rapports d'inspection photos",
-      price: 370,
+      price: 90,
       period: "an",
-      savings: 98,
+      savings: 18,
       features: [
         "Rapports photo illimités",
         "Modèles personnalisables",
@@ -175,7 +175,7 @@ export const pricingPlans = {
       description: "Tous les modules + Draft Survey",
       price: 1071,
       period: "an",
-      savings: 357,
+      savings: 250,
       features: [
         "Draft Survey Pro",
         "OnHire App Complet",

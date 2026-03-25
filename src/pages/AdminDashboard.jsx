@@ -43,7 +43,7 @@ const [loadingMessages, setLoadingMessages] = useState(false);
 
 
 
-  // Vérification d'accès admin
+  // Admin access check
   useEffect(() => {
     if (!loading && (!currentUser || !isAdmin())) {
       navigate("/");
@@ -63,7 +63,7 @@ const [loadingMessages, setLoadingMessages] = useState(false);
         }));
         setUsers(usersList);
       } catch (error) {
-        console.error("Erreur:", error);
+        console.error("Error:", error);
       } finally {
         setLoading(false);
       }
@@ -130,12 +130,12 @@ const [loadingMessages, setLoadingMessages] = useState(false);
   };
 
   const handleDeleteUser = async (userId) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur?")) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await deleteUser(userId);
         setUsers(users.filter(u => u.id !== userId));
       } catch (error) {
-        alert("Erreur lors de la suppression");
+        alert("Error deleting user");
       }
     }
   };

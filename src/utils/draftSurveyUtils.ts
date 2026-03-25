@@ -6,20 +6,23 @@ import { DraftReadings, VesselParticulars, Deductibles, OperationType } from "..
  * - fwdDist: Positive if the mark is FORWARD of the FP. Negative if AFT.
  * - aftDist: Positive if the mark is FORWARD of the AP. Negative if AFT.
  */
+/**
+ * LBM (Length Between Marks).
+ * Convention: fwdDist positive FORWARD FP, negative AFT FP; aftDist positive FORWARD AP, negative AFT AP.
+ * User-preferred comprehensive cases.
+ */
 export const calculateLBM = (lbp: number, fwdDist: number, aftDist: number) => {
-    // If fwd mark is forward, it extends the length. If aft mark is forward, it shortens it.
-    // Calcul du lbm: lenght between perpendiculars
     if(fwdDist > 0 && aftDist > 0){
         return lbp + fwdDist - aftDist;
     }
     if (fwdDist < 0 && aftDist < 0) {
-        return lbp - fwdDist + aftDist;
+        return lbp - Math.abs(fwdDist) + Math.abs(aftDist);
     }
     if (fwdDist > 0 && aftDist < 0) {
         return lbp + fwdDist + aftDist;
     }
     if (fwdDist < 0 && aftDist > 0) {
-        return lbp - aftDist - fwdDist;
+        return lbp - aftDist - Math.abs(fwdDist);
     }
     if (fwdDist === 0 && aftDist > 0) {
         return lbp - aftDist;
@@ -31,10 +34,9 @@ export const calculateLBM = (lbp: number, fwdDist: number, aftDist: number) => {
         return lbp + fwdDist;
     }
     if (fwdDist < 0 && aftDist === 0) {
-        return lbp - fwdDist;
+        return lbp - Math.abs(fwdDist);
     }
-    return  lbp;
-    
+    return lbp;
 };
 
 /**

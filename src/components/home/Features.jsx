@@ -1,5 +1,5 @@
 import React from "react";
-import { features, additionalFeatures, processSteps } from "../../data/features";
+import { features, additionalFeatures, processSteps } from "../../data/features_en";
 import { ArrowRight, Check } from "lucide-react";
 
 const colorClasses = {
@@ -35,15 +35,14 @@ const Features = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-sm font-semibold mb-4">
-            Fonctionnalités
+<span className="inline-block px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-sm font-semibold mb-4">
+            Features
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-            Tout ce dont vous avez besoin
+            Everything you need
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Une suite complète d'outils pour simplifier vos expertises maritimes, 
-            de la création à la génération de rapports professionnels.
+            Complete suite of tools to simplify your maritime surveys, from creation to professional report generation.
           </p>
         </div>
 
@@ -110,10 +109,10 @@ const Features = () => {
         <div className="mb-20">
           <div className="text-center mb-12">
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-              Comment ça marche ?
+              How it works?
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
-              Commencez en quelques minutes, pas en quelques jours
+              Get started in minutes, not days
             </p>
           </div>
 
@@ -138,7 +137,7 @@ const Features = () => {
         <div>
           <div className="text-center mb-12">
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-              Et bien plus encore...
+              And much more...
             </h3>
           </div>
 

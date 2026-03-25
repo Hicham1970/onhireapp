@@ -4,7 +4,7 @@ import { saveContactMessage } from "../../api/api";
 
 const interestOptions = [
   { value: "demo", label: "Request a demo" },
-  { value: "devis", label: "Get a quote" },
+  { value: "quote", label: "Get a quote" },
   { value: "question", label: "Ask a question" },
   { value: "partnership", label: "Partnership" }
 ];
@@ -94,7 +94,7 @@ const ContactForm = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Email</h4>
-                  <p className="text-slate-600 dark:text-slate-400">contact@onhireapp.com</p>
+                  <p className="text-slate-600 dark:text-slate-400">contact@marinesurveyordev.com</p>
                 </div>
               </div>
 
@@ -117,8 +117,8 @@ const ContactForm = () => {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Disponibility</h4>
-                  <p className="text-slate-600 dark:text-slate-400">Mon-Fry: 9h-18h · Support 24/7</p>
+                  <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Availability</h4>
+                  <p className="text-slate-600 dark:text-slate-400">Mon-Fri: 9AM-6PM · 24/7 Support</p>
                 </div>
               </div>
             </div>
@@ -157,7 +157,7 @@ const ContactForm = () => {
                   {/* Name */}
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      Nom complet *
+                      Full name *
                     </label>
                     <input
                       type="text"
@@ -168,7 +168,7 @@ const ContactForm = () => {
                       className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
                         errors.name ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                       }`}
-                      placeholder="Jean Dupont"
+                      placeholder="John Doe"
                     />
                     {errors.name && (
                       <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
@@ -192,7 +192,7 @@ const ContactForm = () => {
                       className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
                         errors.email ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                       }`}
-                      placeholder="jean@entreprise.com"
+                      placeholder="john@company.com"
                     />
                     {errors.email && (
                       <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
@@ -206,7 +206,7 @@ const ContactForm = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Company */}
                   <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <label htmlFor="company" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Company *
                     </label>
                     <input
@@ -218,7 +218,7 @@ const ContactForm = () => {
                       className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
                         errors.company ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                       }`}
-                      placeholder="Nom de l'entreprise"
+                      placeholder="Company name"
                     />
                     {errors.company && (
                       <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
@@ -230,7 +230,7 @@ const ContactForm = () => {
 
                   {/* Phone */}
                   <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Phone
                     </label>
                     <input
@@ -240,7 +240,7 @@ const ContactForm = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                      placeholder="+33 6 12 34 56 78"
+                      placeholder="+1 (555) 123-4567"
                     />
                   </div>
                 </div>
@@ -279,7 +279,7 @@ const ContactForm = () => {
                     className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors resize-none ${
                       errors.message ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                     }`}
-                    placeholder="Décrivez votre projet ou posez-nous vos questions..."
+                    placeholder="Describe your project or ask us your questions..."
                   />
                   {errors.message && (
                     <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
@@ -294,7 +294,7 @@ const ContactForm = () => {
                   <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800 flex items-center gap-3">
                     <AlertCircle className="w-5 h-5 text-red-500" />
                     <p className="text-sm text-red-600 dark:text-red-400">
-                      Une erreur est survenue. Veuillez réessayer plus tard.
+                      An error occurred. Please try again later.
                     </p>
                   </div>
                 )}
@@ -331,4 +331,3 @@ const ContactForm = () => {
 };
 
 export default ContactForm;
-

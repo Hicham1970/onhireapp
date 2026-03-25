@@ -1,5 +1,5 @@
 import React from "react";
-import { testimonials, stats } from "../../data/testimonials";
+import { testimonials, stats } from "../../data/testimonials_en";
 import { Star, Quote } from "lucide-react";
 
 const Testimonials = () => {
@@ -8,14 +8,14 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-sm font-semibold mb-4">
-            Témoignages
+<span className="inline-block px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-sm font-semibold mb-4">
+            Testimonials
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-            Ce que disent nos clients
+            What our clients say
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Des professionnels du maritime qui nous font confiance pour simplifier leurs expertises quotidiennes.
+            Maritime professionals who trust us to simplify their daily surveys.
           </p>
         </div>
 
@@ -92,13 +92,13 @@ const Testimonials = () => {
         {/* CTA */}
         <div className="text-center mt-12">
           <p className="text-slate-500 dark:text-slate-400 mb-6">
-            Rejoignez plus de 500 professionnels du maritime qui font confiance à OnHireApp
+            Join 500+ maritime professionals who trust OnHireApp
           </p>
           <a
             href="#pricing"
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
           >
-            Commencer maintenant
+            Get Started
           </a>
         </div>
       </div>

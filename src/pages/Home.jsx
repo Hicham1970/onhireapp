@@ -8,13 +8,13 @@ import Hero from "../components/home/Hero";
 import Features from "../components/home/Features";
 import Pricing from "../components/home/Pricing";
 import Testimonials from "../components/home/Testimonials";
-import ContactForm from "../components/home/ContactForm";
-import Footer from "../components/home/Footer";
+import ContactForm from "../components/home/ContactForm_en";
+import Footer from "../components/home/Footer_en";
 
 const Home = () => {
   const { currentUser } = useAuth();
 
-  // Si l'utilisateur est connecté, on le redirige vers le tableau de bord.
+// If user is logged in, redirect to dashboard
   if (currentUser) {
     return <Navigate to="/dashboard" replace />;
   }

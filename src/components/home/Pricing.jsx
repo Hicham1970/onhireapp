@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Check, X, Star, ArrowRight } from "lucide-react";
-import { pricingPlans } from "../../data/pricing";
+import { pricingPlans } from "../../data/pricing_en";
 
 const colorClasses = {
   blue: {
@@ -43,14 +43,14 @@ const Pricing = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 text-sm font-semibold mb-4">
-            Tarification
+<span className="inline-block px-4 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 text-sm font-semibold mb-4">
+            Pricing
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-            Choisissez votre plan
+            Choose your plan
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-8">
-            Des tarifs flexibles pour tous les besoins. Paiement mensuel ou annuel avec économie.
+            Flexible pricing for all needs. Monthly or annual billing with savings.
           </p>
 
           {/* Billing Toggle */}
@@ -63,7 +63,7 @@ const Pricing = () => {
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
-              Mensuel
+              Monthly
             </button>
             <button
               onClick={() => setBillingPeriod("annual")}
@@ -73,7 +73,7 @@ const Pricing = () => {
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
-              Annuel
+              Annual
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
                 -25%
               </span>
@@ -174,11 +174,11 @@ const Pricing = () => {
         {/* Bottom Note */}
         <div className="text-center mt-12">
           <p className="text-slate-500 dark:text-slate-400">
-            Tous les plans incluent un essai gratuit de 14 jours.{" "}
+            All plans include a 14-day free trial.{" "}
             <a href="#contact" className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">
-              Contactez-nous
+              Contact us
             </a>{" "}
-            pour une tarification entreprise personnalisée.
+            for custom enterprise pricing.
           </p>
         </div>
       </div>

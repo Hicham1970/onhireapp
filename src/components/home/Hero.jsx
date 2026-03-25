@@ -42,20 +42,20 @@ const Hero = () => {
                 : 'bg-blue-100 border border-blue-200 text-blue-700'
             }`}>
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-              Nouveau: Essai gratuit de 14 jours
+              New: 14-Day Free Trial
             </div>
 
             {/* Title */}
             <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
-              La plateforme SaaS pour
+              The SaaS platform for
               <span className={`block mt-2 bg-clip-text text-transparent ${
                 isDark
                   ? 'bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400'
                   : 'bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500'
               }`}>
-                les expertises maritimes
+                maritime surveys
               </span>
             </h1>
 
@@ -63,9 +63,8 @@ const Hero = () => {
             <p className={`text-lg sm:text-xl max-w-3xl mx-auto lg:mx-0 mb-10 leading-relaxed ${
               isDark ? 'text-blue-100/80' : 'text-slate-600'
             }`}>
-              Gérez vos expertises OnHire, OffHire, Draft Surveys et Bunker Survey, créez des rapports d'inspection 
-              professionnels et calculez vos quantitées de carburant avec précision. Tout ce dont 
-              vous avez besoin en un seul endroit.
+              Manage your OnHire, OffHire, Draft Surveys, and Bunker Surveys. Create professional inspection reports
+              and calculate fuel quantities accurately. Everything you need in one place.
             </p>
 
             {/* CTAs */}
@@ -74,7 +73,7 @@ const Hero = () => {
                 to="/register"
                 className="group relative inline-flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25"
               >
-                <span>Commencer gratuitement</span>
+                <span>Start Free</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <button className={`inline-flex items-center gap-3 px-8 py-4 rounded-full border-2 font-semibold text-lg transition-all duration-300 ${
@@ -83,7 +82,7 @@ const Hero = () => {
                   : 'border-slate-300 text-slate-700 hover:bg-slate-100'
               }`}>
                 <Play className="w-5 h-5" />
-                <span>Voir la démo</span>
+                <span>Watch Demo</span>
               </button>
             </div>
 
@@ -93,15 +92,15 @@ const Hero = () => {
             }`}>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-emerald-500" />
-                <span>Sans carte de crédit</span>
+                <span>No credit card required</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-emerald-500" />
-                <span>Support 24/7</span>
+                <span>24/7 Support</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-emerald-500" />
-                <span>Équipe disponible</span>
+                <span>Team available</span>
               </div>
             </div>
           </div>
@@ -147,7 +146,7 @@ const Hero = () => {
                     </div>
                     <p className={`text-xs font-medium uppercase tracking-wide ${
                       isDark ? 'text-slate-300' : 'text-slate-600'
-                    }`}>Navires actifs</p>
+                    }`}>Active Vessels</p>
                   </div>
 
                   {/* Card 2 */}
@@ -168,7 +167,7 @@ const Hero = () => {
                     </div>
                     <p className={`text-xs font-medium uppercase tracking-wide ${
                       isDark ? 'text-slate-300' : 'text-slate-600'
-                    }`}>Expertises ce mois</p>
+                    }`}>Surveys this month</p>
                   </div>
 
                   {/* Card 3 */}
