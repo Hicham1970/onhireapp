@@ -70,9 +70,21 @@ readTime: "15 min",
 
   return (
     <div className={`${isDark ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'} min-h-screen`}>
-      <Helmet>
-        <title>Blog - OnHireApp Morocco Maritime Experts</title>
-        <meta name="description" content="25+ years marine survey insights from all Moroccan ports. Draft surveys, inspections, industry news, onhire, offhire ." />
+<Helmet>
+        <title>Blog - Maritime Survey Insights | MarineSurveyorDev</title>
+        <meta name="description" content="25+ years Morocco ports experience. Draft surveys, vessel inspections, industry news from Casablanca to Tangier-Med." />
+        <meta name="keywords" content="marine survey blog, draft survey, Morocco ports, vessel inspection, maritime news" />
+        <meta property="og:title" content="Blog - Maritime Survey Insights | MarineSurveyorDev" />
+        <meta property="og:description" content="Expert insights from 25 years surveying Morocco's ports" />
+        <meta property="og:type" content="website" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "Marine Survey Blog",
+            "description": "Insights from 25 years of maritime surveys in Morocco"
+          })}
+        </script>
       </Helmet>
 
       {/* Hero */}

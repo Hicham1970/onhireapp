@@ -109,9 +109,13 @@ function DashboardUser() {
 
   return (
     <>
-      <Helmet>
-        <title>Dashboard | MarineSurveyorDev - Maritime Surveys</title>
-        <meta name="description" content="User dashboard for managing on-hire surveys, vessel inspections, reports, and maritime data. Secure access to your surveys." />
+<Helmet>
+        <title>Dashboard | Manage Surveys | MarineSurveyorDev</title>
+        <meta name="description" content="User dashboard: manage draft surveys, on-hire/off-hire reports, vessel inspections, analytics. Secure maritime data platform." />
+        <meta name="keywords" content="survey dashboard, draft survey, vessel reports, maritime dashboard" />
+        <meta property="og:title" content="Dashboard | Manage Surveys | MarineSurveyorDev" />
+        <meta property="og:description" content="Manage your maritime surveys and reports" />
+        <meta property="og:type" content="website" />
       </Helmet>
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-20 px-4">
         <div className="max-w-6xl mx-auto">

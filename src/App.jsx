@@ -1,4 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Alert from './components/Alert';
@@ -60,7 +61,17 @@ function App() {
 
 
   return (
-    <>
+    <HelmetProvider>
+      <Helmet>
+        <title>MarineSurveyorDev | Maritime On-Hire Surveys</title>
+        <meta name="description" content="Professional platform for on-hire vessel surveys, inspections, detailed reports, and maritime fleet management. Secure, efficient, compliant solutions." />
+        <meta name="keywords" content="marine surveyor, on-hire survey, vessel inspection, draft survey, maritime reports, fleet management" />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="MarineSurveyorDev | On-Hire Maritime Surveys" />
+        <meta property="og:description" content="Professional on-hire survey platform for vessel inspections and maritime reporting." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://marinesurveyordev.com/" />
+      </Helmet>
       <Navbar />
       <Alert />
       <Suspense fallback={<Loader />}>
@@ -133,7 +144,7 @@ function App() {
           <Route path="*" element={<Notfound />} />
         </Routes>
       </Suspense>
-    </>
+    </HelmetProvider>
   );
 }
 

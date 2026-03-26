@@ -67,7 +67,7 @@ function Navbar() {
           >
             <img 
               src="/MSD_Logo.jpg" 
-              alt="MSD Logo" 
+              alt="MarineSurveyorDev Logo - Maritime Survey Experts" 
               className="h-14 w-14 object-contain dark:invert-[95%] dark:brightness-[1.05] transition-all duration-300"
             />
             <span className="text-xl font-bold text-slate-800 dark:text-white hidden md:inline">MarineSurveyDev</span>
