@@ -107,7 +107,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Copyright */}
             <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              © {currentYear} OnHireApp. Tous droits réservés.
+              © {currentYear} Marinesurveydev. Tous droits réservés.
               <span className="mx-2">·</span>
               <span>Créé par H. Garroum</span>
             </p>
