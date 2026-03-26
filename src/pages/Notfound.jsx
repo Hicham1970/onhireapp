@@ -32,7 +32,7 @@ function Notfound() {
         <h1 className="text-4xl font-bold mb-2 text-slate-900">404</h1>
         <h2 className="text-xl font-semibold mb-4 text-slate-700">Page non trouvée</h2>
         <p className="text-slate-500 mb-8">
-          La page que vous recherchez n'existe pas ou a été déplacée.
+          The page you are looking for will come soon.
         </p>
         <div className="text-sm text-slate-400 mb-6">
           Redirection automatique dans <span className="font-bold text-blue-600 text-lg">{timeOut}</span> secondes...
