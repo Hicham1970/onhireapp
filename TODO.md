@@ -1,20 +1,13 @@
-# Task: Fix MIME type "text/jsx" error in deployed version
+# Petrocal Implementation TODO
 
-## Steps to complete:
+## Planned Steps (Approved)
+- [x] Create src/utils/petrocalFormulas.js - Formulas module ✅
+- [x] Create src/pages/Petrocal.jsx - Full UI component ✅
+- [x] Update src/App.jsx - Add /petrocal route ✅
+- [x] Update src/pages/DashboardUser.jsx - Change Fuel button to /petrocal ✅
+- [ ] Test: npm run dev, verify navigation & live calculator
+- [ ] Polish: Animations, responsiveness, copy buttons
 
-### 1. [x] Update firebase.json
-- Add "hosting" configuration to serve from /dist with proper MIME headers for .js/.jsx files.
-
-### 2. [x] Build the project
-- Run `npm run build` to generate /dist folder with bundled assets.
-
-### 3. [x] Deploy to Firebase
-- Run `firebase deploy` to upload dist/ correctly.
-
-### 4. [ ] Verify fix
-- Check deployed site console for no MIME errors.
-- Test page loads (e.g., Press page).
-
-### 5. [ ] Complete task
-- Update TODO.md as done, attempt_completion.
+## Progress Tracking
+Updated after each step.
 

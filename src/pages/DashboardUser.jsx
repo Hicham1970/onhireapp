@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useAuth } from "../context/AuthContext";
 import { useUser } from "../hooks/Hooks";
 import Profile from "../components/Profile";
-import { Ship, ClipboardCheck, Gauge, Camera, FileText, BarChart3, ArrowRight, Loader2, Clock, RefreshCw } from "lucide-react";
+import { Calculator, Ship, ClipboardCheck, Gauge, Camera, FileText, BarChart3, ArrowRight, Loader2, Clock, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getSurveys, getFullReports, getVessels } from "../api/api";
 import { getDraftSurveys, deleteDraftSurvey } from "../services/draftSurveyServices";
@@ -247,19 +247,19 @@ function DashboardUser() {
                   <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
                 </Link>
                 <Link
-                  to="/onhire?tab=vessels"
+                  to="/petrocal"
                   className="flex items-center gap-4 p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25">
-                    <Gauge className="w-7 h-7 text-white" />
+                  <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                    <Calculator className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
-                      Fuel Calculator
+                    <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors">
+                      Petrocal
                     </h3>
-                    <p className="text-sm text-slate-500">Calculator Maritime</p>
+                    <p className="text-sm text-slate-500">Oil & Gas Unit Converter</p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
                 </Link>
                 <Link
                   to="/onhire?tab=ai"

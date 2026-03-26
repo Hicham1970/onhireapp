@@ -46,6 +46,7 @@ const Documentation_en = lazy(() => import('./pages/Documentation_en'));
 const Careers = lazy(() => import('./pages/Careers'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Press = lazy(() => import('./pages/Press'));
+const Petrocal = lazy(() => import('./pages/Petrocal'));
 
 function App() {
   const { currentUser, userData, loading } = useAuth();
@@ -127,7 +128,8 @@ function App() {
           <Route path="/docs" element={<Documentation />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/press" element={<Press />} />
+<Route path="/press" element={<Press />} />
+          <Route path="/petrocal" element={<Petrocal />} />
           <Route path="*" element={<Notfound />} />
         </Routes>
       </Suspense>
