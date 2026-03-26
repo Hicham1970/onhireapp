@@ -1,22 +1,20 @@
-# Footer Development TODO
+# Task: Fix MIME type "text/jsx" error in deployed version
 
-## Status Legend
-- [ ] Not started
-- [>] In progress
-- [✅] Completed
+## Steps to complete:
 
-## Steps
+### 1. [x] Update firebase.json
+- Add "hosting" configuration to serve from /dist with proper MIME headers for .js/.jsx files.
 
-1. [✅] Create src/data/footerLinks.js and src/data/footerLinks_en.js
-2. [✅] Update Footer.jsx to import/use footerLinks
-3. [✅] Update Footer_en.jsx to import/use footerLinks_en
-4. [✅] Create About.jsx / About_en.jsx pages
-5. [✅] Create Privacy.jsx / Privacy_en.jsx pages
-6. [✅] Create Documentation.jsx / Documentation_en.jsx pages
-7. [ ] Add routes in App.jsx / Layout.tsx
-8. [ ] Test footer links
-9. [✅] Create remaining pages (Careers.jsx created)
-10. [ ] Update sitemap.xml and SEO
+### 2. [x] Build the project
+- Run `npm run build` to generate /dist folder with bundled assets.
 
-Updated after each step.
+### 3. [x] Deploy to Firebase
+- Run `firebase deploy` to upload dist/ correctly.
+
+### 4. [ ] Verify fix
+- Check deployed site console for no MIME errors.
+- Test page loads (e.g., Press page).
+
+### 5. [ ] Complete task
+- Update TODO.md as done, attempt_completion.
 

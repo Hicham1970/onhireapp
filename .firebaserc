@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "onhireapp"
-  }
+  },
+  "targets": {
+    "onhireapp": {
+      "hosting": {
+        "onhireapp": [
+          "onhireapp"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
