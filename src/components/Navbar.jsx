@@ -61,12 +61,16 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link 
+            <Link 
             to={currentUser ? "/dashboard" : "/"} 
-            className="flex items-center gap-2 text-xl font-bold text-slate-800 dark:text-white hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
-            <Ship className="w-8 h-8 text-blue-600" />
-            <span>MarineSurveyorDev</span>
+            <img 
+              src="/MSD_Logo.jpg" 
+              alt="MSD Logo" 
+              className="h-14 w-14 object-contain dark:invert-[95%] dark:brightness-[1.05] transition-all duration-300"
+            />
+            <span className="text-xl font-bold text-slate-800 dark:text-white hidden md:inline">MarineSurveyDev</span>
           </Link>
 
           {/* Desktop Navigation */}
