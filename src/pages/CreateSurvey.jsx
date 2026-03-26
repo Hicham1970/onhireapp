@@ -89,11 +89,11 @@ const CreateSurvey = () => {
       };
       
       const result = await saveSurvey(currentUser.uid, surveyData);
-      alert(`Expertise sauvée ! ID: ${result.surveyId}`);
+      alert(`Inspection registred  ! ID: ${result.surveyId}`);
       navigate('/dashboard');
     } catch (error) {
       console.error('Save error:', error);
-      alert('Erreur sauvegarde: ' + error.message);
+      alert('Registration failed: ' + error.message);
     }
   }, [currentUser, shipData, navigate]);
 
@@ -107,7 +107,7 @@ const CreateSurvey = () => {
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Download PDF Button */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Télécharger Rapport PDF</h3>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Download PDF & Save</h3>
             <div className="flex gap-4">
               <button 
                 onClick={async () => {
@@ -124,7 +124,7 @@ const CreateSurvey = () => {
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
               >
-                📄 Télécharger PDF Rapport Survey
+                📄 Download PDF Bunker Survey
               </button>
               <button 
                 onClick={async () => {
@@ -141,7 +141,7 @@ const CreateSurvey = () => {
                 }}
                 className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
               >
-                📜 Certificate PDF
+                📜 Download PDF certificate 
               </button>
               <button 
                 onClick={async () => {
@@ -154,7 +154,7 @@ const CreateSurvey = () => {
                 }}
                 className="bg-slate-900 hover:bg-black text-white px-8 py-3 rounded-xl flex items-center gap-2 font-bold shadow-lg hover:shadow-xl transition-all"
               >
-                💾 Finalize & Save Computation
+                💾 Finalize To DataBase
               </button>
 
             </div>
@@ -168,11 +168,11 @@ const CreateSurvey = () => {
             className="flex items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
           >
             <ChevronLeft className="w-5 h-5" />
-            Retour Onhire
+            Back
 
           </button>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-            Créer Nouvelle Expertise
+            New Inspection?
           </h1>
           <div className="w-32" />
         </div>
