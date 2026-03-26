@@ -2,50 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Ship, Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
+import { footerLinks } from "../../data/footerLinks";
 
 const Footer = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const currentYear = new Date().getFullYear();
-
-  const footerLinks = {
-    product: {
-      title: "Produit",
-      links: [
-        { label: "Fonctionnalités", href: "#features" },
-        { label: "Tarification", href: "#pricing" },
-        { label: "Demo", href: "#" },
-        { label: "Mises à jour", href: "#" }
-      ]
-    },
-    company: {
-      title: "Entreprise",
-      links: [
-        { label: "À propos", href: "#" },
-        { label: "Carrières", href: "#" },
-        { label: "Blog", href: "#" },
-        { label: "Presse", href: "#" }
-      ]
-    },
-    resources: {
-      title: "Ressources",
-      links: [
-        { label: "Documentation", href: "#" },
-        { label: "Centre d'aide", href: "#" },
-        { label: "API", href: "#" },
-        { label: "Statut", href: "#" }
-      ]
-    },
-    legal: {
-      title: "Légal",
-      links: [
-        { label: "Confidentialité", href: "#" },
-        { label: "Conditions", href: "#" },
-        { label: "CGU", href: "#" },
-        { label: "Cookies", href: "#" }
-      ]
-    }
-  };
 
   return (
     <footer className={`${isDark ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-900'}`}>

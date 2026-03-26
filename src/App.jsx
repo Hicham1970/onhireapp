@@ -36,6 +36,16 @@ const DraftDeductibles = lazy(() => import('./pages/DraftDeductibles'));
 const DraftSurveyReport = lazy(() => import('./pages/DraftSurveyReport'));
 const DraftSurveyLayout = lazy(() => import('./layouts/DraftSurveyLayout'));
 
+// Footer pages - clean single declarations
+const About = lazy(() => import('./pages/About'));
+const About_en = lazy(() => import('./pages/About_en'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Privacy_en = lazy(() => import('./pages/Privacy_en'));
+const Documentation = lazy(() => import('./pages/Documentation'));
+const Documentation_en = lazy(() => import('./pages/Documentation_en'));
+const Careers = lazy(() => import('./pages/Careers'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Press = lazy(() => import('./pages/Press'));
 
 function App() {
   const { currentUser, userData, loading } = useAuth();
@@ -79,7 +89,6 @@ function App() {
           <Route path="/admin/edit-report/:userId/:reportId" element={<AdminRoute><EditReport /></AdminRoute>} />
 
           {/* Draft Survey Routes */}
-
 <Route path="/draft-survey/*" element={
             <DraftSurveyProvider>
               <Routes>
@@ -110,6 +119,15 @@ function App() {
           <Route path="/users/:username/edit" element={<Edit />} />
           <Route path="/users/:username" element={<User />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/a-propos" element={<About />} />
+          <Route path="/about" element={<About_en />} />
+          <Route path="/confidentialite" element={<Privacy />} />
+          <Route path="/privacy" element={<Privacy_en />} />
+          <Route path="/documentation" element={<Documentation />} />
+          <Route path="/docs" element={<Documentation />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/press" element={<Press />} />
           <Route path="*" element={<Notfound />} />
         </Routes>
       </Suspense>
@@ -118,3 +136,4 @@ function App() {
 }
 
 export default App;
+

@@ -2,50 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Ship, Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
+import { footerLinks } from "../../data/footerLinks_en";
 
 const Footer = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const currentYear = new Date().getFullYear();
-
-  const footerLinks = {
-    product: {
-      title: "Product",
-      links: [
-        { label: "Features", href: "#features" },
-        { label: "Pricing", href: "#pricing" },
-        { label: "Demo", href: "#" },
-        { label: "Updates", href: "#" }
-      ]
-    },
-    company: {
-      title: "Company",
-      links: [
-        { label: "About", href: "#" },
-        { label: "Careers", href: "#" },
-        { label: "Blog", href: "#" },
-        { label: "Press", href: "#" }
-      ]
-    },
-    resources: {
-      title: "Resources",
-      links: [
-        { label: "Documentation", href: "#" },
-        { label: "Help Center", href: "#" },
-        { label: "API", href: "#" },
-        { label: "Status", href: "#" }
-      ]
-    },
-    legal: {
-      title: "Legal",
-      links: [
-        { label: "Privacy", href: "#" },
-        { label: "Terms", href: "#" },
-        { label: "TOS", href: "#" },
-        { label: "Cookies", href: "#" }
-      ]
-    }
-  };
 
   return (
     <footer className={`${isDark ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-900'}`}>
@@ -137,7 +99,7 @@ const Footer = () => {
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://github.com/Hicham1970/onhireapp"
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
                   isDark 
                     ? 'bg-slate-800 text-slate-400 hover:bg-blue-600 hover:text-white'
@@ -156,3 +118,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
