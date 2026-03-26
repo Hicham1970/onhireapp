@@ -49,13 +49,13 @@ const Hero = () => {
             <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
-              The SaaS platform for
+              Platform for
               <span className={`block mt-2 bg-clip-text text-transparent ${
                 isDark
                   ? 'bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400'
                   : 'bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500'
               }`}>
-                maritime surveys
+                maritime surveyors
               </span>
             </h1>
 
