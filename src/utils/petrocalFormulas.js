@@ -21,33 +21,54 @@ export const kgM3ToSg = (kgm3) => kgm3 / 1000;
 export const cStToCP = (cst, sg) => cst * sg;
 export const cPToCSt = (cp, sg) => cp / sg;
 
+
 // Energy conversions (example constants)
 const MJ_PER_MBTU = 1.05506;
 const BBL_PER_M3 = 6.28981;
 export const mjPerM3ToMbtuPerBbl = (mj_m3) => (mj_m3 * 0.001 / MJ_PER_MBTU) * BBL_PER_M3;
 
 // Add more precise formulas as needed
-export const calculateAllConversions = (inputValue, fromUnit, category) => {
+export const calculateAllConversions = (inputValue, fromUnit, category, sg = 0.85) => {
   const conversions = {};
-  // Implement per-category logic
+  const normFrom = fromUnit.toLowerCase().replace(/[^a-z]/g, '');
   switch (category) {
     case 'temperature':
-      conversions.f = celsiusToFahrenheit(inputValue);
-      conversions.c = inputValue;
+      if (normFrom === 'c' || normFrom === '°c') {
+        conversions.f = celsiusToFahrenheit(inputValue);
+        conversions['°c'] = inputValue;
+      } else {
+        conversions.c = fahrenheitToCelsius(inputValue);
+        conversions['°f'] = inputValue;
+      }
       break;
     case 'pressure':
-      conversions.bar = psiToBar(inputValue);
       conversions.psi = inputValue;
+      conversions.bar = psiToBar(inputValue);
       break;
     case 'density':
-      conversions.api = sgToApi(inputValue);
       conversions.sg = inputValue;
-      conversions.kgm3 = sgToKgM3(inputValue);
+      conversions.api = sgToApi(inputValue);
+      conversions['kgm3'] = sgToKgM3(inputValue);
       break;
-    // Add more cases
+    case 'viscosity':
+      conversions.cst = inputValue;
+      conversions.cp = cStToCP(inputValue, sg);
+      break;
+    case 'energy':
+      conversions['mjm3'] = inputValue;
+      conversions['mbtubbl'] = mjPerM3ToMbtuPerBbl(inputValue);
+      break;
+    case 'scales':
+      conversions.result = inputValue; // Placeholder
+      break;
     default:
       conversions.result = inputValue;
   }
   return conversions;
 };
+
+export const mbtuPerBblToMjM3 = (mbtu_bbl) => (mbtu_bbl * 1.05506 / 6.28981) * 1000;
+
+export const btuGalToMjM3 = (btu_gal) => (btu_gal * 0.263 / 3.785) * 1000; // approx
+export const kCalToMjM3 = (kcal) => kcal * 0.0041868 * 1000;
 

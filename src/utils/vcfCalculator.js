@@ -1,4 +1,52 @@
-export const calculateVCF = (densityAt15, temperature) => {
+export const calculateVCF_A54 = (densityAt15, temperature) => {
+  if (typeof densityAt15 !== 'number' || typeof temperature !== 'number') {
+    throw new Error('densityAt15 and temperature must be numbers');
+  }
+  
+  if (densityAt15 <= 0) {
+    throw new Error('densityAt15 must be greater than 0');
+  }
+
+  if (densityAt15 < 0.61 || densityAt15 > 1.000) {
+    console.warn(`Warning: densityAt15 ${densityAt15} T/m³ outside typical crude oil range for Table 54A`);
+  }
+
+  const den15 = densityAt15 * 1000;
+  const deltaT = temperature - 15;
+  let alpha;
+
+  // ASTM D1250 Table 54A coefficients for Generalized Crude Oils
+  if (den15 <= 770) {
+    const k0 = 341.0957;
+    const k1 = 0.40288;
+    alpha = (k0 + k1 * den15) / Math.pow(den15, 2);
+  } else if (den15 > 770 && den15 < 778) {
+    const a = 0.000667;
+    const b = 3002.3;
+    alpha = a + b / Math.pow(den15, 2);
+  } else if (den15 >= 778 && den15 < 839) {
+    const k0 = 546.0786;
+    const k1 = 0;
+    alpha = (k0 + k1 * den15) / Math.pow(den15, 2);
+  } else {
+    const k0 = 148.9815;
+    const k1 = 0.46040;
+    alpha = (k0 + k1 * den15) / Math.pow(den15, 2);
+  }
+
+  const vcf = Math.exp(-alpha * deltaT * (1 + 0.8 * alpha * deltaT));
+
+  return {
+    table: 'A54',
+    vcf: parseFloat(vcf.toFixed(5)),
+    alpha: parseFloat(alpha.toExponential(6)),
+    gsv: (observedVolume) => parseFloat((observedVolume * vcf).toFixed(2)),
+    weightInVacuum: (observedVolume) => parseFloat((observedVolume * vcf * densityAt15).toFixed(3)),
+    weightInAir: (observedVolume) => parseFloat((observedVolume * vcf * (densityAt15 - 0.0011)).toFixed(3))
+  };
+};
+
+export const calculateVCF_B54 = (densityAt15, temperature) => {
   if (typeof densityAt15 !== 'number' || typeof temperature !== 'number') {
     throw new Error('densityAt15 and temperature must be numbers');
   }
@@ -15,6 +63,7 @@ export const calculateVCF = (densityAt15, temperature) => {
   const deltaT = temperature - 15;
   let alpha;
 
+  // Original Table 54B coefficients for Products/Refined Oils
   if (den15 <= 770) {
     const k0 = 346.42278;
     const k1 = 0.43884;
@@ -36,6 +85,7 @@ export const calculateVCF = (densityAt15, temperature) => {
   const vcf = Math.exp(-alpha * deltaT * (1 + 0.8 * alpha * deltaT));
 
   return {
+    table: 'B54',
     vcf: parseFloat(vcf.toFixed(5)),
     alpha: parseFloat(alpha.toExponential(6)),
     gsv: (observedVolume) => parseFloat((observedVolume * vcf).toFixed(2)),
@@ -59,3 +109,4 @@ export const getDefaultDensityForFuelType = (fuelType) => {
 
   return 0.9910;
 };
+
