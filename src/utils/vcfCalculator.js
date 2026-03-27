@@ -110,3 +110,7 @@ export const getDefaultDensityForFuelType = (fuelType) => {
   return 0.9910;
 };
 
+// Backward compatibility for FuelCalculator
+export const calculateVCF = calculateVCF_B54;
+
+

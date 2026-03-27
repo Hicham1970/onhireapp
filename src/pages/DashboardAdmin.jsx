@@ -539,9 +539,8 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
         </div>
       </div>
     </div>
-      
-  
   );
 };
+
 
 export default DashboardAdmin;
