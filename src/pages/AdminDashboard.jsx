@@ -7,7 +7,7 @@ import {
   getContactMessages, deleteContactMessage
 } from "../api/api";
 import {  
-  Users, Package, FileText, BarChart3, Settings, Search, Ship,
+  Users, Package, FileText, BarChart3, Settings, Search, Ship, Gauge,
   Edit3, Trash2, Shield, TrendingUp, DollarSign, Eye, Loader2,
   Menu, X, Mail
 } from "lucide-react";
@@ -133,7 +133,8 @@ function AdminDashboard() {
   );
 
   const adminTabs = [
-    { id: "overview", label: "Aperçu", icon: BarChart3 },
+{ id: "overview", label: "Aperçu", icon: BarChart3 },
+  { id: "petrocal", label: "Petrocal", icon: Gauge },
     { id: "messages", label: "Messages", icon: Mail },
     { id: "surveys", label: "Surveys", icon: Ship },
     { id: "rapports", label: "Rapports", icon: FileText },
@@ -187,13 +188,18 @@ function AdminDashboard() {
         {/* Sidebar */}
         <aside className={`lg:block ${mobileMenuOpen ? 'block' : 'hidden'} w-64 bg-white/80 dark:bg-slate-800/95 backdrop-blur-md border-r border-slate-200 dark:border-slate-700`}>
           <nav className="p-4 space-y-1">
-            {adminTabs.map((tab) => (
+{adminTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => {
-                  setActiveTab(tab.id);
+                  if (tab.id === 'petrocal') {
+                    navigate('/petrocal');
+                  } else {
+                    setActiveTab(tab.id);
+                  }
                   setMobileMenuOpen(false);
                 }}
+
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${
                   activeTab === tab.id
                     ? "bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md"

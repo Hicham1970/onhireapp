@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Calculator, Copy, RefreshCw, ChevronRight, Sun, Moon, Globe, Menu, X, Zap, Thermometer, Gauge, Droplets, Activity, Database } from 'lucide-react';
+import { Calculator, Copy, RefreshCw, ChevronRight, Menu, X, Zap, Thermometer, Gauge, Droplets, Activity } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import { celsiusToFahrenheit, fahrenheitToCelsius, psiToBar, barToPsi, sgToApi, apiToSg, sgToKgM3, kgM3ToSg, cStToCP, cPToCSt, mjPerM3ToMbtuPerBbl, calculateAllConversions } from '../utils/petrocalFormulas';
 import { calculateVCF_A54, calculateVCF_B54 } from '../utils/vcfCalculator';
 
 const Petrocal = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
   const [activeCategory, setActiveCategory] = useState('energy');
   const [inputValue, setInputValue] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState('mj_m3');
@@ -16,7 +20,7 @@ const Petrocal = () => {
 
   // VCF specific states
   const [a54Temp, setA54Temp] = useState(15);
-  const [a54Density, setA54Density] = useState(0.99560);
+  const [a54Density, setA54Density] = useState(0.9956);
   const [a54Result, setA54Result] = useState({ vcf: 1.00000, alpha: '0' });
 
   const [b54Temp, setB54Temp] = useState(15);
@@ -117,7 +121,7 @@ const Petrocal = () => {
   const handleReset = () => {
     if (activeCategory === 'vcf') {
       setA54Temp(15);
-      setA54Density(0.8365);
+      setA54Density(0.9956);
       setB54Temp(15);
       setB54Density(0.8365);
     } else {
@@ -134,7 +138,7 @@ const Petrocal = () => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div>
-            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-orange-200">
+            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-orange-100 dark:text-orange-200">
               Température (°C)
             </label>
             <input
@@ -142,29 +146,29 @@ const Petrocal = () => {
               step="0.1"
               value={a54Temp}
               onChange={(e) => setA54Temp(parseFloat(e.target.value) || 15)}
-              className="w-full bg-white/20 border-2 border-orange-400/50 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-center focus:outline-none focus:border-orange-400 hover:border-orange-300 transition-all backdrop-blur-sm text-white"
+              className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-2 border-orange-400/50 dark:border-orange-400 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-slate-900 dark:text-white text-center focus:outline-none focus:border-orange-400 hover:border-orange-300 transition-all backdrop-blur-sm placeholder-slate-400 dark:placeholder-slate-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-orange-200">
+            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-orange-100 dark:text-orange-200">
               Densité @15°C (t/m³)
             </label>
             <input
               type="number"
               step="0.0001"
               value={a54Density}
-              onChange={(e) => setA54Density(parseFloat(e.target.value) || 0.8365)}
-              className="w-full bg-white/20 border-2 border-orange-400/50 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-center focus:outline-none focus:border-orange-400 hover:border-orange-300 transition-all backdrop-blur-sm text-white"
+              onChange={(e) => setA54Density(parseFloat(e.target.value) || 0.9956)}
+              className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-2 border-orange-400/50 dark:border-orange-400 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-slate-900 dark:text-white text-center focus:outline-none focus:border-orange-400 hover:border-orange-300 transition-all backdrop-blur-sm placeholder-slate-400 dark:placeholder-slate-500"
             />
           </div>
           <div className="lg:col-span-2">
-            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-orange-200">
+            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-orange-100 dark:text-orange-200">
               CVF Calculé
             </label>
             <div className="text-5xl font-mono font-black text-center bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent drop-shadow-2xl">
               {a54Result.vcf.toFixed(5)}
             </div>
-            <div className="text-sm opacity-80 mt-2 text-center">
+            <div className="text-sm opacity-80 mt-2 text-center text-slate-700 dark:text-slate-300">
               α = {a54Result.alpha}
             </div>
           </div>
@@ -178,7 +182,7 @@ const Petrocal = () => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div>
-            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-emerald-200">
+            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-emerald-100 dark:text-emerald-200">
               Température (°C)
             </label>
             <input
@@ -186,11 +190,11 @@ const Petrocal = () => {
               step="0.1"
               value={b54Temp}
               onChange={(e) => setB54Temp(parseFloat(e.target.value) || 15)}
-              className="w-full bg-white/20 border-2 border-emerald-400/50 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-center focus:outline-none focus:border-emerald-400 hover:border-emerald-300 transition-all backdrop-blur-sm text-white"
+              className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-2 border-emerald-400/50 dark:border-emerald-400 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-slate-900 dark:text-white text-center focus:outline-none focus:border-emerald-400 hover:border-emerald-300 transition-all backdrop-blur-sm placeholder-slate-400 dark:placeholder-slate-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-emerald-200">
+            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-emerald-100 dark:text-emerald-200">
               Densité @15°C (t/m³)
             </label>
             <input
@@ -198,17 +202,17 @@ const Petrocal = () => {
               step="0.0001"
               value={b54Density}
               onChange={(e) => setB54Density(parseFloat(e.target.value) || 0.8365)}
-              className="w-full bg-white/20 border-2 border-emerald-400/50 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-center focus:outline-none focus:border-emerald-400 hover:border-emerald-300 transition-all backdrop-blur-sm text-white"
+              className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-2 border-emerald-400/50 dark:border-emerald-400 rounded-2xl px-6 py-4 text-xl font-mono font-bold text-slate-900 dark:text-white text-center focus:outline-none focus:border-emerald-400 hover:border-emerald-300 transition-all backdrop-blur-sm placeholder-slate-400 dark:placeholder-slate-500"
             />
           </div>
           <div className="lg:col-span-2">
-            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-emerald-200">
+            <label className="block text-sm font-bold uppercase tracking-wide mb-3 text-emerald-100 dark:text-emerald-200">
               CVF Calculé
             </label>
             <div className="text-5xl font-mono font-black text-center bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-2xl">
               {b54Result.vcf.toFixed(5)}
             </div>
-            <div className="text-sm opacity-80 mt-2 text-center">
+            <div className="text-sm opacity-80 mt-2 text-center text-slate-700 dark:text-slate-300">
               α = {b54Result.alpha}
             </div>
           </div>
@@ -216,7 +220,7 @@ const Petrocal = () => {
       </div>
 
       {/* Standards Note */}
-      <div className="p-6 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm text-slate-300">
+      <div className="p-6 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl text-sm text-slate-700 dark:text-slate-300">
         <strong>Normes ASTM D1250-80:</strong> Table 54A (Brut) & 54B (Produits raffinés). 
         Densité en t/m³ @15°C. Calcul: VCF = exp[-αΔT(1+0.8αΔT)] avec coefficients tabulés.
       </div>
@@ -224,17 +228,17 @@ const Petrocal = () => {
   );
 
   return (
-    <div className="min-h-screen pt-24 bg-gradient-to-br from-slate-900 via-slate-900/50 to-slate-900 text-white p-4 md:p-8">
+    <div className="min-h-screen pt-24 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50 dark:from-slate-900 dark:via-slate-900/50 dark:to-slate-900 text-slate-900 dark:text-white p-4 md:p-8">
       <header className="flex items-center justify-between mb-12 mt-10 max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-2xl flex items-center justify-center shadow-2xl shadow-cyan-500/25">
             <Calculator className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent">
               O&G Calc
             </h1>
-            <p className="text-sm opacity-80 font-medium">Instant Oil & Gas Unit Converter</p>
+            <p className="text-sm opacity-80 font-medium text-slate-600 dark:text-slate-400">Instant Oil & Gas Unit Converter</p>
           </div>
         </div>
       </header>
@@ -242,7 +246,7 @@ const Petrocal = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar */}
         <div className={`lg:block ${sidebarOpen ? 'fixed inset-0 z-50 bg-black/50 flex lg:hidden' : 'hidden lg:block'}`}>
-          <div className={`w-full lg:w-80 h-screen bg-slate-900/90 backdrop-blur-xl border-r border-white/10 p-8 shadow-2xl overflow-y-auto ${sidebarOpen ? 'ml-auto w-64' : ''} transition-all duration-300`}>
+          <div className={`w-full lg:w-80 h-screen bg-slate-50 dark:bg-slate-900/90 backdrop-blur-xl border-r border-slate-200 dark:border-white/10 p-8 shadow-2xl overflow-y-auto ${sidebarOpen ? 'ml-auto w-64' : ''} transition-all duration-300`}>
             <h2 className="text-2xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">
               Categories
             </h2>
@@ -255,19 +259,19 @@ const Petrocal = () => {
                 }}
                 className={`w-full flex items-center gap-4 p-5 mb-4 rounded-2xl transition-all group hover:shadow-xl hover:-translate-y-1 border-2 ${
                   activeCategory === cat.id
-                    ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 border-white/30 shadow-2xl shadow-cyan-500/25'
-                    : 'border-transparent hover:border-white/20 bg-white/5'
+                    ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 border-cyan-300 dark:border-white/30 shadow-2xl shadow-cyan-500/25'
+                    : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-100/50 dark:bg-slate-800/50'
                 }`}
               >
-                <cat.icon className="w-6 h-6 flex-shrink-0" />
-                <span className="font-bold">{cat.label}</span>
+                <cat.icon className="w-6 h-6 flex-shrink-0 text-slate-700 dark:text-slate-300" />
+                <span className="font-bold text-slate-900 dark:text-white">{cat.label}</span>
               </button>
             ))}
             <button 
               onClick={() => setSidebarOpen(false)} 
-              className="lg:hidden absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20"
+              className="lg:hidden absolute top-4 right-4 p-2 rounded-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 text-slate-700 dark:text-slate-300" />
             </button>
           </div>
         </div>
@@ -275,7 +279,7 @@ const Petrocal = () => {
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-8 lg:pr-8">
           <button 
-            className="lg:hidden mb-6 p-3 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-2xl flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+            className="lg:hidden mb-6 p-3 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-2xl flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all text-slate-900 dark:text-white"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="w-5 h-5" />
@@ -283,17 +287,17 @@ const Petrocal = () => {
           </button>
 
           {/* Calculator Card */}
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <div className="bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-100 to-white/80 bg-clip-text text-transparent drop-shadow-lg">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent drop-shadow-lg">
                 {categories.find(c => c.id === activeCategory)?.label} Converter
               </h2>
               <div className="flex gap-3">
-                <button onClick={handleCopy} className="p-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl flex items-center gap-2 backdrop-blur-sm transition-all">
+                <button onClick={handleCopy} className="p-3 bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 rounded-2xl flex items-center gap-2 backdrop-blur-sm transition-all text-slate-900 dark:text-white">
                   <Copy className="w-4 h-4" />
                   {copied ? 'Copied!' : 'Copy'}
                 </button>
-                <button onClick={handleReset} className="p-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl flex items-center gap-2 backdrop-blur-sm transition-all">
+                <button onClick={handleReset} className="p-3 bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 rounded-2xl flex items-center gap-2 backdrop-blur-sm transition-all text-slate-900 dark:text-white">
                   <RefreshCw className="w-4 h-4" />
                   Reset
                 </button>
@@ -309,7 +313,7 @@ const Petrocal = () => {
                 <div className="space-y-6 mb-12">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="md:col-span-1">
-                      <label className="block text-sm font-bold uppercase tracking-wide mb-2 text-cyan-200">
+                      <label className="block text-sm font-bold uppercase tracking-wide mb-2 text-slate-700 dark:text-slate-300">
                         Enter Value
                       </label>
                       <input
@@ -317,12 +321,12 @@ const Petrocal = () => {
                         step="0.01"
                         value={inputValue}
                         onChange={(e) => setInputValue(parseFloat(e.target.value) || 0)}
-                        className="w-full bg-white/20 border-2 border-white/30 rounded-2xl px-6 py-4 text-3xl font-mono font-bold text-center focus:outline-none focus:border-cyan-400 hover:border-white/50 transition-all backdrop-blur-sm text-white"
+                        className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-2 border-slate-300 dark:border-slate-700 rounded-2xl px-6 py-4 text-3xl font-mono font-bold text-slate-900 dark:text-white text-center focus:outline-none focus:border-cyan-400 hover:border-slate-400 dark:hover:border-slate-600 transition-all backdrop-blur-sm placeholder-slate-400 dark:placeholder-slate-500"
                         placeholder="42.5"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold uppercase tracking-wide mb-2 text-emerald-200">
+                      <label className="block text-sm font-bold uppercase tracking-wide mb-2 text-emerald-700 dark:text-emerald-300">
                         From Unit
                       </label>
                       <select
@@ -331,7 +335,7 @@ const Petrocal = () => {
                           setSelectedUnit(e.target.value);
                           if (e.target.value === selectedToUnit) setSelectedToUnit('');
                         }}
-                        className="w-full bg-white/10 border-2 border-emerald-400/50 rounded-2xl px-6 py-4 text-lg font-bold backdrop-blur-sm focus:outline-none focus:border-emerald-400 hover:border-emerald-300/50 transition-all appearance-none text-white"
+                        className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-2 border-emerald-400/50 dark:border-emerald-400 rounded-2xl px-6 py-4 text-lg font-bold text-slate-900 dark:text-white backdrop-blur-sm focus:outline-none focus:border-emerald-400 hover:border-emerald-300/50 dark:hover:border-emerald-300 transition-all appearance-none"
                       >
                         {categories.find(c => c.id === activeCategory)?.units.map(u => (
                           <option key={u} value={u.toLowerCase().replace(/[^a-z0-9]/g, '')} className="text-black">
@@ -341,13 +345,13 @@ const Petrocal = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-bold uppercase tracking-wide mb-2 text-cyan-200">
+                      <label className="block text-sm font-bold uppercase tracking-wide mb-2 text-cyan-700 dark:text-cyan-300">
                         To Unit
                       </label>
                       <select
                         value={selectedToUnit}
                         onChange={(e) => setSelectedToUnit(e.target.value)}
-                        className="w-full bg-white/10 border-2 border-cyan-400/50 rounded-2xl px-6 py-4 text-lg font-bold backdrop-blur-sm focus:outline-none focus:border-cyan-400 hover:border-cyan-300/50 transition-all appearance-none text-white"
+                        className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-2 border-cyan-400/50 dark:border-cyan-400 rounded-2xl px-6 py-4 text-lg font-bold text-slate-900 dark:text-white backdrop-blur-sm focus:outline-none focus:border-cyan-400 hover:border-cyan-300/50 dark:hover:border-cyan-300 transition-all appearance-none"
                       >
                         {categories.find(c => c.id === activeCategory)?.units
                           .filter(u => u.toLowerCase().replace(/[^a-z0-9]/g, '') !== selectedUnit)
@@ -363,19 +367,19 @@ const Petrocal = () => {
 
                 {/* Direct Conversion */}
                 {selectedToUnit && (
-                  <div className="bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border-2 border-emerald-400/50 backdrop-blur-xl rounded-3xl p-8 mb-8 shadow-2xl">
-                    <h3 className="text-xl font-bold mb-4 text-emerald-200 uppercase tracking-wide">
+                  <div className="bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border-2 border-emerald-400/50 dark:border-emerald-400 backdrop-blur-xl rounded-3xl p-8 mb-8 shadow-2xl">
+                    <h3 className="text-xl font-bold mb-4 text-emerald-700 dark:text-emerald-300 uppercase tracking-wide">
                       Direct Conversion
                     </h3>
                     <div className="text-center">
                       <div className="text-6xl font-mono font-black mb-2 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-2xl">
                         {inputValue.toFixed(2)}
                       </div>
-                      <div className="text-lg opacity-90 mb-8">
+                      <div className="text-lg opacity-90 mb-8 text-slate-700 dark:text-slate-300">
                         {categories.find(c => c.id === activeCategory)?.units.find(u => u.toLowerCase().replace(/[^a-z0-9]/g, '') === selectedUnit)?.replace(/[°]/g, '°')} →{' '}
                         {categories.find(c => c.id === activeCategory)?.units.find(u => u.toLowerCase().replace(/[^a-z0-9]/g, '') === selectedToUnit)?.replace(/[°]/g, '°')}
                       </div>
-                      <div className="text-5xl font-mono font-bold text-white mb-4">
+                      <div className="text-5xl font-mono font-bold text-slate-900 dark:text-white mb-4">
                         {singleResult !== null ? singleResult.toFixed(3) : 'Select To Unit'}
                       </div>
                     </div>
@@ -385,8 +389,8 @@ const Petrocal = () => {
                 {/* Results */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                   {Object.entries(results).map(([key, value]) => (
-                    <div key={key} className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center hover:shadow-2xl hover:-translate-y-2 hover:border-cyan-400/50 transition-all overflow-hidden hover:bg-white/10">
-                      <div className="text-xs opacity-75 uppercase tracking-wider font-bold mb-2 text-cyan-300">
+                    <div key={key} className="group bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-2xl p-8 text-center hover:shadow-2xl hover:-translate-y-2 hover:border-cyan-400/50 transition-all overflow-hidden hover:bg-slate-200/50 dark:hover:bg-slate-700/50">
+                      <div className="text-xs opacity-75 uppercase tracking-wider font-bold mb-2 text-slate-600 dark:text-slate-400">
                         {key.toUpperCase()}
                       </div>
                       <div className="text-3xl font-mono font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-1 group-hover:scale-105 transition-transform">
@@ -397,8 +401,8 @@ const Petrocal = () => {
                   ))}
                   {Object.keys(results).length === 0 && (
                     <div className="col-span-full text-center py-20 opacity-50">
-                      <Calculator className="w-24 h-24 mx-auto mb-4 text-cyan-400" />
-                      <p className="text-xl">Enter value to see conversions</p>
+                      <Calculator className="w-24 h-24 mx-auto mb-4 text-slate-500 dark:text-slate-400" />
+                      <p className="text-xl text-slate-600 dark:text-slate-400">Enter value to see conversions</p>
                     </div>
                   )}
                 </div>
@@ -408,8 +412,8 @@ const Petrocal = () => {
 
           {/* Footer */}
           <div className="text-center pt-12 pb-8 opacity-75">
-            <p className="text-lg mb-4">Powered by precise petroleum engineering formulas</p>
-            <div className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-medium transition-colors cursor-default">
+            <p className="text-lg mb-4 text-slate-700 dark:text-slate-300">Powered by precise petroleum engineering formulas</p>
+            <div className="inline-flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-medium transition-colors cursor-default">
               <ChevronRight className="w-5 h-5 rotate-[-45deg]" />
               <span>More Oil & Gas Tools Coming Soon</span>
             </div>

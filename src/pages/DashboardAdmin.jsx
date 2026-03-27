@@ -7,7 +7,7 @@ import { deleteDraftSurvey, getAllDraftSurveys } from '../services/draftSurveySe
 import { generateDraftSurveyPDF } from '../utils/pdfDraftSurveyGenerator.js';
 import { Trash2, FileText, Edit3, Download, Search, User, Calendar, Package, BadgeCheck, Plus, Eye, Camera } from 'lucide-react';
 import Profile from '../components/Profile';
-import { Mail, ClipboardCheck, Shield, ChevronLeft, Loader2, Users, BarChart3 } from 'lucide-react';
+import { Mail, ClipboardCheck, Shield, ChevronLeft, Loader2, Users, BarChart3, Gauge } from 'lucide-react';
 
 const DashboardAdmin = () => {
   const { currentUser, loading, isAdmin, userData } = useAuth();
@@ -499,7 +499,7 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
         )}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
           <button onClick={() => navigate('/create-survey')} className="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <FileText className="w-8 h-8" />
@@ -519,15 +519,15 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <User className="w-8 h-8" />
             </div>
-            <h4 className="text-xl font-bold mb-2">Users </h4>
+            <h4 className="text-xl font-bold mb-2">Users</h4>
             <p className="opacity-90">All Clients</p>
           </button>
-          <button onClick={() => navigate('/onhire?tab=ai')} className="group p-6 bg-gradient-to-br from-slate-500 to-slate-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
+          <button onClick={() => navigate('/petrocal')} className="group p-6 bg-gradient-to-br from-slate-500 to-slate-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <BarChart3 className="w-8 h-8" />
+              <Gauge className="w-8 h-8" />
             </div>
-            <h4 className="text-xl font-bold mb-2">Analytics</h4>
-            <p className="opacity-90">Global Statistics</p>
+            <h4 className="text-xl font-bold mb-2">Petrocal</h4>
+            <p className="opacity-90">Oil & Gas Calculator</p>
           </button>
           <button onClick={() => navigate('/draft-survey/infos')} className="group p-6 bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
@@ -539,6 +539,8 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
         </div>
       </div>
     </div>
+      
+  
   );
 };
 
