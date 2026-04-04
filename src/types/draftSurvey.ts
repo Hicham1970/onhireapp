@@ -1,4 +1,3 @@
-
 export type OperationType = 'Loading' | 'Unloading';
 
 export interface DraftReadings {
@@ -42,6 +41,13 @@ export interface VesselParticulars {
     summerDeadweight?: number;
 }
 
+export interface MarkCorrections {
+    fwdDraftMarkDist: number;
+    aftDraftMarkDist: number;
+    midDraftMarkDist: number;
+    keelThickness: number;
+}
+
 export interface Hydrostatics {
     displacement: number;
     tpc: number;
@@ -52,6 +58,7 @@ export interface Hydrostatics {
 export interface SurveyStep {
     drafts: DraftReadings;
     deductibles: Deductibles;
+    markCorrections?: MarkCorrections;
     density: number;
     hydrostatics: Hydrostatics;
     mom?: number;

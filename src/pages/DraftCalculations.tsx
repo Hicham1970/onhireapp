@@ -34,25 +34,31 @@ const DraftCalculations = ({ step }: Props) => {
     const navigate = useNavigate();
     
     const currentData = step === 'initial' ? survey.initial : survey.final;
-    const { drafts } = currentData;
+    const { drafts, markCorrections } = currentData;
     const { particulars } = survey;
 
+    const currentMarkCorr = markCorrections || {
+        fwdDraftMarkDist: particulars.fwdDraftMarkDist,
+        aftDraftMarkDist: particulars.aftDraftMarkDist,
+        midDraftMarkDist: particulars.midDraftMarkDist,
+        keelThickness: particulars.keelThickness
+    };
+
     const corrected = useMemo(() => {
-        console.log(`[CALC ${step}] Calling SGS corrections`, { drafts, particulars });
-        const result = calculateSGSCorrectedDrafts(drafts, particulars);
+        console.log(`[CALC ${step}] Calling SGS corrections`, { drafts, currentMarkCorr });
+        const result = calculateSGSCorrectedDrafts(drafts, particulars.lbp, currentMarkCorr);
         console.log(`[CALC ${step}] SGS result:`, result);
         return result;
-    }, [drafts, particulars, step]);
+    }, [drafts, particulars.lbp, currentMarkCorr, step]);
 
     const means = useMemo(() => {
         console.log(`[CALC ${step}] SGS Middle Means input:`, { fwd: corrected.fwd.corrected, mid: corrected.mid.corrected, aft: corrected.aft.corrected });
-        const result = calculateSGSMiddleMeans(corrected.fwd.corrected, corrected.mid.corrected, corrected.aft.corrected, survey.particulars.keelThickness || 0);
+        const result = calculateSGSMiddleMeans(corrected.fwd.corrected, corrected.mid.corrected, corrected.aft.corrected, currentMarkCorr.keelThickness || 0);
         console.log(`[CALC ${step}] Middle Means result:`, result);
         return result;
-    }, [corrected, step]);
+    }, [corrected, currentMarkCorr.keelThickness, step]);
 
     const trim = useMemo(() => {
-        // We use the corrected trim for the status card
         return corrected.aft.corrected - corrected.fwd.corrected;
     }, [corrected]);
 
@@ -98,7 +104,7 @@ const DraftCalculations = ({ step }: Props) => {
                             <div>
                                 <p className="text-xs font-bold text-blue-500 mb-2 font-mono uppercase tracking-widest flex justify-between">
                                     <span>FORE (AVANT)</span>
-                                    <span className="text-[10px] opacity-70">Dist: {particulars.fwdDraftMarkDist}m</span>
+                                    <span className="text-[10px] opacity-70">Dist: {currentMarkCorr.fwdDraftMarkDist}m</span>
                                 </p>
                                 <TableRow label="Draft Moyenne" value={corrected.fwd.mean} unit="m" />
                                 <TableRow label="Stern Correction (Auto)" value={corrected.fwd.autoCorr} unit="m" />
@@ -107,7 +113,7 @@ const DraftCalculations = ({ step }: Props) => {
                             <div>
                                 <p className="text-xs font-bold text-amber-500 mb-2 font-mono uppercase tracking-widest flex justify-between">
                                     <span>AFT (ARRIÈRE)</span>
-                                    <span className="text-[10px] opacity-70">Dist: {particulars.aftDraftMarkDist}m</span>
+                                    <span className="text-[10px] opacity-70">Dist: {currentMarkCorr.aftDraftMarkDist}m</span>
                                 </p>
                                 <TableRow label="Draft Moyenne" value={corrected.aft.mean} unit="m" />
                                 <TableRow label="Stern Correction (Auto)" value={corrected.aft.autoCorr} unit="m" />
@@ -116,7 +122,7 @@ const DraftCalculations = ({ step }: Props) => {
                             <div>
                                 <p className="text-xs font-bold text-emerald-500 mb-2 font-mono uppercase tracking-widest flex justify-between">
                                     <span>MID (MILIEU)</span>
-                                    <span className="text-[10px] opacity-70">Dist: {particulars.midDraftMarkDist}m</span>
+                                    <span className="text-[10px] opacity-70">Dist: {currentMarkCorr.midDraftMarkDist}m</span>
                                 </p>
                                 <TableRow label="Draft Moyenne" value={corrected.mid.mean} unit="m" />
                                 <TableRow label="Mid Correction (Auto)" value={corrected.mid.autoCorr} unit="m" />

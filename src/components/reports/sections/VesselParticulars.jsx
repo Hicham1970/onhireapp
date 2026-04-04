@@ -73,6 +73,16 @@ const VesselParticulars = ({ data, onChange }) => {
                 
                 <InputField label="Light Displacement (mt)" name="lightDisplacement" value={data.lightDisplacement} onChange={handleChange} placeholder="11 843" isDark={isDark} />
                 <InputField label="Hatches / holds" name="hatchesHolds" value={data.hatchesHolds} onChange={handleChange} placeholder="5/5" isDark={isDark} />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 rounded-lg border bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 mt-6">
+                    <h4 className="md:col-span-2 text-sm font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-4 flex items-center gap-2">
+                        Draft Mark Corrections
+                    </h4>
+                    <InputField label="Fwd Mark Dist. (m)" name="fwdDraftMarkDist" value={data.fwdDraftMarkDist} onChange={handleChange} type="number" step="0.001" isDark={isDark} />
+                    <InputField label="Aft Mark Dist. (m)" name="aftDraftMarkDist" value={data.aftDraftMarkDist} onChange={handleChange} type="number" step="0.001" isDark={isDark} />
+                    <InputField label="Mid Mark Dist. (m)" name="midDraftMarkDist" value={data.midDraftMarkDist} onChange={handleChange} type="number" step="0.001" isDark={isDark} />
+                    <InputField label="Keel Thickness (mm)" name="keelThickness" value={data.keelThickness} onChange={handleChange} type="number" step="1" isDark={isDark} />
+                </div>
             </div>
         </div>
     );

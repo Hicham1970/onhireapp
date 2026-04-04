@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { DraftSurvey, OperationType, SurveyStep } from '../types/draftSurvey';
+import { DraftSurvey, OperationType, SurveyStep, MarkCorrections } from '../types/draftSurvey';
 
 interface DraftSurveyContextType {
     survey: DraftSurvey;
@@ -19,6 +19,12 @@ const emptyStep: SurveyStep = {
         sternCorrectionFwd: 0,
         sternCorrectionAft: 0,
         midCorrection: 0
+    },
+    markCorrections: {
+        fwdDraftMarkDist: 0,
+        aftDraftMarkDist: 0,
+        midDraftMarkDist: 0,
+        keelThickness: 0
     },
     deductibles: {
         fuelOil: 0, dieselOil: 0, lubeOil: 0, freshWater: 0, ballastWater: 0, others: 0

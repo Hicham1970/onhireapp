@@ -126,7 +126,12 @@ const DraftSurveyReportInner = () => {
     const computeStep = (stepData: typeof initial, stepName: string) => {
         try {
             console.log(`=== RECAP ${stepName.toUpperCase()} COMPUTE START ===`, { stepData, particulars });
-            const corr = calculateSGSCorrectedDrafts(stepData.drafts, particulars);
+const corr = calculateSGSCorrectedDrafts(stepData.drafts, particulars.lbp, stepData.markCorrections || {
+    fwdDraftMarkDist: particulars.fwdDraftMarkDist,
+    aftDraftMarkDist: particulars.aftDraftMarkDist,
+    midDraftMarkDist: particulars.midDraftMarkDist,
+    keelThickness: particulars.keelThickness
+});
             console.log(`Corrections SGS:`, corr);
             const { quarterMean } = calculateSGSMiddleMeans(
                 corr.fwd.corrected, corr.mid.corrected, corr.aft.corrected,

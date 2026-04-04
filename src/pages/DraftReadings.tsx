@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Anchor, ChevronRight, Clock } from 'lucide-react';
+import { Anchor, ChevronRight, Clock, Layers } from 'lucide-react';
 import { useDraftSurvey } from '../context/DraftSurveyContext';
-import { DraftReadings as DraftReadingsType } from '../types/draftSurvey';
+import { DraftReadings as DraftReadingsType, MarkCorrections } from '../types/draftSurvey';
 
 interface Props {
     step: 'initial' | 'final';
@@ -45,6 +45,15 @@ const DraftReadings = ({ step }: Props) => {
         completedTime: currentData.completedTime || ''
     });
 
+    const defaultMarkCorr: MarkCorrections = {
+        fwdDraftMarkDist: 0,
+        aftDraftMarkDist: 0,
+        midDraftMarkDist: 0,
+        keelThickness: 0
+    };
+
+    const [localMarkCorr, setLocalMarkCorr] = useState(currentData.markCorrections || defaultMarkCorr);
+
     useEffect(() => {
         setLocalDrafts(currentData.drafts);
         setTimes({
@@ -53,11 +62,13 @@ const DraftReadings = ({ step }: Props) => {
             completedDate: currentData.completedDate || '',
             completedTime: currentData.completedTime || ''
         });
+        setLocalMarkCorr(currentData.markCorrections || defaultMarkCorr);
     }, [step]);
 
     const handleNext = () => {
         const payload = { 
             drafts: localDrafts,
+            markCorrections: localMarkCorr,
             ...times
         };
         if (step === 'initial') {
@@ -72,6 +83,11 @@ const DraftReadings = ({ step }: Props) => {
     const updateDraftField = (field: keyof DraftReadingsType, value: string) => {
         const val = parseFloat(value) || 0;
         setLocalDrafts(prev => ({ ...prev, [field]: val }));
+    };
+
+    const updateMarkField = (field: keyof MarkCorrections, value: string) => {
+        const val = parseFloat(value) || 0;
+        setLocalMarkCorr(prev => ({ ...prev, [field]: val }));
     };
 
     const updateTimeField = (field: string, value: string) => {
@@ -89,6 +105,18 @@ const DraftReadings = ({ step }: Props) => {
 
             <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-8 shadow-xl space-y-10">
                 
+                <div className="space-y-6">
+                    <h3 className="font-bold flex items-center gap-2 text-slate-900 dark:text-white uppercase text-xs tracking-widest text-slate-400">
+                        <Layers className="w-4 h-4" /> Correction des Marques
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <InputField label="Dist. Fwd Mark" field="fwdDraftMarkDist" value={localMarkCorr.fwdDraftMarkDist} onChange={updateMarkField} unit="m" />
+                        <InputField label="Dist. Aft Mark" field="aftDraftMarkDist" value={localMarkCorr.aftDraftMarkDist} onChange={updateMarkField} unit="m" />
+                        <InputField label="Dist. Mid Mark" field="midDraftMarkDist" value={localMarkCorr.midDraftMarkDist} onChange={updateMarkField} unit="m" />
+                        <InputField label="Keel Thickness" field="keelThickness" value={localMarkCorr.keelThickness} onChange={updateMarkField} unit="mm" />
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                      <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
                         <p className="font-bold text-xs uppercase tracking-widest text-blue-600 flex items-center gap-2">

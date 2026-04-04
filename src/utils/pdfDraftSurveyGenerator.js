@@ -7,7 +7,12 @@ const safeNum = (v) => (isFinite(v) && !isNaN(v) ? v : 0);
 const fmtNum3 = (v) => isFinite(v) ? Number(v).toFixed(3) : '0.000';
 
 const computeStep = (stepData, particulars) => {
-  const corr = calculateSGSCorrectedDrafts(stepData.drafts, particulars);
+const corr = calculateSGSCorrectedDrafts(stepData.drafts, particulars.lbp, stepData.markCorrections || {
+    fwdDraftMarkDist: particulars.fwdDraftMarkDist,
+    aftDraftMarkDist: particulars.aftDraftMarkDist,
+    midDraftMarkDist: particulars.midDraftMarkDist,
+    keelThickness: particulars.keelThickness
+});
   const { quarterMean } = calculateSGSMiddleMeans(corr.fwd.corrected, corr.mid.corrected, corr.aft.corrected);
   const h = stepData.hydrostatics;
   const lbp = safeNum(particulars.lbp) || 1;
@@ -210,7 +215,7 @@ export const generateDraftSurveyPDF = async (survey) => {
   const disclaimerText = `This Draft Survey Report is issued based on measurements taken in the presence of vessel representatives. All calculations follow standard marine surveying practices. 
 GH Marine Surveying assumes no liability for discrepancies arising from vessel data inaccuracies, density variations, or external factors beyond our control. 
 This certificate does not constitute a warranty of quantity. Client accepts all measurements as-is and waives any legal claims against GH Marine Surveying.`;
-  doc.text(disclaimerText, margin, disclaimerY, { maxWidth: pageWidth - 2*margin });
+doc.text(disclaimerText, pageWidth / 2, disclaimerY, { align: 'center', maxWidth: pageWidth - 2*margin });
 
   doc.save(`DS_${(informations.vesselName || 'Report').replace(/[^a-zA-Z0-9]/g, '')}_${new Date().toISOString().slice(0,10)}.pdf`);
 };

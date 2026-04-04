@@ -1,4 +1,4 @@
-import { DraftReadings, VesselParticulars, Deductibles, OperationType } from "../types/draftSurvey";
+import { DraftReadings, VesselParticulars, Deductibles, OperationType, MarkCorrections } from "../types/draftSurvey";
 
 /**
  * Calculates LBM (Length Between Marks).
@@ -68,10 +68,9 @@ export const calculateDraftCorrections = (
 /**
  * Calcul des tirants d'eau corrigés
  */
-export const calculateSGSCorrectedDrafts = (drafts: DraftReadings, particulars: VesselParticulars) => {
+export const calculateSGSCorrectedDrafts = (drafts: DraftReadings, lbp: number, markCorrections: MarkCorrections) => {
     const { fwdPort, fwdStbd, midPort, midStbd, aftPort, aftStbd } = drafts;
-    const { lbp, fwdDraftMarkDist, aftDraftMarkDist, midDraftMarkDist } = particulars;
-
+    const { fwdDraftMarkDist, aftDraftMarkDist, midDraftMarkDist } = markCorrections;
     const fwdMean = (fwdPort + fwdStbd) / 2;
     const midMean = (midPort + midStbd) / 2;
     const aftMean = (aftPort + aftStbd) / 2;
@@ -88,8 +87,6 @@ export const calculateSGSCorrectedDrafts = (drafts: DraftReadings, particulars: 
     const correctedMid = midMean + midCorr;
     const correctedAft = aftMean + aftCorr;
 
-
-    
     return {
         fwd: { mean: fwdMean, corrected: correctedFwd, autoCorr: fwdCorr },
         mid: { mean: midMean, corrected: correctedMid, autoCorr: midCorr },

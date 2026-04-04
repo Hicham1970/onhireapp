@@ -83,19 +83,7 @@ const DraftSurveyCaracteristiques = () => {
                     </div>
                 </div>
 
-                <hr className="dark:border-slate-700" />
 
-                <div className="space-y-6">
-                    <h3 className="font-bold flex items-center gap-2 text-slate-900 dark:text-white uppercase text-xs tracking-widest text-slate-400">
-                        <Layers className="w-4 h-4" /> Correction des Marques
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <InputField label="Dist. Fwd Mark" field="fwdDraftMarkDist" value={localParticulars.fwdDraftMarkDist} onChange={updateField} />
-                        <InputField label="Dist. Aft Mark" field="aftDraftMarkDist" value={localParticulars.aftDraftMarkDist} onChange={updateField} />
-                        <InputField label="Dist. Mid Mark" field="midDraftMarkDist" value={localParticulars.midDraftMarkDist} onChange={updateField} />
-                        <InputField label="Keel Thickness" field="keelThickness" value={localParticulars.keelThickness} unit="mm" onChange={updateField} />
-                    </div>
-                </div>
 
                 <div className="mt-12 flex justify-end">
                     <button 
