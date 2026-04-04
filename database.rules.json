@@ -52,6 +52,7 @@
     },
     "messages": {
       ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+      ".write": true,
       "$messageId": {
         ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
         ".write": true,

@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "messages": {
+      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+      "$messageId": {
+        ".write": true
+      }
+    }
+  }
+}
