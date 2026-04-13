@@ -1,4 +1,33 @@
 {
+  "headers": [
+    {
+      "source": "**/*.@(js|jsx|ts|tsx)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        }
+      ]
+    },
+    {
+      "source": "**/*.css",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css"
+        }
+      ]
+    },
+    {
+      "source": "**/*.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "max-age=0"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
