@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présentation Services OnhireApp - Maritime Survey SaaS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Georgia', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @page { size: A4; margin: 1cm; }
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none; }
+        }
+        .a4-height { height: 1122px; }
+        .a4-width { width: 793px; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-indigo-900 text-white font-serif p-8 space-y-12 print:p-4 print:space-y-8">
+
+    <!-- Page 1: Cover -->
+    <div class="a4-height flex flex-col items-center justify-center text-center print:mb-12">
+        <img src="public/logo.jpg" alt="OnhireApp Logo" class="w-40 h-40 mb-8 rounded-full shadow-2xl object-contain border-4 border-white/30">
+        <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-2xl tracking-tight">
+            OnhireApp
+        </h1>
+        <p class="text-3xl mb-4 font-semibold text-blue-100 drop-shadow-lg">
+            Plateforme SaaS pour Expertises Maritimes
+        </p>
+        <p class="text-2xl mb-12 opacity-90 drop-shadow-lg">
+            Draft Survey • OnHire/OffHire • Rapports d&#x27;Inspection
+        </p>
+        <div class="bg-white/20 backdrop-blur-xl p-8 rounded-3xl border-2 border-white/30 shadow-2xl max-w-2xl">
+            <h2 class="text-2xl font-bold mb-4">Présentation des Services</h2>
+            <p class="text-xl mb-2">(English Version Available)</p>
+            <p class="text-lg opacity-90">Destiné au Frontend Design 3D - Antigravity Skill</p>
+        </div>
+        <p class="mt-12 text-sm opacity-75 italic">www.onhireapp.com • contact@onhireapp.com</p>
+    </div>
+
+    <!-- Page 2: Services -->
+    <div class="a4-height print:break-before-page">
+        <h2 class="text-4xl font-bold mb-12 text-center pb-8 border-b-4 border-blue-300/50">
+            Nos Services Principaux
+        </h2>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Draft Survey -->
+            <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:shadow-2xl transition-all group">
+                <div class="w-20 h-20 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                    ⚓
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-blue-100">Draft Survey</h3>
+                <h4 class="text-xl mb-6 font-semibold">Expertise de Tirant d&#x27;Eau</h4>
+                <p class="mb-6 text-lg leading-relaxed opacity-95">
+                    Effectuez vos expertises selon les standards SGS. Corrections automatiques de trim, 
+                    interpolation hydrostatique précise, et rapports PDF professionnels.
+                </p>
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center">✅ Corrections SGS automatiques</li>
+                    <li class="flex items-center">✅ Précision ±0.1%</li>
+                    <li class="flex items-center">✅ Rapports PDF conformes</li>
+                    <li class="flex items-center">✅ Calcul cargo final précis</li>
+                </ul>
+            </div>
+
+            <!-- OnHire App -->
+            <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:shadow-2xl transition-all group">
+                <div class="w-20 h-20 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                    📋
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-emerald-100">OnHire App</h3>
+                <h4 class="text-xl mb-6 font-semibold">Gestion Expertises Maritimes</h4>
+                <p class="mb-6 text-lg leading-relaxed opacity-95">
+                    Simplifiez OnHire, OffHire et Bunker surveys. Interface intuitive, 
+                    gestion soundings/volumes, rapports pros en <span class="font-bold text-emerald-300"><5 min</span>.
+                </p>
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center">✅ Expertises illimitées</li>
+                    <li class="flex items-center">✅ Calculs volumes auto</li>
+                    <li class="flex items-center">✅ Multi-navires</li>
+                    <li class="flex items-center">✅ Historique complet</li>
+                </ul>
+            </div>
+
+            <!-- Inspection Report -->
+            <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:shadow-2xl transition-all group">
+                <div class="w-20 h-20 bg-amber-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                    📸
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-amber-100">Inspection Report</h3>
+                <h4 class="text-xl mb-6 font-semibold">Rapports Photos Professionnels</h4>
+                <p class="mb-6 text-lg leading-relaxed opacity-95">
+                    Documentez inspections haute résolution. Rapports pros avec signatures numériques 
+                    et export PDF, 100% IACS compliant.
+                </p>
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center">✅ Photos illimitées</li>
+                    <li class="flex items-center">✅ Modèles personnalisables</li>
+                    <li class="flex items-center">✅ Signature numérique</li>
+                    <li class="flex items-center">✅ 100% IACS</li>
+                </ul>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Pricing -->
+    <div class="a4-height print:break-before-page">
+        <h2 class="text-4xl font-bold mb-12 text-center pb-8 border-b-4 border-emerald-300/50">
+            Tarification Flexible
+        </h2>
+        <p class="text-xl text-center mb-12 opacity-90 max-w-3xl mx-auto">
+            Plans adaptés à tous les besoins. Essai gratuit 14 jours - Pas d&#x27;engagement - Annulation anytime.
+        </p>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-300/30 relative">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-bold">POPULAIRE</div>
+                <h3 class="text-2xl font-bold mb-4 text-purple-100 text-center">Draft Survey</h3>
+                <div class="text-center mb-8">
+                    <span class="text-4xl font-bold text-white">9€</span>
+                    <span class="text-lg opacity-75 block">/mois</span>
+                    <p class="text-sm opacity-75 mt-2">70€/an (28% savings)</p>
+                </div>
+                <ul class="space-y-3 mb-8 text-left">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Draft illimité</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Hydrostatics précis</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>PDF pros</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Fuel Calculator</li>
+                </ul>
+                <button class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-xl font-bold text-lg transition-all duration-300">
+                    COMMENCER 9€
+                </button>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-300/30">
+                <h3 class="text-2xl font-bold mb-4 text-blue-100 text-center">OnHire App</h3>
+                <div class="text-center mb-8">
+                    <span class="text-4xl font-bold text-white">7€</span>
+                    <span class="text-lg opacity-75 block">/mois</span>
+                    <p class="text-sm opacity-75 mt-2">90€/an (18% savings)</p>
+                </div>
+                <ul class="space-y-3 mb-8 text-left">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>On/OffHire illimité</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Volumes auto</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Rapports PDF</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Fuel Calculator</li>
+                </ul>
+                <button class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-xl font-bold text-lg transition-all duration-300">
+                    COMMENCER 7€
+                </button>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border-2 border-emerald-300/30">
+                <h3 class="text-2xl font-bold mb-4 text-emerald-100 text-center">Inspection</h3>
+                <div class="text-center mb-8">
+                    <span class="text-4xl font-bold text-white">9€</span>
+                    <span class="text-lg opacity-75 block">/mois</span>
+                    <p class="text-sm opacity-75 mt-2">90€/an (18% savings)</p>
+                </div>
+                <ul class="space-y-3 mb-8 text-left">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Photos illimitées</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Signature digitale</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>PDF export</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Stockage 10Go</li>
+                </ul>
+                <button class="w-full bg-emerald-600 hover:bg-emerald-700 py-4 rounded-xl font-bold text-lg transition-all duration-300">
+                    COMMENCER 9€
+                </button>
+            </div>
+
+            <div class="bg-gradient-to-br from-amber-500/20 to-amber-600/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-amber-300/40">
+                <div class="bg-amber-500/30 px-4 py-2 rounded-xl mb-4 text-center">
+                    <span class="font-bold text-lg">Pack Complet</span> <br>
+                    <span class="text-sm opacity-90">-25% annuel</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-amber-100 text-center">TOUT Inclus</h3>
+                <div class="text-center mb-8">
+                    <span class="text-4xl font-bold text-white">30€</span>
+                    <span class="text-lg opacity-75 block">/mois</span>
+                    <p class="text-sm opacity-75 mt-2">1071€/an (250€ savings)</p>
+                </div>
+                <ul class="space-y-2 mb-8 text-left text-sm">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>✅ Tous modules</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>5 utilisateurs</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></span>Formation incluse</li>
+                </ul>
+                <button class="w-full bg-amber-600 hover:bg-amber-700 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg">
+                    PACK COMPLET 30€
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-12 pt-12 border-t-2 border-white/20 text-center">
+            <p class="text-lg mb-4">RGPD Compliant • Serveurs France • Support 24/7</p>
+            <p class="text-sm opacity-75">Essai gratuit 14 jours - Annulation facile</p>
+        </div>
+    </div>
+
+    <!-- Page 4: Testimonials & Stats -->
+    <div class="a4-height print:break-before-page">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Testimonials -->
+            <div>
+                <h2 class="text-4xl font-bold mb-12 text-center pb-6 border-b-4 border-amber-300/50">
+                    Ce que disent nos clients
+                </h2>
+                <div class="space-y-8">
+                    <div class="bg-white/10 p-8 rounded-2xl border border-white/20 hover:shadow-xl transition-all">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center font-bold text-lg mr-4">5</div>
+                            <div>
+                                <p class="font-bold text-lg">Capt. Michel Dubois</p>
+                                <p class="text-sm opacity-75">Captain, MSC</p>
+                            </div>
+                        </div>
+                        <p class="text-lg leading-relaxed mb-4">"OnHire révolutionne nos expertises. Fini la paperasse, rapports en quelques clics !"</p>
+                        <p class="font-bold text-sm text-emerald-300">Gain de temps considérable</p>
+                    </div>
+
+                    <div class="bg-white/10 p-8 rounded-2xl border border-white/20 hover:shadow-xl transition-all">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center font-bold text-lg mr-4">5</div>
+                            <div>
+                                <p class="font-bold text-lg">Sarah Chen</p>
+                                <p class="text-sm opacity-75">Senior Surveyor, Bureau Veritas</p>
+                            </div>
+                        </div>
+                        <p class="text-lg leading-relaxed mb-4">"Les rapports photo impressionnent nos clients. Fuel Calculator précis au litre !"</p>
+                        <p class="font-bold text-sm text-emerald-300">Rapports professionnels</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="text-center">
+                <h2 class="text-4xl font-bold mb-16 pb-8 border-b-4 border-blue-300/50 text-center mx-auto">
+                    Nos Chiffres
+                </h2>
+                <div class="grid grid-cols-2 gap-12">
+                    <div>
+                        <div class="text-5xl font-bold text-blue-300 mb-2">500+</div>
+                        <p class="text-xl opacity-90">Navires gérés</p>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-bold text-emerald-300 mb-2">10K+</div>
+                        <p class="text-xl opacity-90">Expertises réalisées</p>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-bold text-amber-300 mb-2">99.9%</div>
+                        <p class="text-xl opacity-90">Précision calculs</p>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-bold text-purple-300 mb-2">24/7</div>
+                        <p class="text-xl opacity-90">Support client</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 5: CTA & Footer -->
+    <div class="a4-height print:break-before-page bg-gradient-to-r from-emerald-900/80 via-blue-900/80 to-purple-900/80">
+        <div class="flex flex-col items-center text-center pt-20 pb-16">
+            <img src="public/ship.jpeg" alt="Navire" class="w-64 h-48 object-cover rounded-3xl shadow-2xl mb-12 opacity-75">
+            <h2 class="text-5xl font-bold mb-8 bg-gradient-to-r from-emerald-300 to-white bg-clip-text text-transparent drop-shadow-2xl">
+                Prêt pour la Révolution 3D ?
+            </h2>
+            <p class="text-2xl mb-12 max-w-2xl leading-relaxed opacity-95">
+                Transformez cette présentation en interface dynamique avec animations 3D. 
+                Contactez Antigravity Frontend Skill dès maintenant !
+            </p>
+            <div class="space-y-4 max-w-md mx-auto">
+                <a href="mailto:contact@onhireapp.com" class="block bg-white text-blue-900 px-12 py-6 rounded-3xl font-bold text-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                    DEMANDER DÉMO GRATUITE
+                </a>
+                <a href="#" class="block border-2 border-white text-white px-12 py-6 rounded-3xl font-bold text-xl hover:bg-white hover:text-blue-900 transition-all duration-300">
+                    ESSAI 14 JOURS GRATUIT
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="border-t-2 border-white/20 pt-12 text-center text-sm opacity-75 space-y-2">
+            <p><strong>OnhireApp</strong> | www.onhireapp.com | contact@onhireapp.com | +33 1 23 45 67 89</p>
+            <p>RGPD Compliant • Données hébergées France • Support 24/7 • Conformité IACS/SGS</p>
+            <p>© 2024 OnhireApp - Tous droits réservés | Destiné Antigravity 3D Frontend</p>
+        </div>
+    </div>
+
+</body>
+</html>

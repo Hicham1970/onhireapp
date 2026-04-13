@@ -1,0 +1,4 @@
+# TODO: Service Presentation PDF Progress
+
+## Plan Breakdown & Progress
+- [x] **Step 1**: Create cover page HTML with Tailwind styling, logo, title (completed)\n- [x] **Step 2**: Add Services section (3 main services: Draft Survey, OnHire/OffHire, Inspection Reports) with descriptions/benefits/stats from src/data/features.js (completed)\n- [x] **Step 3**: Add Pricing section (plans monthly/annual from pricing.js) (completed)\n- [x] **Step 4**: Add Testimonials (quotes from testimonials.js) (completed)\n- [x] **Step 5**: Add Stats, CTA, Contact, Footer (completed)\n- [x] **Step 6**: Finalize multi-page A4 layout, print optimizations (completed)\n- [ ] **Step 7**: Test in browser, generate PDF (Print to PDF)\n\n**File ready!** Open services-presentation.html, Ctrl+P → Save as PDF (A4, no margins, background colors).

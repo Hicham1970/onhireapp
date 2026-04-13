@@ -51,13 +51,13 @@
       }
     },
     "messages": {
-      ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
-      ".write": true,
       "$messageId": {
         ".read": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
         ".write": true,
-        ".validate": "newData.hasChildren(['name', 'email', 'company', 'message', 'createdAt', 'status', 'interest']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 100 && newData.child('email').isString() && newData.child('email').val().length > 0 && newData.child('email').val().length <= 100 && newData.child('company').isString() && newData.child('company').val().length > 0 && newData.child('company').val().length <= 100 && newData.child('message').isString() && newData.child('message').val().length > 10 && newData.child('message').val().length <= 5000 && newData.child('createdAt').isString() && newData.child('status').isString() && newData.child('status').val() === 'unread' && newData.child('interest').isString()"
+        ".validate": "newData.hasChildren(['name', 'email', 'company', 'message', 'createdAt', 'status', 'interest']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 100 && newData.child('email').isString() && newData.child('email').val().length > 0 && newData.child('email').val().length <= 100 && newData.child('company').isString() && newData.child('company').val().length > 0 && newData.child('company').val().length <= 100 && newData.child('message').isString() && newData.child('message').val().length > 10 && newData.child('message').val().length <= 5000 && newData.child('createdAt').isString() && newData.child('status').isString() && newData.child('status').val() === 'unread' && newData.child('interest').isString() && (newData.child('phone').val() === null || newData.child('phone').isString()) && newData.child('id').isString()",
+        ".indexOn": ["createdAt"]
       }
     }
   }
 }
+
